@@ -1,4 +1,4 @@
-package kr.edgs.controller;
+package kr.ebgs.controller;
 
 import java.text.DateFormat;
 import java.util.Date;
