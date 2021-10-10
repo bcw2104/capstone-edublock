@@ -9,14 +9,14 @@
 
 	<annotation-driven />
 
+	<context:component-scan base-package="kr.ebgs.controller" />
+
 	<resources mapping="/resources/**" location="/resources/" />
 
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
-
-	<context:component-scan base-package="kr.ebgs.controller" />
 
 	<beans:bean id="AuthCheckInterceptor" class="kr.ebgs.interceptor.AuthCheckInterceptor"/>
 

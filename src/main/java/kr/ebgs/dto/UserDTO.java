@@ -8,8 +8,8 @@ public class UserDTO {
 	private String userPw;
 	private String userEmail;
 	private Timestamp regDate;
-	private String userImg;
 	private String userType;
+	private String salt;
 
 	public UserDTO() {
 		this.userId = null;
@@ -17,20 +17,19 @@ public class UserDTO {
 		this.userPw = null;
 		this.userEmail = null;
 		this.regDate = null;
-		this.userImg = null;
 		this.userType = null;
+		this.salt = null;
 	}
 
 	public UserDTO(String userId, String userNickname, String userPw, String userEmail, Timestamp regDate,
-			String userImg, String userType) {
-		super();
+			String userType, String salt) {
 		this.userId = userId;
 		this.userNickname = userNickname;
 		this.userPw = userPw;
 		this.userEmail = userEmail;
 		this.regDate = regDate;
-		this.userImg = userImg;
 		this.userType = userType;
+		this.salt = salt;
 	}
 
 	public String getUserId() {
@@ -73,14 +72,6 @@ public class UserDTO {
 		this.regDate = regDate;
 	}
 
-	public String getUserImg() {
-		return userImg;
-	}
-
-	public void setUserImg(String userImg) {
-		this.userImg = userImg;
-	}
-
 	public String getUserType() {
 		return userType;
 	}
@@ -89,6 +80,13 @@ public class UserDTO {
 		this.userType = userType;
 	}
 
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
 
 }
 

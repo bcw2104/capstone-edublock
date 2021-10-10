@@ -236,9 +236,6 @@
 		        </executions>
                 <configuration>
                 	<nosuffix>true</nosuffix>
-			        <excludes>
-				  		<exclude>**/ckeditor/**</exclude>
-				    </excludes>
 				    <encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>

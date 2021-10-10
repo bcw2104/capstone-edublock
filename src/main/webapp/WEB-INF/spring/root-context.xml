@@ -14,23 +14,19 @@
 
 
 	<context:component-scan base-package="kr.ebgs.serviceImpl"/>
-	<context:component-scan base-package="kr.ebgs.mapper"/>
 	<context:component-scan base-package="kr.ebgs.exception" />
 
 	<!-- properties -->
-	<context:property-placeholder
-		location="/WEB-INF/properties/*.properties" />
+	<context:property-placeholder location="/WEB-INF/properties/*.properties" />
 
 	<!-- MultipartResolver -->
-	<bean id="multipartResolver"
-		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<property name="maxUploadSize" value="100000000" />  <!-- 10MB -->
 		<property name="maxInMemorySize" value="100000000" /> <!-- 10MB -->
 	</bean>
 
 	<!-- repository -->
-	<mybatis-spring:scan
-		base-package="kr.ebgs.mapper" />
+	<mybatis-spring:scan base-package="kr.ebgs.mapper" />
 
 	<bean class="org.apache.commons.dbcp2.BasicDataSource" id="basicDataSource">
 		<property name="driverClassName" value="${jdbc.driverClass}" />
@@ -52,4 +48,7 @@
 	</bean>
 
 	<!-- Util beans -->
+	<bean class="kr.ebgs.util.SecureTool" />
+	<bean class="kr.ebgs.util.MailTool" />
+
 </beans>

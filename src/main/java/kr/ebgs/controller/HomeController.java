@@ -1,31 +1,65 @@
 package kr.ebgs.controller;
 
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.Locale;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.ebgs.dto.UserDTO;
+import kr.ebgs.serviceImpl.LoginService;
+import kr.ebgs.serviceImpl.UserService;
 
 @Controller
 public class HomeController {
 
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
+	@Autowired
+	private UserService userService;
+	@Autowired
+	private LoginService loginService;
 
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+	@GetMapping("/")
+	public String home(Model model) {
+		return "home";
+	}
 
-		String formattedDate = dateFormat.format(date);
+	@GetMapping("/login")
+	public String login(Model model) throws Exception {
+		return "login";
+	}
 
-		model.addAttribute("serverTime", formattedDate );
+	@PostMapping("/login.do")
+	@ResponseBody
+	public String login(@RequestParam("id") String id,
+						@RequestParam("pw") String pw, HttpServletRequest request) throws Exception {
+
+		UserDTO user = userService.getUserById(id);
+
+		if(user != null && loginService.checkUserPassword(pw, user.getUserPw(), user.getSalt())) {
+			HttpSession session = request.getSession();
+			session.setAttribute("user", user);
+			session.setMaxInactiveInterval(1800);
+
+			return "success";
+		}
+
+		return "fail";
+	}
+
+	@GetMapping("/logout.do")
+	public String logout(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+
+		session.invalidate();
 
 		return "home";
 	}

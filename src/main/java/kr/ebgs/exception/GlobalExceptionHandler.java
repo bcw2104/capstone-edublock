@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
 	public void runtimeException(RuntimeException e, HttpServletResponse response) {
 		e.printStackTrace();
 		try {
-			response.sendError(404);
+			response.sendError(500);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}

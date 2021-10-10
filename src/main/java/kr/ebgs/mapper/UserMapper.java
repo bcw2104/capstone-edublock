@@ -8,8 +8,8 @@ import kr.ebgs.dto.UserDTO;
 
 @Mapper
 public interface UserMapper {
-	public ArrayList<UserDTO> select();
+	public ArrayList<UserDTO> select(UserDTO userDTO);
 	public void modify(UserDTO userDTO);
 	public void insert(UserDTO userDTO);
-	public void delete(UserDTO userDTO);
+	public void delete(String userId);
 }

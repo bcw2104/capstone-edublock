@@ -7,12 +7,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import kr.ebgs.annotation.Auth;
+
 @Controller
 @RequestMapping("/user")
 public class UserController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+	@Auth
 	@GetMapping("/mypage")
 	public String mypage(Model model) {
 
