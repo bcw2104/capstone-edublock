@@ -14,16 +14,24 @@ a:hover {
     position: relative;
 }
 
-.form-control{
-    border: 0px;
-    border-bottom: 1px solid #ced4da;
-    border-radius:0px;
-    padding: 0px 5px;
+.border-circle{
+	border-radius: 15px;
 }
 
-.form-control:focus{
-	border-bottom: 2px solid #80bdff;
-    box-shadow: none;
+.pointer{
+	cursor: pointer;
+}
+
+.custom-form-control{
+    border: 0px !important;
+    border-bottom: 1px solid #ced4da !important;
+    border-radius:0px !important;
+    padding: 0px 5px !important;
+}
+
+.custom-form-control:focus{
+	border-bottom: 2px solid #80bdff !important;
+    box-shadow: none !important;
 }
 
 .w-fix{

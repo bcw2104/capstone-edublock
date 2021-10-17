@@ -19,7 +19,6 @@ public class HomeController {
 	public String home(HttpServletRequest request, Model model) {
 		model.addAttribute("page", GlobalValues.homePage);
 
-		model.addAttribute("login", request.getSession().getAttribute("user"));
 		return "frame";
 	}
 

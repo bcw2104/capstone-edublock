@@ -1,6 +1,6 @@
+<%@page import="kr.ebgs.dto.UserDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core" %>
-
 
 <link rel="stylesheet" type="text/css" href="/resources/css/header/style.css">
 <link rel="stylesheet" type="text/css" href="/resources/css/header/modal-style.css">
@@ -8,7 +8,7 @@
 <script type="text/javascript" src="/resources/js/header/action.js"></script>
 
 
-<c:if test="${requestScope.login == null}">
+<c:if test="${sessionScope.user == null}">
 <div class="modal fade" id="signUpModal">
     <div class="modal-dialog">
         <div class="modal-content py-4 px-5">
@@ -20,23 +20,23 @@
             <div class="modal-body">
 			    <form id="signUpForm">
 				    <div class="form-group">
-				        <input type="text" id="regId" class="form-control" name="userId"  autocomplete="off"  placeholder="아이디"/>
+				        <input type="text" id="regId" class="custom-form-control form-control" name="userId"  autocomplete="off"  placeholder="아이디"/>
 						<div class="form-msg"></div>
 					</div>
 					<div class="form-group">
-			        	<input type="password" id="regPw" class="form-control" name="userPw" placeholder="비밀번호"/>
+			        	<input type="password" id="regPw" class="custom-form-control form-control" name="userPw" placeholder="비밀번호"/>
 			        	<div class="form-msg"></div>
 					</div>
 					<div class="form-group">
-				        <input type="password" id="regPwCk" class="form-control"  placeholder="비밀번호 확인"/>
+				        <input type="password" id="regPwCk" class="custom-form-control form-control"  placeholder="비밀번호 확인"/>
 				        <div class="form-msg"></div>
 					</div>
 					<div class="form-group ">
-				    	<input type="text" id="regNickname" class="form-control" name="userNickname" placeholder="닉네임"/>
+				    	<input type="text" id="regNickname" class="custom-form-control form-control" name="userNickname" placeholder="닉네임"/>
 				    	<div class="form-msg"></div>
 					</div>
 			        <div class="form-group">
-			        	<input type="text" id="regEmail" class="form-control" name="userEmail" placeholder="이메일"/>
+			        	<input type="text" id="regEmail" class="custom-form-control form-control" name="userEmail" placeholder="이메일"/>
 			        	<div class="form-msg"></div>
 					</div>
 			        <button type="button" id="signUpFormSubmit" class="btn btn-primary w-100 font-20 font-weight-bold">회원가입</button>
@@ -60,11 +60,11 @@
             <div class="modal-body">
 			    <form id="loginForm">
 				    <div class="form-group">
-				        <input type="text" id="loginId" class="form-control" name="userId" autocomplete="off"  placeholder="아이디"/>
+				        <input type="text" id="loginId" class="custom-form-control form-control" name="userId" autocomplete="off"  placeholder="아이디"/>
 						<div class="form-msg"></div>
 					</div>
 					<div class="form-group">
-			        	<input type="password" id="loginPw" class="form-control" name="userPw" placeholder="비밀번호"/>
+			        	<input type="password" id="loginPw" class="custom-form-control form-control" name="userPw" placeholder="비밀번호"/>
 			        	<div class="form-msg"></div>
 					</div>
 			        <button type="button" id="loginFormSubmit" class="btn btn-primary w-100 font-20 font-weight-bold">로그인</button>
@@ -119,7 +119,7 @@
 		<nav id="userNavBar" class="collapse navbar-collapse">
 			<ul class="navbar-nav ml-auto font-14 p-3 text-right">
 			<c:choose>
-				<c:when test="${requestScope.login != null}">
+				<c:when test="${sessionScope.user != null}">
 				<li class="nav-item"><a role="button" class="nav-link" href="/user/logout.do">로그아웃</a></li>
 				<li class="nav-item"><a role="button" class="nav-link" href="/user/mypage">마이페이지</a></li>
 				</c:when>

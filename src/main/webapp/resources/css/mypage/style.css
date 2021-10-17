@@ -1,0 +1,26 @@
+@charset "UTF-8";
+
+.mypage-nav{
+	width:200px;
+	height: 500px;
+}
+
+.mypage-nav .selected, .mypage-nav .nav-item:hover{
+	background-color: #ffffff;
+	font-weight: bold;
+}
+
+.mypage-content-container{
+	flex: 1;
+}
+
+.profile-img{
+	width: 100px;
+    height: 100px;
+    border-radius: 50px;
+}
+
+.mypage-content{
+	width: 250px;
+}
+

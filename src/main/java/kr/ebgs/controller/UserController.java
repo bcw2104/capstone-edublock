@@ -20,6 +20,7 @@ import kr.ebgs.annotation.Auth.Type;
 import kr.ebgs.dto.UserDTO;
 import kr.ebgs.serviceImpl.LoginService;
 import kr.ebgs.serviceImpl.UserService;
+import kr.ebgs.util.GlobalValues;
 
 @Controller
 @RequestMapping("/user")
@@ -109,14 +110,11 @@ public class UserController {
 		return "<script>alert('"+msg+"'); location.href='/';</script>";
 	}
 
-	@Auth
+	@Auth(type = Type.MEMBER)
 	@GetMapping("/mypage")
 	public String mypage(Model model) {
+		model.addAttribute("page", GlobalValues.myPage);
 
-
-		return "mypage";
+		return "frame";
 	}
-
-
-
 }
