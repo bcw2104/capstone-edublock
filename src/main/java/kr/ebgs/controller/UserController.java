@@ -1,5 +1,6 @@
 package kr.ebgs.controller;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import kr.ebgs.annotation.Auth;
 import kr.ebgs.annotation.Auth.Type;
 import kr.ebgs.dto.UserDTO;
+import kr.ebgs.serviceImpl.FileService;
 import kr.ebgs.serviceImpl.LoginService;
 import kr.ebgs.serviceImpl.UserService;
 import kr.ebgs.util.GlobalValues;
@@ -28,6 +30,8 @@ public class UserController {
 	private UserService userService;
 	@Autowired
 	private LoginService loginService;
+	@Autowired
+	private FileService fileService;
 
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -156,7 +160,14 @@ public class UserController {
 		UserDTO user = (UserDTO) session.getAttribute("user");
 
 		if(loginService.checkUserPassword(userPw, user.getUserPw(), user.getSalt())) {
-			userService.deleteUser(user.getUserId());
+			String userId = user.getUserId();
+			userService.deleteUser(userId);
+
+			String dirPath = fileService.getIdPath(userId);
+			ServletContext context= session.getServletContext();
+			String realPath=context.getRealPath(dirPath);
+
+			fileService.removePath(realPath);
 
 			session.invalidate();
 

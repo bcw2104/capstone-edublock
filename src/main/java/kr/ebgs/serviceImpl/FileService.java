@@ -26,6 +26,10 @@ public class FileService {
 		return "/resources/upload/"+userId+"/profile";
 	}
 
+	public String getIdPath(String userId) {
+		return "/resources/upload/"+userId;
+	}
+
 	public String getProfileImgName(String path) {
 		File file = fileTool.findFile(path, null);
 
@@ -39,7 +43,7 @@ public class FileService {
 		fileTool.createFile(path , mfile);
 	}
 
-	public void removeProfileImg(String dirPath) {
+	public void removePath(String dirPath) {
 		fileTool.removeFile(dirPath, null);
 	}
 }

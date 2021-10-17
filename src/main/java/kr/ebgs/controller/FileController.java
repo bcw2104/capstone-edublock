@@ -72,7 +72,7 @@ public class FileController {
 
 			String path = realPath+File.separator+fileName;
 
-			fileService.removeProfileImg(realPath);
+			fileService.removePath(realPath);
 			fileService.changeProfileImg(path,mfile);
 
 			return "success";
