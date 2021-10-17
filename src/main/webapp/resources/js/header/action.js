@@ -2,11 +2,7 @@
 	$(document).ready(function() {
 		var confirmEmail="";
 
-		var idValid = 0;
-		var pwValid =0;
-		var pwCheck = 0;
-		var nicknameValid =0;
-		var emailValid = 0;
+		var regValid = [0,0,0,0,0];
 
 		var isExist = function(key,value){
 			var queryString = key+"="+value;
@@ -17,7 +13,7 @@
 			});
 		}
 
-		var passwordCheck = function(event){
+		var checkRegPassword = function(event){
 			var userPw = $("#regPw").val();
 			var userPwCk = $("#regPwCk").val();
 
@@ -26,14 +22,14 @@
 			if(userPwCk != ""){
 				if(userPw == userPwCk){
 					formMsg.css("color", "#0000ff").text("일치");
-					pwCheck = 1;
+					regValid[2] = 1;
 				}
 				else{
 					formMsg.css("color", "#ff0000").text("비밀번호가 일치하지 않습니다");
-					pwCheck=0;
+					regValid[2]=0;
 				}
 			}else{
-				pwCheck=0;
+				regValid[2]=0;
 			}
 		}
 
@@ -46,23 +42,23 @@
 
 			if(userId == ""){
 				formMsg.css("color", "#ff0000").text("사용하실 아이디를 입력해주세요.");
-				idValid=0;
+				regValid[0]=0;
 			}
 			else if(regExp.test(userId)){
 				isExist("userId",userId).done(function(data) {
 					if(data == "false"){
 						formMsg.css("color", "#0000ff").text("사용 가능한 아이디입니다.");
-						idValid = 1;
+						regValid[0] = 1;
 					}
 					else if(data == "true"){
 						formMsg.css("color", "#ff0000").text("이미 존재하는 아이디입니다.");
-						idValid=0;
+						regValid[0]=0;
 					}
 				});
 			}
 			else{
 				formMsg.css("color", "#ff0000").text("5~20자의 영문, 숫자만 사용 가능합니다.");
-				idValid=0;
+				regValid[0]=0;
 			}
 		});
 
@@ -75,17 +71,17 @@
 
 			if(regExp.test(userPw)){
 				formMsg.css("color", "#0000ff").text("사용 가능한 비밀번호입니다.");
-				pwValid = 1;
+				regValid[1] = 1;
 			}
 			else{
 				formMsg.css("color", "#ff0000").text("8~16자의 영문, 숫자, 특수문자를 사용하세요.");
-				pwValid=0;
+				regValid[1]=0;
 			}
-			passwordCheck($("#regPwCk"));
+			checkRegPassword($("#regPwCk"));
 		});
 
 		$("#regPwCk").on('focusout',function() {
-			passwordCheck(this);
+			checkRegPassword(this);
 		});
 
 		$("#regNickname").on('focusout',function() {
@@ -97,23 +93,23 @@
 
 			if(userNickname == ""){
 				formMsg.css("color", "#ff0000").text("닉네임을 입력해주세요.");
-				nicknameValid=0;
+				regValid[3]=0;
 			}
 			else if(regExp.test(userNickname)){
 				isExist("userNickname",userNickname).done(function(data) {
 					if(data == "false"){
 						formMsg.css("color", "#0000ff").text("사용 가능한 닉네임입니다.");
-						nicknameValid = 1;
+						regValid[3] = 1;
 					}
 					else if(data == "true"){
 						formMsg.css("color", "#ff0000").text("이미 존재하는 닉네임입니다.");
-						nicknameValid=0;
+						regValid[3]=0;
 					}
 				});
 			}
 			else{
 				formMsg.css("color", "#ff0000").text("2~10자의 영문, 숫자, 한글만 사용 가능합니다.");
-				nicknameValid=0;
+				regValid[3]=0;
 			}
 		});
 
@@ -126,23 +122,23 @@
 
 			if(userEmail == ""){
 				formMsg.css("color", "#ff0000").text("이메일 주소를 입력해주세요.");
-				emailValid=0;
+				regValid[4]=0;
 			}
 			else if(regExp.test(userEmail)){
 				isExist("userEmail",userEmail).done(function(data) {
 					if(data == "false"){
 						formMsg.css("color", "#0000ff").text("사용 가능한 이메일입니다.");
-						emailValid = 1;
+						regValid[4] = 1;
 					}
 					else if(data == "true"){
 						formMsg.css("color", "#ff0000").text("이미 사용중인 이메일 주소입니다.");
-						emailValid=0;
+						regValid[4]=0;
 					}
 				});
 			}
 			else{
 				formMsg.css("color", "#ff0000").text("올바르지 않은 이메일 주소입니다.");
-				emailValid=0;
+				regValid[4]=0;
 			}
 		});
 
@@ -167,7 +163,12 @@
 		});
 
 		$("#signUpFormSubmit").on("click",function() {
-			var validator = idValid + pwValid + pwCheck + nicknameValid  + emailValid;
+			var validator = 0;
+
+			for(var i = 0; i < regValid.length; i++){
+				validator+=regValid[i];
+			}
+
 
 			if(validator != 5){
 				alert("항목을 전부 확인해주세요.");
@@ -189,6 +190,7 @@
 				$("#confirmEmail").text(regEmail);
 
 				confirmEmail = regEmail;
+				regValid = [0,0,0,0,0];
 			}
 		});
 

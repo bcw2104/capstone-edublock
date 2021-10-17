@@ -1,7 +1,6 @@
 package kr.ebgs.controller;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -43,6 +42,19 @@ public class UserController {
 		else {
 			return "false";
 		}
+	}
+
+	@Auth(type = Type.MEMBER)
+	@PostMapping("/check.do")
+	@ResponseBody
+	public String check(@RequestParam("userPw") String userPw,HttpSession session) throws Exception {
+		UserDTO user = (UserDTO) session.getAttribute("user");
+
+		if(loginService.checkUserPassword(userPw, user.getUserPw(), user.getSalt())) {
+			return "success";
+		}
+
+		return "fail";
 	}
 
 	@PostMapping("/login.do")
@@ -116,5 +128,41 @@ public class UserController {
 		model.addAttribute("page", GlobalValues.myPage);
 
 		return "frame";
+	}
+
+	@Auth(type = Type.MEMBER)
+	@PostMapping("/modify.do")
+	@ResponseBody
+	public String modify(UserDTO user,HttpSession session) throws Exception {
+		UserDTO loginUser = (UserDTO) session.getAttribute("user");
+
+		String userId = loginUser.getUserId();
+		user.setUserId(userId);
+		userService.modifyUser(user);
+
+		user = new UserDTO();
+		user.setUserId(userId);
+		user = userService.getUser(user);
+
+		session.setAttribute("user", user);
+
+		return "success";
+	}
+
+	@Auth(type = Type.MEMBER)
+	@PostMapping("/delete.do")
+	@ResponseBody
+	public String delete(@RequestParam("userPw") String userPw,HttpSession session) throws Exception {
+		UserDTO user = (UserDTO) session.getAttribute("user");
+
+		if(loginService.checkUserPassword(userPw, user.getUserPw(), user.getSalt())) {
+			userService.deleteUser(user.getUserId());
+
+			session.invalidate();
+
+			return "success";
+		}
+
+		return "fail";
 	}
 }

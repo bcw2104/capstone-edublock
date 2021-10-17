@@ -19,7 +19,6 @@
 			<set>
 				<if test="userNickname != null">user_nickname = #{userNickname},</if>
 				<if test="userPw != null">user_pw = #{userPw},</if>
-				<if test="userEmail != null">user_email = #{userEmail},</if>
 				<if test="salt != null">salt = #{salt}</if>
 			</set>
 			<where>
@@ -54,7 +53,7 @@
 	</insert>
 
 	<delete id="delete" parameterType="String">
-		DELETE FROM tbl_user WHERE user_id = #{userId}
+		DELETE FROM user_tbl WHERE user_id = #{userId}
 	</delete>
 
 </mapper>
