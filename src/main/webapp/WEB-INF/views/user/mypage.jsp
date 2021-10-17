@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <script type="text/javascript" src="/resources/js/mypage/action.js"></script>
+<script type="text/javascript" src="/resources/js/mypage/upload-action.js"></script>
 <link rel="stylesheet" type="text/css" href="/resources/css/mypage/style.css">
 
 <div class="container my-5">

@@ -2,13 +2,13 @@
 <div class="font-18 font-weight-bold p-4">내 정보</div>
 <div class="px-4 pb-4">
 	<div class="mypage-content">
-		<div class="mb-4">
-			<img class="profile-img mb-2" alt="profile" src="/resources/images/icon_profile.png">
+		<form id="profileImgForm" class="mb-4">
+			<img class="profile-img mb-2" alt="profile">
 			<div class="position-relative">
-				<input type="file" id="newProfileImg" class="custom-file-input pointer"/>
-				<label class="custom-file-label" for="newProfileImg">프로필 이미지</label>
+				<input type="file" id="profileImgUploader" name="profileImg" class="custom-file-input pointer"/>
+				<label id="profileImgUploaderLabel" class="custom-file-label" for="uploadProfileImg">파일 선택</label>
 			</div>
-		</div>
+		</form>
 		<form id="userInfoForm">
 			<div class="form-group">
 				<label class="font-14 font-weight-bold">아이디</label>
