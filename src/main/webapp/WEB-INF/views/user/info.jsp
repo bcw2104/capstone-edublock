@@ -6,7 +6,7 @@
 			<img class="profile-img mb-2" alt="profile">
 			<div class="position-relative">
 				<input type="file" id="profileImgUploader" name="profileImg" class="custom-file-input pointer"/>
-				<label id="profileImgUploaderLabel" class="custom-file-label" for="uploadProfileImg">파일 선택</label>
+				<label id="profileImgUploaderLabel" class="custom-file-label" for="profileImgUploader">파일 선택</label>
 			</div>
 		</form>
 		<form id="userInfoForm">
