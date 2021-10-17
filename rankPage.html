@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="rankPage.css">
+
+    <title>순위 페이지</title>
+</head>
+<body>
+    <main>
+        <h2 id="rankPageTitle">순위</h2>
+
+        <h3 id="myRankTitle" class="rankTitle">내 순위</h3>
+        <table id="myRankTable" class="table table-striped">
+            <tr>
+                <th>순위</th>
+                <th>닉네임</th>
+                <th>점수</th>
+                <th>클리어한 맵 수</th>
+            </tr>
+            <tr>
+                <td id="myRank" class="mine">my</td>
+                <td id="myNickName" class="mine">my</td>
+                <td id="myPoint" class="mine">my</td>
+                <td id="myClearData" class="mine">my</td>
+            </tr>
+        </table>
+
+        <h3 id="totalRankTitle" class="rankTitle">전체 순위</h3>
+        <table id="totalRankTable" class="table table-striped">
+            <tr>
+                <th>순위</th>
+                <th>닉네임</th>
+                <th>점수</th>
+                <th>클리어한 맵 수</th>
+            </tr>
+            <tr>
+                <td id="rank0" class="firstData totalRanks">0</td>
+                <td id="nickName0" class="firstData totalNicName">0</td>
+                <td id="point0" class="firstData totalPoint">0</td>
+                <td id="clearData0" class="firstData totalClearData">0</td>
+            </tr>
+            <tr>
+                <td id="rank1" class="secondData totalRanks">1</td>
+                <td id="nickName1" class="secondData totalNicName">1</td>
+                <td id="point1" class="secondData totalPoint">1</td>
+                <td id="clearData1" class="secondData totalClearData">1</td>
+            </tr>
+            <tr>
+                <td id="rank2" class="thirdData totalRanks">2</td>
+                <td id="nickName2" class="thirdData totalNicName">2</td>
+                <td id="point2" class="thirdData totalPoint">2</td>
+                <td id="clearData2" class="thirdData totalClearData">2</td>
+            </tr>
+            <tr>
+                <td id="rank3" class="fourthData totalRanks">3</td>
+                <td id="nickName3" class="fourthData totalNicName">3</td>
+                <td id="point3" class="fourthData totalPoint">3</td>
+                <td id="clearData3" class="fourthData totalClearData">3</td>
+            </tr>
+            <tr>
+                <td id="rank4" class="FifthData totalRanks">4</td>
+                <td id="nickName4" class="FifthData totalNicName">4</td>
+                <td id="point4" class="FifthData totalPoint">4</td>
+                <td id="clearData4" class="FifthData totalClearData">4</td>
+            </tr>
+            <tr>
+                <td id="rank5" class="SixthData totalRanks">5</td>
+                <td id="nickName5" class="SixthData totalNicName">5</td>
+                <td id="point5" class="SixthData totalPoint">5</td>
+                <td id="clearData5" class="SixthData totalClearData">5</td>
+            </tr>
+            <tr>
+                <td id="rank6" class="SeventhData totalRanks">6</td>
+                <td id="nickName6" class="SeventhData totalNicName">6</td>
+                <td id="point6" class="SeventhData totalPoint">6</td>
+                <td id="clearData6" class="SeventhData totalClearData">6</td>
+            </tr>
+            <tr>
+                <td id="rank7" class="EighthData totalRanks">7</td>
+                <td id="nickName7" class="EighthData totalNicName">7</td>
+                <td id="point7" class="EighthData totalPoint">7</td>
+                <td id="clearData7" class="EighthData totalClearData">7</td>
+            </tr>
+            <tr>
+                <td id="rank8" class="NinthData totalRanks">8</td>
+                <td id="nickName8" class="NinthData totalNicName">8</td>
+                <td id="point8" class="NinthData totalPoint">8</td>
+                <td id="clearData8" class="NinthData totalClearData">8</td>
+            </tr>
+            <tr>
+                <td id="rank9" class="TenthData totalRanks">9</td>
+                <td id="nickName9" class="TenthData totalNicName">9</td>
+                <td id="point9" class="TenthData totalPoint">9</td>
+                <td id="clearData9" class="TenthData totalClearData">9</td>
+            </tr>
+        </table>
+        <div id="pageButton">
+            <button type="button" class="btn btn-primary">이전</button>
+            <button type="button" class="btn btn-primary">다음</button>
+        </div>
+    </main>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

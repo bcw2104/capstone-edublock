@@ -1,0 +1,36 @@
+body, h1, h2, h3, h4, h5, h6, p {
+    margin: 0px;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+main {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+table {
+    text-align: center;
+}
+
+#rankPageTitle {
+    font-size: 40px;
+    font-weight: 700;
+    margin: 20px 0;
+    padding: 0 30px;
+}
+
+.rankTitle {
+    font-size: 25px;
+    font-weight: 600;
+    width:fit-content;
+    margin: 20px auto;
+}
+
+#pageButton {
+    width: 300px;
+    margin: 0 auto;
+    
+    display: flex;
+    justify-content: space-around;
+}
