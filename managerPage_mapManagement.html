@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="managerPage_mapManagement.css">
+    <title>관리자 페이지 - 기본 맵 관리</title>
+</head>
+<body>
+    <nav>
+        <ui class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link" href="managerPage_report.html">신고 목록</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="managerPage_userManagement.html">회원 관리</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="#">공식맵 수정</a>
+            </li>
+        </ui>
+    </nav>
+    <main>
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col" class="mapId">맵 아이디</th>
+                <th scope="col" class="mapName">맵 이름</th>
+                <th scope="col" class="buttons">맵 변경</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="userList" onclick="">
+                <td class="mapId">아이디</th>
+                <td class="mapName">닉네임</td>
+                <td scope="col" class="buttons">
+                    <button type="button" class="changeBtn btn btn-primary">수정</button>
+                    <button type="button" class="deleteBtn btn btn-primary">삭제</button>
+                </td>
+              </tr>
+              <tr class="userList" onclick="">
+                <td class="mapId">아이디</th>
+                <td class="mapName">닉네임</td>
+                <td scope="col" class="buttons">
+                    <button type="button" class="changeBtn btn btn-primary">수정</button>
+                    <button type="button" class="deleteBtn btn btn-primary">삭제</button>
+                </td>
+              </tr>
+              <tr class="userList" onclick="">
+                <td class="mapId">아이디</th>
+                <td class="mapName">닉네임</td>
+                <td scope="col" class="buttons">
+                    <button type="button" class="changeBtn btn btn-primary">수정</button>
+                    <button type="button" class="deleteBtn btn btn-primary">삭제</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div id="buttonBox">
+            <button type="button" id="addMap" class="btn btn-primary">맵 추가</button>
+          </div>
+    </main>
+</body>
+</html>

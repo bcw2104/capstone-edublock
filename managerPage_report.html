@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="managerPage_report.css">
+    <title>관리자 페이지 - 신고</title>
+</head>
+<body>
+    <nav>
+        <ui class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">신고 목록</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="managerPage_userManagement.html">회원 관리</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="managerPage_mapManagement.html">공식맵 수정</a>
+            </li>
+        </ui>
+    </nav>
+    <main>
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col" class="num">번호</th>
+                <th scope="col" class="reportedMap">신고맵</th>
+                <th scope="col" class="reportTitle">신고 제목</th>
+                <th scope="col" class="isSolved">해결여부</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="reportContent" onclick="">
+                <td class="num">1</th>
+                <td class="reportedMap">맵이름</td>
+                <td class="reportTitle">신고 제목</td>
+                <td class="isSolved">n</td>
+              </tr>
+              <tr class="reportContent" onclick="">
+                <td class="num">2</th>
+                <td class="reportedMap">맵이름</td>
+                <td class="reportTitle">신고 제목</td>
+                <td class="isSolved">n</td>
+              </tr>
+              <tr class="reportContent" onclick="">
+                <td class="num">3</th>
+                <td class="reportedMap">맵이름</td>
+                <td class="reportTitle">신고 제목</td>
+                <td class="isSolved">n</td>
+              </tr>
+            </tbody>
+          </table>  
+    </main>
+</body>
+</html>

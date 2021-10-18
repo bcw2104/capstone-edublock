@@ -1,0 +1,27 @@
+nav {
+    width: 1000px;
+    margin: 20px auto;
+}
+
+main {
+    width: 1000px;
+    margin: 20px auto;
+}
+
+.mapId {
+    width: 30%;
+}
+
+.mapName {
+    width: 30%;
+}
+
+.buttons {
+    width: 40%;
+    text-align: center;
+}
+
+#buttonBox {
+    margin: 20px 0;
+    text-align: right;
+}

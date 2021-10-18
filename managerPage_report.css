@@ -1,0 +1,21 @@
+nav {
+    width: 1000px;
+    margin: 20px     auto;
+}
+
+main {
+    width: 1000px;
+    margin: 20px auto;
+}
+
+td, tr{
+    text-align: center;
+}
+
+.reportContent {
+    cursor: pointer;
+}
+
+.reportTitle {
+    width: 50%;
+}

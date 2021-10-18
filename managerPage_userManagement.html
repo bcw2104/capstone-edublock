@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="managerPage_userManagement.css">
+    <title>관리자 페이지 - 회원 관리</title>
+</head>
+<body>
+    <nav>
+        <ui class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link" href="managerPage_report.html">신고 목록</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="#">회원 관리</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="managerPage_mapManagement.html">공식맵 수정</a>
+            </li>
+        </ui>
+    </nav>
+    <main>
+        <form id="searchUser" class="form-inline mt-2 mt-md-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="닉네임" aria-label="Search">
+            <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">검색</button>
+        </form>
+
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col" class="userId">아이디</th>
+                <th scope="col" class="userNickname">닉네임</th>
+                <th scope="col" class="userPoint">점수</th>
+                <th scope="col" class="loginDate">최근 접속 날짜</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="userList" onclick="">
+                <td class="userId">아이디</th>
+                <td class="userNickname">닉네임</td>
+                <td class="userPoint">점수</td>
+                <td class="loginDate">날짜</td>
+              </tr>
+              <tr class="userList" onclick="">
+                <td class="userId">아이디</th>
+                <td class="userNickname">닉네임</td>
+                <td class="userPoint">점수</td>
+                <td class="loginDate">날짜</td>
+              </tr>
+              <tr class="userList" onclick="">
+                <td class="userId">아이디</th>
+                <td class="userNickname">닉네임</td>
+                <td class="userPoint">점수</td>
+                <td class="loginDate">날짜</td>
+              </tr>
+            </tbody>
+          </table>  
+    </main>
+</body>
+</html>
