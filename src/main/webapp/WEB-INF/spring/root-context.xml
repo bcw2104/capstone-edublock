@@ -50,5 +50,5 @@
 	<!-- Util beans -->
 	<bean class="kr.ebgs.util.SecureTool" />
 	<bean class="kr.ebgs.util.MailTool" />
-
+	<bean class="kr.ebgs.util.FileTool" />
 </beans>

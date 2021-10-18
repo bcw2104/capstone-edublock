@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(METHOD)
 public @interface Auth {
-	public enum Type {ADMIN, USER}
+	public enum Type {ADMIN, MEMBER}
 
-	public Type type() default Type.USER;
+	public Type type() default Type.MEMBER;
 }

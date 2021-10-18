@@ -1,0 +1,30 @@
+@charset "UTF-8";
+
+.modal-dialog{
+	width:480px;
+}
+
+.close{
+	position: absolute;
+    right: 50px;
+}
+
+.form-msg{
+	height: 20px;
+	line-height: 20px;
+	font-size: 11px;
+}
+
+#certifiactionBtn {
+	line-height: 32px;
+}
+
+
+#registerForm .form-msg{
+	height: 20px;
+    font-size: 0.8rem;
+    margin-top: 3px;
+    margin-bottom: 5px;
+    padding-left: 2px;
+}
+

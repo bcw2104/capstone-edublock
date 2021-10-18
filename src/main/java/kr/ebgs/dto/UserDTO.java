@@ -10,6 +10,8 @@ public class UserDTO {
 	private Timestamp regDate;
 	private String userType;
 	private String salt;
+	private String confirmKey;
+
 
 	public UserDTO() {
 		this.userId = null;
@@ -19,10 +21,13 @@ public class UserDTO {
 		this.regDate = null;
 		this.userType = null;
 		this.salt = null;
+		this.confirmKey = null;
 	}
 
+
 	public UserDTO(String userId, String userNickname, String userPw, String userEmail, Timestamp regDate,
-			String userType, String salt) {
+			String userType, String salt, String confirmKey) {
+		super();
 		this.userId = userId;
 		this.userNickname = userNickname;
 		this.userPw = userPw;
@@ -30,63 +35,89 @@ public class UserDTO {
 		this.regDate = regDate;
 		this.userType = userType;
 		this.salt = salt;
+		this.confirmKey = confirmKey;
 	}
+
 
 	public String getUserId() {
 		return userId;
 	}
 
+
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+
 
 	public String getUserNickname() {
 		return userNickname;
 	}
 
+
 	public void setUserNickname(String userNickname) {
 		this.userNickname = userNickname;
 	}
+
 
 	public String getUserPw() {
 		return userPw;
 	}
 
+
 	public void setUserPw(String userPw) {
 		this.userPw = userPw;
 	}
+
 
 	public String getUserEmail() {
 		return userEmail;
 	}
 
+
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
 	}
+
 
 	public Timestamp getRegDate() {
 		return regDate;
 	}
 
+
 	public void setRegDate(Timestamp regDate) {
 		this.regDate = regDate;
 	}
+
 
 	public String getUserType() {
 		return userType;
 	}
 
+
 	public void setUserType(String userType) {
 		this.userType = userType;
 	}
+
 
 	public String getSalt() {
 		return salt;
 	}
 
+
 	public void setSalt(String salt) {
 		this.salt = salt;
 	}
+
+
+	public String getConfirmKey() {
+		return confirmKey;
+	}
+
+
+	public void setConfirmKey(String confirmKey) {
+		this.confirmKey = confirmKey;
+	}
+
 
 }
 

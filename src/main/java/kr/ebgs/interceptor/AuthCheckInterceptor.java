@@ -34,8 +34,8 @@ public class AuthCheckInterceptor implements HandlerInterceptor {
 
 		HttpSession session = request.getSession();
 
-		if(session.getAttribute("user") == null) {
-			response.sendRedirect("/login");
+		if(session.getAttribute("user") == null ) {
+			response.sendError(401);
 			return false;
 		}
 
@@ -43,8 +43,22 @@ public class AuthCheckInterceptor implements HandlerInterceptor {
 
 		// 관리자 권한이 필요한 경우
 		if(auth.type().compareTo(Type.ADMIN) == 0) {
-			return user.getUserType().equals(Auth.Type.ADMIN);
+
+			if(user.getUserType().equals(Auth.Type.ADMIN)) return true;
+
+			response.sendError(401);
+			return false;
 		}
+
+		/*
+		 * // 회원 권한이 필요한 경우
+		 * if(auth.type().compareTo(Type.MEMBER) == 0) {
+			 * if(user.getUserType().equals(Auth.Type.MEMBER) ||
+			 * user.getUserType().equals(Auth.Type.ADMIN)) return true;
+			 *
+			 * response.sendError(401); return false;
+		 * }
+		 */
 
 		return true;
 	}

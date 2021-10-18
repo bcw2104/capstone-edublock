@@ -23,6 +23,14 @@ public class SecureTool {
         return sb.toString();
     }
 
+	public String hashGenerator(String str) throws Exception {
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+
+		md.update(str.getBytes());
+
+		return byteToString(md.digest());
+	}
+
 	public String encrypt(String password,String salt) throws Exception {
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
 
