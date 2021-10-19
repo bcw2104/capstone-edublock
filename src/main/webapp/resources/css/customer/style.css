@@ -1,0 +1,131 @@
+.board-wrap {
+    min-width: 768px;
+	min-height: 750px;
+	padding: 100px 0;
+}
+
+/* pagination */
+.paginationjs-pages > ul{
+	display:flex;
+	list-style: none;
+	justify-content: center;
+}
+
+.paginationjs-pages > ul > li{
+	cursor:pointer;
+	padding: 10px;
+}
+
+.paginationjs-page.active,
+.paginationjs-page:hover{
+	font-weight: bold;
+}
+
+
+/* board 페이지 */
+
+.board-title{
+	display: inline-block;
+    border-bottom: 3px solid #007bff;
+}
+
+.search-form-wrap{
+	position: absolute;
+	top:0px;
+	right: 0px;
+}
+
+.search-form{
+	border :1px solid #ced4da;
+}
+
+.search-form .form-control:focus,
+.search-form .btn:focus{
+	outline:0 !important;
+	box-shadow: none !important;
+}
+
+.board-type-nav{
+	margin-top: 50px;
+}
+
+.nav-pills >.nav-item:hover,
+.nav-pills >.nav-item > .active{
+	font-weight: bold;
+}
+
+.post-list-table th,
+.post-list-table td:nth-child(1),
+.post-list-table td:nth-child(3),
+.post-list-table td:nth-child(4),
+.post-list-table td:nth-child(5){
+	text-align: center;
+	vertical-align: middle !important;
+}
+.post-list-table td:nth-child(2){
+	cursor:pointer;
+}
+.post-list-table td:nth-child(2) > a:hover{
+	font-weight: bold;
+}
+
+.post-list-table td:nth-child(2) > a{
+	display: block;
+}
+
+/* view 페이지 */
+.post-view .author-profile-img,
+.comment-view .comment-profile-img{
+	width: 45px;
+	height: 45px;
+    border-radius: 22.5px;
+}
+
+.post-view .post-content{
+	word-break: break-all;
+	min-height:250px;
+}
+
+.post-view .author-info{
+	align-self: end;
+}
+
+.post-view .hits{
+	align-self: end;
+	flex:1
+}
+
+.comment-view .comment-form-wrap{
+	background-color: #ffffff;
+	border-radius: 20px;
+    border: 1px solid #ced4da;
+    margin:20px 0px;
+    padding: 10px;
+}
+
+.comment-view .form-control{
+	resize: none;
+    height: 70px;
+
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.comment-view .btn{
+	width: 100px;
+    border-radius: 20px;
+}
+
+.comment-view .comment-content{
+	word-break: break-all;
+}
+
+.comment-view .sub{
+	background-color: #e5e5e5;
+}
+.comment-view .comment-menu{
+	width: 20px;
+	float: right;
+	cursor: pointer;
+}
