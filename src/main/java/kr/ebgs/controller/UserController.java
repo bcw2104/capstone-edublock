@@ -98,6 +98,8 @@ public class UserController {
 
 	@PostMapping("/signup.do")
 	public String signUp(UserDTO user, Model model) throws Exception {
+		if(user.getUserPw() == null) throw new Exception();
+
 		userService.addUser(user);
 
 		model.addAttribute("userEmail",user.getUserEmail());
@@ -130,6 +132,7 @@ public class UserController {
 	@GetMapping("/mypage")
 	public String mypage(Model model) {
 		model.addAttribute("page", GlobalValues.myPage);
+		model.addAttribute("pageTitle", GlobalValues.myPageTitle);
 
 		return "frame";
 	}

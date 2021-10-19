@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+														"HTTP://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.ebgs.mapper.CenterPostMapper">
+
+	<select id="select" resultType="centerpostDTO" parameterType="int">
+		SELECT ct.*,ut.user_nickname AS post_author_nickname
+			FROM
+				centerpost_tbl ct
+			LEFT join
+				user_tbl ut
+			ON ct.post_author = ut.user_id
+			<where>
+				<if test="postId != null">post_id = #{postId}</if>
+			</where>
+
+			ORDER BY post_date DESC;
+	</select>
+	<select id="selectList" resultType="centerpostDTO" parameterType="centerpostDTO">
+		SELECT ct.*,ut.user_nickname AS post_author_nickname
+			FROM
+				centerpost_tbl ct
+			LEFT join
+				user_tbl ut
+			ON ct.post_author = ut.user_id
+			<where>
+				<if test="postAuthor != null">post_author = #{postAuthor}</if>
+				<if test="postTitle != null">AND post_title LIKE '%${postTitle}%'</if>
+				<if test="boardType != null">AND board_type = #{boardType}</if>
+			</where>
+			ORDER BY post_id DESC;
+	</select>
+
+	<update id="modify" parameterType="centerPostDTO">
+		UPDATE centerpost_tbl
+			<set>
+				<if test="postTitle != null">post_title = #{postTitle},</if>
+				<if test="postContent != null">post_content = #{postContent}</if>
+			</set>
+			<where>
+				post_id = #{postId}
+			</where>
+	</update>
+
+	<insert id="insert" parameterType="centerPostDTO">
+		INSERT INTO centerpost_tbl(post_author,post_title,post_content,board_type)
+			VALUES(#{postAuthor},#{postTitle},#{postContent},#{boardType})
+	</insert>
+
+	<delete id="delete" parameterType="int">
+		DELETE FROM centerpost_tbl WHERE post_id = #{postId}
+	</delete>
+
+</mapper>

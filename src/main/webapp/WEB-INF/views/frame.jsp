@@ -14,7 +14,7 @@
 <link rel="stylesheet" type="text/css" href="/resources/css/home/style.css">
 <link rel="stylesheet" type="text/css" href="/resources/css/common.css">
 
-<title>EBGS | Educational Block Coding Games</title>
+<title>EBGS | ${requestScope.pageTitle}</title>
 </head>
 <body class="w-fix">
 	<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>

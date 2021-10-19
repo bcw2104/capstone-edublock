@@ -49,8 +49,6 @@ public class UserService {
 	}
 
 	public void addUser(UserDTO user) throws Exception{
-		if(user.getUserPw() == null) throw new RuntimeException();
-
 		String salt = secureTool.createSalt();
 		user.setUserPw(secureTool.encrypt(user.getUserPw(), salt));
 		user.setSalt(salt);

@@ -135,7 +135,7 @@
 				<li class="nav-item"><a class="nav-link" href="">GAME</a></li>
 				<li class="nav-item"><a class="nav-link" href="">창작마당</a></li>
 				<li class="nav-item"><a class="nav-link" href="">랭킹</a></li>
-				<li class="nav-item"><a class="nav-link" href="">고객센터</a></li>
+				<li class="nav-item"><a class="nav-link" href="/customer">고객센터</a></li>
 			</ul>
 		</nav>
 	</div>

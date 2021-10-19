@@ -16,7 +16,6 @@ import kr.ebgs.dto.UserDTO;
 public class AuthCheckInterceptor implements HandlerInterceptor {
 	private static final Logger logger = LoggerFactory.getLogger(AuthCheckInterceptor.class);
 
-	@SuppressWarnings("unlikely-arg-type")
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
@@ -44,21 +43,20 @@ public class AuthCheckInterceptor implements HandlerInterceptor {
 		// 관리자 권한이 필요한 경우
 		if(auth.type().compareTo(Type.ADMIN) == 0) {
 
-			if(user.getUserType().equals(Auth.Type.ADMIN)) return true;
+			if(user.getUserType().equals(Auth.Type.ADMIN.name())) return true;
 
 			response.sendError(401);
 			return false;
 		}
 
-		/*
-		 * // 회원 권한이 필요한 경우
-		 * if(auth.type().compareTo(Type.MEMBER) == 0) {
-			 * if(user.getUserType().equals(Auth.Type.MEMBER) ||
-			 * user.getUserType().equals(Auth.Type.ADMIN)) return true;
-			 *
-			 * response.sendError(401); return false;
-		 * }
-		 */
+		// 회원 권한이 필요한 경우
+		if(auth.type().compareTo(Type.MEMBER) == 0) {
+			if(user.getUserType().equals(Auth.Type.MEMBER.name()) || user.getUserType().equals(Auth.Type.ADMIN.name())) return true;
+
+			response.sendError(401);
+			return false;
+		}
+
 
 		return true;
 	}

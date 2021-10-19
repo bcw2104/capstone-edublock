@@ -1,13 +1,13 @@
 package kr.ebgs.dto;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 public class UserDTO {
 	private String userId;
 	private String userNickname;
 	private String userPw;
 	private String userEmail;
-	private Timestamp regDate;
+	private Date regDate;
 	private String userType;
 	private String salt;
 	private String confirmKey;
@@ -25,7 +25,7 @@ public class UserDTO {
 	}
 
 
-	public UserDTO(String userId, String userNickname, String userPw, String userEmail, Timestamp regDate,
+	public UserDTO(String userId, String userNickname, String userPw, String userEmail, Date regDate,
 			String userType, String salt, String confirmKey) {
 		super();
 		this.userId = userId;
@@ -79,12 +79,12 @@ public class UserDTO {
 	}
 
 
-	public Timestamp getRegDate() {
+	public Date getRegDate() {
 		return regDate;
 	}
 
 
-	public void setRegDate(Timestamp regDate) {
+	public void setRegDate(Date regDate) {
 		this.regDate = regDate;
 	}
 

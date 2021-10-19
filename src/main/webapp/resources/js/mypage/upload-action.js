@@ -62,7 +62,12 @@ function getProfileImg(){
 		url: "/upload/profile",
         type: "get",
         success : function(res){
-        	$(".profile-img").attr("src",res);
+			if(res == "fail"){
+				alert("프로필 이미지를 불러오는데 실패했습니다.");
+			}
+			else{
+        		$(".profile-img").attr("src",res);
+			}
         }
     });
 }
