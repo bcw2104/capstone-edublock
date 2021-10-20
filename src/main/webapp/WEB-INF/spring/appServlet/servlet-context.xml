@@ -17,7 +17,6 @@
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
-
 	<beans:bean id="AuthCheckInterceptor" class="kr.ebgs.interceptor.AuthCheckInterceptor"/>
 
 	<interceptors>

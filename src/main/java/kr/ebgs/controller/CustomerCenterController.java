@@ -61,14 +61,25 @@ public class CustomerCenterController {
 		return JsonTool.convertToJson(centerPostList);
 	}
 
+	@SuppressWarnings("unchecked")
 	@GetMapping("/{boardType}/{postId}")
-	public String view(@PathVariable("postId") String _postId,Model model)throws Exception {
+	public String view(@PathVariable("postId") String _postId,Model model,HttpSession session)throws Exception {
 		int postId = Integer.parseInt(_postId);
 
 		CenterPostDTO centerPost = centerService.getCenterPostById(postId);
 
 		if(centerPost == null)
 			throw new NoHandlerFoundException(null, null, null);
+
+		if(session.getAttribute("centerVisit") == null) {
+			session.setAttribute("centerVisit", new ArrayList<Integer>());
+		}
+		ArrayList<Integer> visitList = (ArrayList<Integer>) session.getAttribute("centerVisit");
+		if(centerService.isFirstVisit(visitList,postId)) {
+			centerService.increasePostHits(postId);
+			centerPost.setHits(centerPost.getHits()+1);
+			visitList.add(postId);
+		}
 
 		model.addAttribute("centerPost", centerPost);
 		model.addAttribute("page", GlobalValues.centerViewPage);

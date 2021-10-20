@@ -8,6 +8,10 @@ hr{
 	margin: 0px;
 }
 
+pre{
+	font-size:100% !important;
+}
+
 a:hover {
     text-decoration: none;
     color: black;
