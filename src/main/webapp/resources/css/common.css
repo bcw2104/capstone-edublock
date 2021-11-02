@@ -30,6 +30,35 @@ a:hover {
 	cursor: pointer;
 }
 
+/* pagination */
+.paginationjs-pages > ul{
+	display:flex;
+	list-style: none;
+	justify-content: center;
+}
+
+.paginationjs-pages > ul > li{
+	cursor:pointer;
+	padding: 10px;
+}
+
+.paginationjs-page.active,
+.paginationjs-page:hover{
+	font-weight: bold;
+}
+
+.board-title{
+	display: inline-block;
+    border-bottom: 3px solid #007bff;
+}
+
+.board-wrap {
+    min-width: 768px;
+	min-height: 750px;
+	padding: 100px 0;
+}
+
+
 .custom-form-control{
     border: 0px !important;
     border-bottom: 1px solid #ced4da !important;

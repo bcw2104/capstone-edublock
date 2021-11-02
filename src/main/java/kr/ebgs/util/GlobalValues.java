@@ -9,6 +9,10 @@ public class GlobalValues {
 	public final static String homePage = "/WEB-INF/views/home/home.jsp";
 
 	//user
+	public final static String rankTitle = "랭킹";
+	public final static String rankPage = "/WEB-INF/views/game/rank.jsp";
+
+	//user
 	public final static String myPageTitle = "마이페이지";
 	public final static String myPage = "/WEB-INF/views/user/mypage.jsp";
 

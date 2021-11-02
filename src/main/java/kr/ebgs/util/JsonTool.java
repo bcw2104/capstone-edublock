@@ -1,4 +1,4 @@
-package kr.ebgs.serviceImpl;
+package kr.ebgs.util;
 
 import java.util.ArrayList;
 

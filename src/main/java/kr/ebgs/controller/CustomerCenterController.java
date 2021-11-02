@@ -22,8 +22,8 @@ import kr.ebgs.dto.CenterCommentDTO;
 import kr.ebgs.dto.CenterPostDTO;
 import kr.ebgs.dto.UserDTO;
 import kr.ebgs.serviceImpl.CustomerCenterService;
-import kr.ebgs.serviceImpl.JsonTool;
 import kr.ebgs.util.GlobalValues;
+import kr.ebgs.util.JsonTool;
 
 @Controller
 @RequestMapping("/customer")
