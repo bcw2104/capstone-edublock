@@ -58,7 +58,7 @@ public class CustomerCenterController {
 
 		ArrayList<CenterPostDTO> centerPostList = centerService.getCenterPostList(query,null,boardType);
 
-		return JsonTool.convertToJson(centerPostList);
+		return JsonTool.arrayToJson(centerPostList);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -223,7 +223,7 @@ public class CustomerCenterController {
 		centerComment.setPostId(Integer.parseInt(_postId));
 
 		ArrayList<CenterCommentDTO> centerCommentList = centerService.getCenterCommentList(centerComment);
-		return JsonTool.convertToJson(centerCommentList);
+		return JsonTool.arrayToJson(centerCommentList);
 	}
 
 

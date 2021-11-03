@@ -14,6 +14,7 @@
 		<typeAlias type="kr.ebgs.dto.UserDTO" alias="userDTO"/>
 		<typeAlias type="kr.ebgs.dto.CenterPostDTO" alias="centerPostDTO"/>
 		<typeAlias type="kr.ebgs.dto.CenterCommentDTO" alias="centerCommentDTO"/>
+		<typeAlias type="kr.ebgs.dto.RankDTO" alias="rankDTO"/>
 	</typeAliases>
 </configuration>
 

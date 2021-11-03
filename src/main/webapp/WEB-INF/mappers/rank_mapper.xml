@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+														"HTTP://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.ebgs.mapper.RankMapper">
+	<select id="select" resultType="rankDTO" parameterType="String">
+		WITH total_rank_tbl AS
+			(SELECT RANK() over(ORDER BY score DESC) as rank,user_tbl.user_id,user_tbl.user_nickname,COUNT(record_tbl.game_id) AS clear,IFNULL(SUM(record_tbl.game_id),0) AS score
+					FROM
+						user_tbl
+							LEFT JOIN
+						record_tbl
+							ON user_tbl.user_id = record_tbl.user_id
+					GROUP BY user_tbl.user_id
+					ORDER BY rank ASC)
+
+		SELECT rank,user_nickname,clear,score FROM total_rank_tbl WHERE total_rank_tbl.user_id = #{userId}
+	</select>
+
+	<select id="selectAll" resultType="rankDTO">
+		SELECT RANK() over(ORDER BY score DESC) as rank,user_tbl.user_nickname,COUNT(record_tbl.game_id) AS clear,IFNULL(SUM(record_tbl.game_id),0) AS score
+			FROM
+				user_tbl
+					LEFT JOIN
+				record_tbl
+					ON user_tbl.user_id = record_tbl.user_id
+			GROUP BY user_tbl.user_id
+			ORDER BY rank ASC
+	</select>
+
+</mapper>
