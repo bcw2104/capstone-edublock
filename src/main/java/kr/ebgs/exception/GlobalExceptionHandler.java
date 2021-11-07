@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(NoHandlerFoundException.class)
-	public void numberFormatException(NoHandlerFoundException e, HttpServletResponse response) {
+	public void noHandlerFoundException(NoHandlerFoundException e, HttpServletResponse response) {
 		e.printStackTrace();
 		try {
 			response.sendError(404);

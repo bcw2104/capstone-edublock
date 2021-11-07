@@ -10,12 +10,12 @@
 				,SUM(IFNULL(temp.map_point,0)) AS score
 				,COUNT(temp.map_id) AS clear
 					FROM
-						(SELECT record_tbl.user_id,game_info_tbl.map_point,game_info_tbl.map_id
+						(SELECT game_record_tbl.user_id,game_info_tbl.map_point,game_info_tbl.map_id
 							FROM
-								record_tbl
+								game_record_tbl
 									LEFT JOIN
 								game_info_tbl
-									ON record_tbl.map_id = game_info_tbl.map_id
+									ON game_record_tbl.map_id = game_info_tbl.map_id
 									<if test="gameId != 0">
 									WHERE game_info_tbl.game_id = #{gameId}
 									</if>) temp
@@ -33,12 +33,12 @@
 		,SUM(IFNULL(temp.map_point,0)) AS score
 		,COUNT(temp.map_id) AS clear
 			FROM
-				(SELECT record_tbl.user_id,game_info_tbl.map_point,game_info_tbl.map_id
+				(SELECT game_record_tbl.user_id,game_info_tbl.map_point,game_info_tbl.map_id
 					FROM
-						record_tbl
+						game_record_tbl
 							LEFT JOIN
 						game_info_tbl
-							ON record_tbl.map_id = game_info_tbl.map_id
+							ON game_record_tbl.map_id = game_info_tbl.map_id
 							<if test="gameId != 0">
 							WHERE game_info_tbl.game_id = #{gameId}
 							</if>) temp

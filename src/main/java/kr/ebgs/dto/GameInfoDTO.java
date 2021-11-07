@@ -2,6 +2,7 @@ package kr.ebgs.dto;
 
 public class GameInfoDTO {
 	private int mapId;
+	private int gameId;
     private String mapName;
     private String authorId;
     private String mapData;
@@ -9,6 +10,7 @@ public class GameInfoDTO {
 
 	public GameInfoDTO() {
 		this.mapId = 0;
+		this.gameId = 0;
 		this.mapName = null;
 		this.authorId = null;
 		this.mapData = null;
@@ -21,6 +23,14 @@ public class GameInfoDTO {
 
 	public void setMapId(int mapId) {
 		this.mapId = mapId;
+	}
+
+	public int getGameId() {
+		return gameId;
+	}
+
+	public void setGameId(int gameId) {
+		this.gameId = gameId;
 	}
 
 	public String getMapName() {
