@@ -5,7 +5,17 @@
 <script type="text/javascript" src="/resources/js/rank/action.js"></script>
 
 <div class="container board-wrap">
-	<div class="mb-5 board-title font-32 font-weight-bold">전체 랭킹</div>
+	<div class="row m-0 justify-content-between">
+		<div class="mb-5 board-title font-32 font-weight-bold">전체 랭킹</div>
+		<div class="form-group">
+			<select id="gameType" class="form-control pointer" style="width:150px">
+				<option value="0">전체</option>
+				<c:forEach items="${requestScope.gameType}" var="n">
+				<option value="${n.gameId}">${n.gameName}</option>
+				</c:forEach>
+			</select>
+		</div>
+	</div>
 
     <div class="my-2 font-20 font-weight-bold">내 순위</div>
     <table id="myRankTable" class="table text-center">

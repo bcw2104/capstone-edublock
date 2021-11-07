@@ -3,29 +3,50 @@
 														"HTTP://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="kr.ebgs.mapper.RankMapper">
-	<select id="select" resultType="rankDTO" parameterType="String">
+	<select id="select" resultType="rankDTO" parameterType="hashmap">
 		WITH total_rank_tbl AS
-			(SELECT RANK() over(ORDER BY score DESC) as rank,user_tbl.user_id,user_tbl.user_nickname,COUNT(record_tbl.game_id) AS clear,IFNULL(SUM(record_tbl.game_id),0) AS score
+			(SELECT user_tbl.user_id,user_tbl.user_nickname
+				,RANK() over(ORDER BY score DESC) as rank
+				,SUM(IFNULL(temp.map_point,0)) AS score
+				,COUNT(temp.map_id) AS clear
 					FROM
+						(SELECT record_tbl.user_id,game_info_tbl.map_point,game_info_tbl.map_id
+							FROM
+								record_tbl
+									LEFT JOIN
+								game_info_tbl
+									ON record_tbl.map_id = game_info_tbl.map_id
+									<if test="gameId != 0">
+									WHERE game_info_tbl.game_id = #{gameId}
+									</if>) temp
+						RIGHT JOIN
 						user_tbl
-							LEFT JOIN
-						record_tbl
-							ON user_tbl.user_id = record_tbl.user_id
-					GROUP BY user_tbl.user_id
-					ORDER BY rank ASC)
+						ON temp.user_id = user_tbl.user_id
+						GROUP BY user_tbl.user_id)
 
 		SELECT rank,user_nickname,clear,score FROM total_rank_tbl WHERE total_rank_tbl.user_id = #{userId}
 	</select>
 
-	<select id="selectAll" resultType="rankDTO">
-		SELECT RANK() over(ORDER BY score DESC) as rank,user_tbl.user_nickname,COUNT(record_tbl.game_id) AS clear,IFNULL(SUM(record_tbl.game_id),0) AS score
+	<select id="selectAll" resultType="rankDTO" parameterType="int">
+		SELECT user_tbl.user_nickname
+		,RANK() over(ORDER BY score DESC) as rank
+		,SUM(IFNULL(temp.map_point,0)) AS score
+		,COUNT(temp.map_id) AS clear
 			FROM
+				(SELECT record_tbl.user_id,game_info_tbl.map_point,game_info_tbl.map_id
+					FROM
+						record_tbl
+							LEFT JOIN
+						game_info_tbl
+							ON record_tbl.map_id = game_info_tbl.map_id
+							<if test="gameId != 0">
+							WHERE game_info_tbl.game_id = #{gameId}
+							</if>) temp
+				RIGHT JOIN
 				user_tbl
-					LEFT JOIN
-				record_tbl
-					ON user_tbl.user_id = record_tbl.user_id
-			GROUP BY user_tbl.user_id
-			ORDER BY rank ASC
+				ON temp.user_id = user_tbl.user_id
+				GROUP BY user_tbl.user_id
+				ORDER BY rank ASC
 	</select>
 
 </mapper>

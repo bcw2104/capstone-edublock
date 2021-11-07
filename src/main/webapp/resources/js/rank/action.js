@@ -9,14 +9,13 @@ function getParams(){
     return ret;
 }
 
-$(document).ready(function() {
-	var params = getParams();
-	params["p"] = (params["p"] == undefined ? 1 : params["p"]);
-
-	 $.ajax({
+function getMyRank(type){
+	$.ajax({
         type: "get",
         url: "/game/myrank.do",
+		data:{t:type},
         success: function(data) {
+			$("#myrank").empty();
 			var html;
 			if(data.userNickname == null){
 				html = "<tr>"
@@ -34,12 +33,18 @@ $(document).ready(function() {
 			$("#myrank").append(html);
         }
     });
+}
+
+function getList(type){
+	var params = getParams();
+	params["p"] = (params["p"] == undefined ? 1 : params["p"]);
 
 	$('#pagination').pagination({
 		dataSource: function(done) {
 		    $.ajax({
 		        type: "get",
 		        url: "/game/ranklist.do",
+				data:{t:type},
 		        success: function(response) {
 		            done(response);
 		        }
@@ -65,5 +70,16 @@ $(document).ready(function() {
 				$(".rank-list").append(html);
 			}
 	    }
+	});
+}
+
+$(document).ready(function() {
+	getMyRank(0);
+	getList(0);
+
+	$("#gameType").on("change",function(){
+		var type = $(this).val();
+		getMyRank(type);
+		getList(type);
 	});
 });

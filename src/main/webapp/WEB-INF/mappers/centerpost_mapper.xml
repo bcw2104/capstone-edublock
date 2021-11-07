@@ -4,10 +4,10 @@
 
 <mapper namespace="kr.ebgs.mapper.CenterPostMapper">
 
-	<select id="select" resultType="centerpostDTO" parameterType="int">
+	<select id="select" resultType="centerPostDTO" parameterType="int">
 		SELECT ct.*,ut.user_nickname AS post_author_nickname
 			FROM
-				centerpost_tbl ct
+				center_post_tbl ct
 			LEFT join
 				user_tbl ut
 			ON ct.post_author = ut.user_id
@@ -17,10 +17,10 @@
 
 			ORDER BY post_date DESC;
 	</select>
-	<select id="selectList" resultType="centerpostDTO" parameterType="centerpostDTO">
+	<select id="selectList" resultType="centerPostDTO" parameterType="centerPostDTO">
 		SELECT ct.*,ut.user_nickname AS post_author_nickname
 			FROM
-				centerpost_tbl ct
+				center_post_tbl ct
 			LEFT join
 				user_tbl ut
 			ON ct.post_author = ut.user_id
@@ -33,7 +33,7 @@
 	</select>
 
 	<update id="modify" parameterType="centerPostDTO">
-		UPDATE centerpost_tbl
+		UPDATE center_post_tbl
 			<set>
 				<if test="postTitle != null">post_title = #{postTitle},</if>
 				<if test="postContent != null">post_content = #{postContent}</if>
@@ -44,7 +44,7 @@
 	</update>
 
 	<update id="increaseHits" parameterType="int">
-		UPDATE centerpost_tbl
+		UPDATE center_post_tbl
 			<set>
 				hits = hits+1
 			</set>
@@ -54,12 +54,12 @@
 	</update>
 
 	<insert id="insert" parameterType="centerPostDTO">
-		INSERT INTO centerpost_tbl(post_author,post_title,post_content,board_type)
+		INSERT INTO center_post_tbl(post_author,post_title,post_content,board_type)
 			VALUES(#{postAuthor},#{postTitle},#{postContent},#{boardType})
 	</insert>
 
 	<delete id="delete" parameterType="int">
-		DELETE FROM centerpost_tbl WHERE post_id = #{postId}
+		DELETE FROM center_post_tbl WHERE post_id = #{postId}
 	</delete>
 
 </mapper>

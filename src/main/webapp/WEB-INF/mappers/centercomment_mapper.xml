@@ -7,7 +7,7 @@
 	<select id="select" resultType="centerCommentDTO" parameterType="centerCommentDTO">
 		SELECT ct.*,ut.user_nickname AS comment_author_nickname
 			FROM
-				centercomment_tbl ct
+				center_comment_tbl ct
 			LEFT join
 				user_tbl ut
 			ON ct.comment_author = ut.user_id
@@ -19,11 +19,11 @@
 	</select>
 
 	<insert id="insert" parameterType="centerCommentDTO">
-		insert into centercomment_tbl(comment_author,comment_content,parent_id,post_id)
+		insert into center_comment_tbl(comment_author,comment_content,parent_id,post_id)
 		<choose>
 			<when test="parentId == 0">
 				SELECT #{commentAuthor},#{commentContent},AUTO_INCREMENT,#{postId}
-					FROM information_schema.tables WHERE table_name = 'centercomment_tbl' AND table_schema = DATABASE()
+					FROM information_schema.tables WHERE table_name = 'center_comment_tbl' AND table_schema = DATABASE()
 			</when>
 			<otherwise>
 				values(#{commentAuthor},#{commentContent},#{parentId},#{postId})
@@ -32,7 +32,7 @@
 	</insert>
 
 	<delete id="delete" parameterType="int">
-		DELETE FROM centercomment_tbl WHERE comment_id = #{commentId}
+		DELETE FROM center_comment_tbl WHERE comment_id = #{commentId}
 	</delete>
 
 </mapper>

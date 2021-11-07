@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+														"HTTP://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.ebgs.mapper.GameMapper">
+	<select id="selectGameType" resultType="gameTypeDTO">
+		SELECT * FROM game_tbl
+	</select>
+
+	<select id="selectGameInfo" resultType="GameInfoDTO" parameterType="GameInfoDTO">
+		SELECT * FROM game_info_tbl
+			<where>
+				<if test="mapId != 0">map_id = #{mapId}</if>
+				<if test="mapName != null">map_name = #{mapName}</if>
+				<if test="authorId != 0 ">author_id = #{authorId}</if>
+			</where>
+	</select>
+
+	<insert id="addGameRecord" parameterType="hashmap">
+		INSERT INTO record_tbl(user_id,map_id) VALUES(#{userId},#{mapId})
+	</insert>
+</mapper>
