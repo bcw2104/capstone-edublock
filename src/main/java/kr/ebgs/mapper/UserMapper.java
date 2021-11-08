@@ -11,7 +11,8 @@ public interface UserMapper {
 	public ArrayList<UserDTO> select(UserDTO userDTO);
 	public void modify(UserDTO userDTO);
 	public void insert(UserDTO userDTO);
-	public void confirm(String confirmKey);
+	public void promote(String userId);
+	public void confirm(String userId);
 	public void changeConfirmKey(UserDTO userDTO);
 	public void delete(String userId);
 }

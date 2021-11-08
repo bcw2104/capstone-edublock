@@ -26,14 +26,23 @@
 			</where>
 	</update>
 
+	<update id="promote" parameterType="String">
+		UPDATE user_tbl
+			<set>
+				user_type = 'MEMBER'
+			</set>
+			<where>
+				user_id = #{userId}
+			</where>
+	</update>
+
 	<update id="confirm" parameterType="String">
 		UPDATE user_tbl
 			<set>
-				user_type = 'MEMBER',
 				confirm_key = NULL
 			</set>
 			<where>
-				confirm_key = #{confirmKey}
+				user_id = #{userId}
 			</where>
 	</update>
 

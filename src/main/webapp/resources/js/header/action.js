@@ -162,6 +162,34 @@
 
 		});
 
+		$("#findEmailSendBtn").on("click",function(){
+			var userId = $("#findPw").val();
+			var formMsg = $("#findPw").next();
+			formMsg.empty();
+			$("#findEmailSendMsg").empty();
+			$("#findModal").addClass("wait");
+
+			if(userId == ""){
+				formMsg.css("color", "#ff0000").text("아이디를 입력해주세요.");
+			}
+			else{
+				$.ajax({
+					url : "/user/find.do",
+					type:"post",
+					data:{"userId":userId},
+					success:function(data){
+						if(data=="success"){
+							$("#findEmailSendMsg").text("이메일 전송이 완료되었습니다.");
+						}
+						else{
+							formMsg.css("color", "#ff0000").text("등록되어있지 않은 아이디입니다.");
+						}
+						$("#findModal").removeClass("wait");
+					}
+				});
+			}
+		});
+
 		$("#signUpFormSubmit").on("click",function() {
 			var validator = 0;
 

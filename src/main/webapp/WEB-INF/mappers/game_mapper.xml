@@ -7,7 +7,7 @@
 		SELECT * FROM game_tbl
 			<where>
 				<if test="gameId != 0">game_id = #{gameId}</if>
-				<if test="gameName != null">game_name = #{gameName}</if>
+				<if test="gameName != null">AND game_name = #{gameName}</if>
 			</where>
 	</select>
 

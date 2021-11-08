@@ -41,7 +41,7 @@
 					</div>
 			        <button type="button" id="signUpFormSubmit" class="btn btn-primary w-100 font-20 font-weight-bold">회원가입</button>
 			    </form>
-			    <div class="text-center mt-4">
+			    <div class="text-center mt-4 font-14">
 					<a role="button" class="text-secondary" data-dismiss="modal" data-toggle="modal" data-target="#loginModal">이미 회원이신가요?</a>
 				</div>
 			</div>
@@ -69,10 +69,39 @@
 					</div>
 			        <button type="button" id="loginFormSubmit" class="btn btn-primary w-100 font-20 font-weight-bold">로그인</button>
 			    </form>
-			    <div class="text-center mt-4">
+			    <div class="text-center mt-4 font-14">
 					<a role="button" class="text-secondary" data-dismiss="modal" data-toggle="modal" data-target="#signUpModal">회원가입</a>
 					<span class="v_bar mx-2 text-secondary">|</span>
-					<a class="text-secondary" href="">계정 찾기</a>
+					<a role="button" class="text-secondary" data-dismiss="modal" data-toggle="modal" data-target="#findModal">비밀번호 찾기</a>
+				</div>
+			</div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="findModal">
+    <div class="modal-dialog">
+        <div class="modal-content py-4 px-5">
+        	<div class="text-center mb-3">
+        		<button type="button" class="close" data-dismiss="modal">&times;</button>
+        		<div><img alt="Logo" src="/resources/images/logo.png"></div>
+            	<div class="font-24 mt-1">비밀번호 찾기</div>
+            </div>
+            <div class="modal-body">
+				<div class ="text-center font-14 mb-4">
+					아이디를 입력해주세요.<br/>
+					계정에 등록된 이메일로 비밀번호 링크를 보내드릴게요.
+				</div>
+				<div class="form-group">
+		        	<input type="text" id="findPw" class="custom-form-control form-control" name="userId" placeholder="아이디"/>
+		        	<div class="form-msg"></div>
+				</div>
+			    <div class="mt-4">
+			    	<button id="findEmailSendBtn" type="button" class="btn btn-primary w-100 font-20 font-weight-bold">확인</button>
+			    	<div id="findEmailSendMsg" class="font-14 mt-2 text-primary"></div>
+				</div>
+				<div class="text-center mt-4 font-14">
+					<a role="button" class="text-secondary" data-dismiss="modal" data-toggle="modal" data-target="#loginModal">비밀번호가 기억나셨나요?</a>
 				</div>
 			</div>
         </div>
@@ -88,16 +117,16 @@
             	<div class="font-24 mt-1">이메일 인증</div>
             </div>
             <div class="modal-body">
-            	<div class="text-center">
+            	<div class="text-center font-14 mb-4">
             		인증 메일이 아래의 메일주소로 전송되었습니다.<br>
             		전송된 링크를 통해 인증을 완료해주세요.
             	</div>
-            	<div id="confirmEmail" class="text-center text-primary font-weight-bold mt-4"> </div>
+            	<div id="confirmEmail" class="text-center text-primary font-weight-bold"> </div>
 			    <div class="mt-4">
 			    	<button type="button" class="btn btn-primary w-100 font-20 font-weight-bold" data-dismiss="modal">확인</button>
 			    	<div id="confirmEmailSendMsg" class="font-14 mt-2 text-primary"></div>
 				</div>
-				<div class="text-center mt-4">
+				<div class="text-center mt-4 font-14">
 					<a role="button" id="emailResendBtn" class="text-secondary">이메일 다시 보내기</a>
 				</div>
 			</div>

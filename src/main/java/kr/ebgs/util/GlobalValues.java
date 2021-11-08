@@ -3,7 +3,7 @@ package kr.ebgs.util;
 public class GlobalValues {
 	public final static String protocol = "http://";
 	public final static String domain = "www.ebgs.kr";
-
+	//public final static String domain = "localhost:8080";
 
 	public final static String homeTitle = "Educational Block Coding Games";
 	public final static String homePage = "/WEB-INF/views/home/home.jsp";
@@ -13,6 +13,9 @@ public class GlobalValues {
 	public final static String rankPage = "/WEB-INF/views/game/rank.jsp";
 
 	//user
+	public final static String changePasswordTitle = "비밀번호 변경";
+	public final static String changePasswordPage = "/WEB-INF/views/user/find.jsp";
+
 	public final static String myPageTitle = "마이페이지";
 	public final static String myPage = "/WEB-INF/views/user/mypage.jsp";
 

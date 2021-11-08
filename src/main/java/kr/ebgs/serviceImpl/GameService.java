@@ -45,7 +45,7 @@ public class GameService {
 	}
 
 	public ArrayList<GameTypeDTO> getGameTypeList(){
-		return gameMapper.selectGameType(null);
+		return gameMapper.selectGameType(new GameTypeDTO());
 	}
 
 	public GameInfoDTO getGameInfoById(int mapId){
