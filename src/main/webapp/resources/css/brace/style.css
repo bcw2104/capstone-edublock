@@ -1,0 +1,51 @@
+.game-container{
+    margin: 50px;
+}
+
+.block-board-header{
+	background-color: #7a87e5!important;
+	border-radius: 15px 15px 0 0;
+}
+.block-gen{
+	display: inline-block;
+    width: 183.588px;
+}
+
+.block-ass{
+	display: inline-block;
+}
+
+.block-nav{
+	flex:1;
+	height: 700px;
+}
+
+.blocklyFlyout{
+	border-radius: 0 0 0 15px;
+}
+.blocklyFlyoutBackground{
+	fill: rgb(224 234 255) !important;
+}
+.blocklySvg{
+	width: 100% !important;
+	background-color: #ffffff !important;
+	border-radius: 0 0 15px 15px;
+}
+.map-container{
+	position: relative;
+	width: 700px;
+    height: 700px;
+}
+
+.btn-container{
+	text-align: end;
+    margin: 50px;
+}
+
+.btn-container .btn{
+	width: 150px;
+	height: 50px;
+	font-size:18px;
+}
+
+

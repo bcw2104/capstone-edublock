@@ -33,10 +33,9 @@ public class GameController {
 	private GameService gameService;
 
 	@GetMapping("")
-	@ResponseBody
 	public String game(Model model)throws Exception {
-		model.addAttribute("page", GlobalValues.rankPage);
-		model.addAttribute("pageTitle", GlobalValues.rankTitle);
+		model.addAttribute("page", GlobalValues.bracePage);
+		model.addAttribute("pageTitle", GlobalValues.braceTitle);
 		model.addAttribute("gameType", gameService.getGameTypeList());
 
 		return "frame";

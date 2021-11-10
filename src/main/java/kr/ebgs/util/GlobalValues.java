@@ -8,9 +8,11 @@ public class GlobalValues {
 	public final static String homeTitle = "Educational Block Coding Games";
 	public final static String homePage = "/WEB-INF/views/home/home.jsp";
 
-	//user
+	//game
 	public final static String rankTitle = "랭킹";
 	public final static String rankPage = "/WEB-INF/views/game/rank.jsp";
+	public final static String braceTitle = "Block Race";
+	public final static String bracePage = "/WEB-INF/views/game/brace.jsp";
 
 	//user
 	public final static String changePasswordTitle = "비밀번호 변경";
