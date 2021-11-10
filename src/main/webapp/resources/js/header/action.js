@@ -147,19 +147,46 @@
 				alert("페이지에 오류가 발생했습니다.");
 
 				location.reload();
-				return false;
+			}
+			else{
+				$.ajax({
+					url : "/user/send.do",
+					type:"post",
+					data:{"userEmail":confirmEmail}
+				});
+
+				$("#confirmEmailSendMsg").text("인증 메일이 다시 전송되었습니다.");
+				$("#confirmEmail").text(confirmEmail);
 			}
 
+		});
 
-			$.ajax({
-				url : "/user/send.do",
-				type:"post",
-				data:{"userEmail":confirmEmail}
-			});
+		$("#findEmailSendBtn").on("click",function(){
+			var userId = $("#findPw").val();
+			var formMsg = $("#findPw").next();
+			formMsg.empty();
+			$("#findEmailSendMsg").empty();
+			$("#findModal").addClass("wait");
 
-			$("#confirmEmailSendMsg").text("인증 메일이 다시 전송되었습니다.");
-			$("#confirmEmail").text(confirmEmail);
-
+			if(userId == ""){
+				formMsg.css("color", "#ff0000").text("아이디를 입력해주세요.");
+			}
+			else{
+				$.ajax({
+					url : "/user/find.do",
+					type:"post",
+					data:{"userId":userId},
+					success:function(data){
+						if(data=="success"){
+							$("#findEmailSendMsg").text("이메일 전송이 완료되었습니다.");
+						}
+						else{
+							formMsg.css("color", "#ff0000").text("등록되어있지 않은 아이디입니다.");
+						}
+						$("#findModal").removeClass("wait");
+					}
+				});
+			}
 		});
 
 		$("#signUpFormSubmit").on("click",function() {

@@ -4,8 +4,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import kr.ebgs.annotation.Auth;
 import kr.ebgs.annotation.Auth.Type;
@@ -32,8 +31,6 @@ public class UserController {
 	private LoginService loginService;
 	@Autowired
 	private FileService fileService;
-
-	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@GetMapping("/isexist.do")
 	@ResponseBody
@@ -77,6 +74,7 @@ public class UserController {
 
 			HttpSession session = request.getSession();
 			session.setAttribute("user", user);
+			session.removeAttribute("clear");
 			session.setMaxInactiveInterval(1800);
 
 
@@ -91,7 +89,7 @@ public class UserController {
 	public String logout(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 
-		session.invalidate();
+		session.removeAttribute("user");
 
 		return "redirect:/";
 	}
@@ -116,13 +114,66 @@ public class UserController {
 		return "success";
 	}
 
+	@PostMapping("/find.do")
+	@ResponseBody
+	public String find(@RequestParam("userId") String userId) throws Exception {
+		UserDTO user = new UserDTO();
+		user.setUserId(userId);
+
+		user = userService.getUser(user);
+
+		if(user == null) return "fail";
+
+		String confirmKey = userService.createConfirmKey(user.getUserEmail(), System.currentTimeMillis());
+		userService.changeConfirmKey(user.getUserEmail(), confirmKey);
+		userService.sendFindMail(user.getUserEmail(),confirmKey);
+
+		return "success";
+	}
+
+	@GetMapping("/find")
+	public String find(@RequestParam(name = "key",required = false) String confirmKey,Model model,HttpSession session) throws Exception {
+		UserDTO user = userService.confirmAndGetUser(confirmKey);
+
+		if(user != null) {
+			model.addAttribute("page", GlobalValues.changePasswordPage);
+			model.addAttribute("pageTitle", GlobalValues.changePasswordTitle);
+			session.setAttribute("find", user.getUserId());
+
+			return "frame";
+		}
+
+		throw new NoHandlerFoundException(null, null, null);
+	}
+
+	@PostMapping(value = "/find/change.do", produces = "text/html; charset=utf8")
+	@ResponseBody
+	public String find(@RequestParam("query") String query,HttpSession session) throws Exception {
+		if(session.getAttribute("find") == null) throw new RuntimeException();
+
+		String userId = session.getAttribute("find").toString();
+		session.removeAttribute("find");
+
+		UserDTO user = new UserDTO();
+
+		user.setUserId(userId);
+		user.setUserPw(query);
+
+		userService.modifyUser(user);
+
+		return "success";
+	}
+
 	@GetMapping(value = "/confirm", produces = "text/html; charset=utf8")
 	@ResponseBody
 	public String confirm(@RequestParam(name = "key",required = false) String confirmKey) throws Exception {
-		boolean unexpire = userService.confirmUser(confirmKey);
+		UserDTO user = userService.confirmAndGetUser(confirmKey);
 		String msg;
 
-		if(unexpire) msg = "인증이 완료되었습니다.";
+		if(user != null) {
+			msg = "인증이 완료되었습니다.";
+			userService.promoteUser(user.getUserId());
+		}
 		else msg = "만료된 페이지입니다.";
 
 		return "<script>alert('"+msg+"'); location.href='/';</script>";

@@ -18,6 +18,14 @@ public class CustomerCenterService {
 	@Autowired
 	private CenterCommentMapper centerCommentMapper;
 
+	public boolean isFirstVisit(ArrayList<Integer> visitList,int postId) {
+		for(int visit : visitList) {
+			if(visit == postId) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	public CenterPostDTO getCenterPostById(int postId) {
 		ArrayList<CenterPostDTO> postList = centerPostMapper.select(postId);
@@ -48,6 +56,9 @@ public class CustomerCenterService {
 		centerPostMapper.modify(centerPost);
 	}
 
+	public void increasePostHits(int postId) {
+		centerPostMapper.increaseHits(postId);
+	}
 
 	public void deleteCenterPost(int postId) {
 		centerPostMapper.delete(postId);

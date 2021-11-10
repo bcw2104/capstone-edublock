@@ -35,9 +35,7 @@ public class UserService {
 		if (userList.isEmpty())
 			return null;
 
-		user = userList.get(0);
-
-		return user;
+		return userList.get(0);
 	}
 
 	public void changeConfirmKey(String userEmail,String confirmKey) throws Exception{
@@ -60,17 +58,25 @@ public class UserService {
 		mailTool.sendConfirmMail(userEmail, confirmKey);
 	}
 
-	public boolean confirmUser(String confirmKey) throws Exception{
+	public void sendFindMail(String userEmail,String confirmKey) throws Exception{
+		mailTool.sendFindMail(userEmail, confirmKey);
+	}
+
+	public UserDTO confirmAndGetUser(String confirmKey) throws Exception{
 		UserDTO user = new UserDTO();
 		user.setConfirmKey(confirmKey);
 
 		user = getUser(user);
 		if(user != null) {
-			userMapper.confirm(confirmKey);
-			return true;
+			userMapper.confirm(user.getUserId());
+			return user;
 		}
 
-		return false;
+		return null;
+	}
+
+	public void promoteUser(String userId) throws Exception{
+		userMapper.promote(userId);
 	}
 
 	public void modifyUser(UserDTO user) throws Exception {

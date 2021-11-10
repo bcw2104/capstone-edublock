@@ -4,18 +4,18 @@ function getParams(){
 	var ret = {};
     for(var i = 0; i < array.length; i++){
 		var temp = array[i].split('=');
-		ret[temp[0]]=temp[1];
+		ret[temp[0]]=decodeURI(temp[1]);
 	}
     return ret;
 }
 
 function timestampToDate(timestamp) {
 	date = new Date(timestamp);
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-    let hour = date.getHours();
-    let minute = date.getMinutes();
-    let second = date.getSeconds();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var hour = date.getHours();
+    var minute = date.getMinutes();
+    var second = date.getSeconds();
 
     month = month >= 10 ? month : '0' + month;
     day = day >= 10 ? day : '0' + day;

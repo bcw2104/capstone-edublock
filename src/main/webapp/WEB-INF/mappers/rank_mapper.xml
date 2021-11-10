@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+														"HTTP://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.ebgs.mapper.RankMapper">
+	<select id="select" resultType="rankDTO" parameterType="hashmap">
+		WITH total_rank_tbl AS
+			(SELECT user_tbl.user_id,user_tbl.user_nickname
+				,RANK() over(ORDER BY score DESC) as rank
+				,SUM(IFNULL(temp.map_point,0)) AS score
+				,COUNT(temp.map_id) AS clear
+					FROM
+						(SELECT game_record_tbl.user_id,game_info_tbl.map_point,game_info_tbl.map_id
+							FROM
+								game_record_tbl
+									LEFT JOIN
+								game_info_tbl
+									ON game_record_tbl.map_id = game_info_tbl.map_id
+									<if test="gameId != 0">
+									WHERE game_info_tbl.game_id = #{gameId}
+									</if>) temp
+						RIGHT JOIN
+						user_tbl
+						ON temp.user_id = user_tbl.user_id
+						GROUP BY user_tbl.user_id)
+
+		SELECT rank,user_nickname,clear,score FROM total_rank_tbl WHERE total_rank_tbl.user_id = #{userId}
+	</select>
+
+	<select id="selectAll" resultType="rankDTO" parameterType="int">
+		SELECT user_tbl.user_nickname
+		,RANK() over(ORDER BY score DESC) as rank
+		,SUM(IFNULL(temp.map_point,0)) AS score
+		,COUNT(temp.map_id) AS clear
+			FROM
+				(SELECT game_record_tbl.user_id,game_info_tbl.map_point,game_info_tbl.map_id
+					FROM
+						game_record_tbl
+							LEFT JOIN
+						game_info_tbl
+							ON game_record_tbl.map_id = game_info_tbl.map_id
+							<if test="gameId != 0">
+							WHERE game_info_tbl.game_id = #{gameId}
+							</if>) temp
+				RIGHT JOIN
+				user_tbl
+				ON temp.user_id = user_tbl.user_id
+				GROUP BY user_tbl.user_id
+				ORDER BY rank ASC
+	</select>
+
+</mapper>

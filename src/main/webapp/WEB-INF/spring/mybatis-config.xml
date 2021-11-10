@@ -14,6 +14,10 @@
 		<typeAlias type="kr.ebgs.dto.UserDTO" alias="userDTO"/>
 		<typeAlias type="kr.ebgs.dto.CenterPostDTO" alias="centerPostDTO"/>
 		<typeAlias type="kr.ebgs.dto.CenterCommentDTO" alias="centerCommentDTO"/>
+		<typeAlias type="kr.ebgs.dto.RankDTO" alias="rankDTO"/>
+		<typeAlias type="kr.ebgs.dto.GameTypeDTO" alias="gameTypeDTO"/>
+		<typeAlias type="kr.ebgs.dto.GameInfoDTO" alias="gameInfoDTO"/>
+		<typeAlias type="kr.ebgs.dto.GameRecordDTO" alias="gameRecordDTO"/>
 	</typeAliases>
 </configuration>
 

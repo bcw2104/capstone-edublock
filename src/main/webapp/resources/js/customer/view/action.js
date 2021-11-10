@@ -20,18 +20,18 @@ function getParams(){
 	var ret = {};
     for(var i = 0; i < array.length; i++){
 		var temp = array[i].split('=');
-		ret[temp[0]]=temp[1];
+		ret[temp[0]]=decodeURI(temp[1]);
 	}
     return ret;
 }
 
 function timestampToDate(timestamp) {
 	date = new Date(timestamp);
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-    let hour = date.getHours();
-    let minute = date.getMinutes();
-    let second = date.getSeconds();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    var hour = date.getHours();
+    var minute = date.getMinutes();
+    var second = date.getSeconds();
 
     month = month >= 10 ? month : '0' + month;
     day = day >= 10 ? day : '0' + day;
@@ -101,7 +101,7 @@ $(document).ready(function() {
 							+"<a role='button' class='dropdown-item comment-report'>신고</a>"
 							+"</div>"
 						+"</div>"
-						+"<div class='pt-1 pb-2 font-15 comment-content'>"+data[i].commentContent+"</div>"
+						+"<div class='pt-1 pb-2 font-15 comment-content'><pre>"+data[i].commentContent+"</pre></div>"
 						+"<a role='button' class='reply font-13 text-secondary'>답글</a>"
 						+"</div>"
 						+"<hr/>"
@@ -136,7 +136,7 @@ $(document).ready(function() {
 			var html ="<div class='reply-form comment-form-wrap'>"
 						+"<form class='comment-form'>"
 							+"<input type='hidden' name='parentId' value='"+parentId+"'/>"
-							+"<textarea name='commentContent' class='form-control' placeholder='답변을 입력해주세요.'>@"+to+"</textarea>"
+							+"<textarea name='commentContent' class='form-control' placeholder='답변을 입력해주세요.'>@"+to+"\n</textarea>"
 							+"<div class='text-right'>"
 								+"<button type='button' class='btn btn-primary'>등록</button>"
 							+"</div>"

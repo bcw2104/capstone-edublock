@@ -22,8 +22,8 @@ import kr.ebgs.dto.CenterCommentDTO;
 import kr.ebgs.dto.CenterPostDTO;
 import kr.ebgs.dto.UserDTO;
 import kr.ebgs.serviceImpl.CustomerCenterService;
-import kr.ebgs.serviceImpl.JsonTool;
 import kr.ebgs.util.GlobalValues;
+import kr.ebgs.util.JsonTool;
 
 @Controller
 @RequestMapping("/customer")
@@ -58,17 +58,28 @@ public class CustomerCenterController {
 
 		ArrayList<CenterPostDTO> centerPostList = centerService.getCenterPostList(query,null,boardType);
 
-		return JsonTool.convertToJson(centerPostList);
+		return JsonTool.arrayToJson(centerPostList);
 	}
 
+	@SuppressWarnings("unchecked")
 	@GetMapping("/{boardType}/{postId}")
-	public String view(@PathVariable("postId") String _postId,Model model)throws Exception {
+	public String view(@PathVariable("postId") String _postId,Model model,HttpSession session)throws Exception {
 		int postId = Integer.parseInt(_postId);
 
 		CenterPostDTO centerPost = centerService.getCenterPostById(postId);
 
 		if(centerPost == null)
 			throw new NoHandlerFoundException(null, null, null);
+
+		if(session.getAttribute("centerVisit") == null) {
+			session.setAttribute("centerVisit", new ArrayList<Integer>());
+		}
+		ArrayList<Integer> visitList = (ArrayList<Integer>) session.getAttribute("centerVisit");
+		if(centerService.isFirstVisit(visitList,postId)) {
+			centerService.increasePostHits(postId);
+			centerPost.setHits(centerPost.getHits()+1);
+			visitList.add(postId);
+		}
 
 		model.addAttribute("centerPost", centerPost);
 		model.addAttribute("page", GlobalValues.centerViewPage);
@@ -212,7 +223,7 @@ public class CustomerCenterController {
 		centerComment.setPostId(Integer.parseInt(_postId));
 
 		ArrayList<CenterCommentDTO> centerCommentList = centerService.getCenterCommentList(centerComment);
-		return JsonTool.convertToJson(centerCommentList);
+		return JsonTool.arrayToJson(centerCommentList);
 	}
 
 

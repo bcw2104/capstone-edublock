@@ -4,8 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -14,7 +12,6 @@ import kr.ebgs.annotation.Auth.Type;
 import kr.ebgs.dto.UserDTO;
 
 public class AuthCheckInterceptor implements HandlerInterceptor {
-	private static final Logger logger = LoggerFactory.getLogger(AuthCheckInterceptor.class);
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -23,8 +20,6 @@ public class AuthCheckInterceptor implements HandlerInterceptor {
 		if( handler instanceof HandlerMethod == false ) return true;
 
 		HandlerMethod handlerMethod = (HandlerMethod) handler;
-
-		logger.info("handler method : " + handlerMethod.getMethod().getName());
 
 		Auth auth = handlerMethod.getMethodAnnotation(Auth.class);
 

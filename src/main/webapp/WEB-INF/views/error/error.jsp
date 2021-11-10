@@ -21,15 +21,15 @@
 
 <body class="body-font">
     <jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
-    <div class="container" style="height:650px">
-    	<div class="my-5 py-5">
+    <div class="container" style="height:450px">
+    	<div class="my-5 py-5 text-center">
     		<div class="font-weight-bold text-primary"style="font-size: 100px">${requestScope['javax.servlet.error.status_code']}</div>
     		<div class="mr-2 my-4 font-18">
 			<c:if test="${requestScope['javax.servlet.error.status_code'] == 401}">
 				접근 권한이 없는 페이지입니다.
 			</c:if>
 			<c:if test="${requestScope['javax.servlet.error.status_code'] == 404}">
-				존재하지 않는 페이지입니다.
+				만료되었거나 존재하지 않는 페이지입니다.
 			</c:if>
 			<c:if test="${requestScope['javax.servlet.error.status_code'] == 405}">
 				허용되지 않는 페이지입니다.
