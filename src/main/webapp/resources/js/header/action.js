@@ -147,18 +147,17 @@
 				alert("페이지에 오류가 발생했습니다.");
 
 				location.reload();
-				return false;
 			}
+			else{
+				$.ajax({
+					url : "/user/send.do",
+					type:"post",
+					data:{"userEmail":confirmEmail}
+				});
 
-
-			$.ajax({
-				url : "/user/send.do",
-				type:"post",
-				data:{"userEmail":confirmEmail}
-			});
-
-			$("#confirmEmailSendMsg").text("인증 메일이 다시 전송되었습니다.");
-			$("#confirmEmail").text(confirmEmail);
+				$("#confirmEmailSendMsg").text("인증 메일이 다시 전송되었습니다.");
+				$("#confirmEmail").text(confirmEmail);
+			}
 
 		});
 
