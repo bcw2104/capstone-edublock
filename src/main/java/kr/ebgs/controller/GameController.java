@@ -34,8 +34,8 @@ public class GameController {
 
 	@GetMapping("")
 	public String game(Model model)throws Exception {
-		model.addAttribute("page", GlobalValues.bracePage);
-		model.addAttribute("pageTitle", GlobalValues.braceTitle);
+		model.addAttribute("page", GlobalValues.categoryPage);
+		model.addAttribute("pageTitle", GlobalValues.categoryTitle);
 		model.addAttribute("gameType", gameService.getGameTypeList());
 
 		return "frame";

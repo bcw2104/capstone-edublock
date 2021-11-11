@@ -11,6 +11,8 @@ public class GlobalValues {
 	//game
 	public final static String rankTitle = "랭킹";
 	public final static String rankPage = "/WEB-INF/views/game/rank.jsp";
+	public final static String categoryTitle = "단계별 게임하기";
+	public final static String categoryPage = "/WEB-INF/views/game/category.jsp";
 	public final static String braceTitle = "Block Race";
 	public final static String bracePage = "/WEB-INF/views/game/brace.jsp";
 
