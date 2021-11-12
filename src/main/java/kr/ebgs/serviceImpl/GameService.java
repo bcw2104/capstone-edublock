@@ -50,7 +50,7 @@ public class GameService {
 
 	public GameInfoDTO getGameInfoById(int mapId){
 		GameInfoDTO gameInfo = new GameInfoDTO();
-		gameInfo.setGameId(mapId);
+		gameInfo.setMapId(mapId);
 
 		ArrayList<GameInfoDTO> list = gameMapper.selectGameInfo(gameInfo);
 
@@ -61,6 +61,14 @@ public class GameService {
 
 	public ArrayList<GameInfoDTO> getGameInfoList(GameInfoDTO gameInfo){
 		return gameMapper.selectGameInfo(gameInfo);
+	}
+
+	public ArrayList<GameInfoDTO> getHotGameInfoList(){
+		return gameMapper.selectHotGameInfo();
+	}
+
+	public ArrayList<GameInfoDTO> getNewGameInfoList(){
+		return gameMapper.selectNewGameInfo();
 	}
 
 	public GameRecordDTO getGameRecordByPK(String userId, int mapId){

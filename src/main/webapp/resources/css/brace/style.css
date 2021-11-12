@@ -6,6 +6,12 @@
 	background-color: #7a87e5!important;
 	border-radius: 15px 15px 0 0;
 }
+
+.pass{
+	width: 20px;
+    top: -4px;
+    position: relative;
+}
 .block-gen{
 	display: inline-block;
     width: 183.588px;

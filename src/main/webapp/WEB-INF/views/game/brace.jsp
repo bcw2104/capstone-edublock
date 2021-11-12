@@ -1,7 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<link rel="stylesheet" type="text/css"
-	href="/resources/css/brace/style.css">
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<link rel="stylesheet" type="text/css" href="/resources/css/brace/style.css">
 <link rel="stylesheet" href="/resources/css/brace/canvas.css">
 
 <script src="/resources/js/blockly/blockly_compressed.js"></script>
@@ -23,7 +23,21 @@
 
 
 <div class="game-container">
-	<div class="font-24 font-weight-bold mb-5">Block Race</div>
+	<div class="game-header row m-0 justify-content-between">
+		<div class="mb-5">
+			<div class="map-title">
+				<span class="font-18 font-weight-bold">${requestScope.gameInfo.mapName}</span>
+				<c:if test="${requestScope.clear}">
+					<img class="pass" src="/resources/images/icon_pass.png" alt="pass"/>
+				</c:if>
+			</div>
+			<c:if test="${requestScope.gameInfo.formal == 0}">
+			<span class="font-15 text-secondary">${requestScope.gameInfo.authorId}</span>
+			<span class="font-15 text-secondary"><fmt:formatDate value="${requestScope.gameInfo.regDate}" pattern="yyyy-MM-dd"/></span>
+			</c:if>
+		</div>
+		<a href="/game/${requestScope.gameType.gameName}"><button class="btn btn-primary">목록으로</button></a>
+	</div>
 	<div class="row m-0">
 		<div class="map-container ml-1">
 			<canvas id="mapImgCanvas" class="canvas" width="700" height="700"></canvas>

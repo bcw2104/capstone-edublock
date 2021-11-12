@@ -12,20 +12,53 @@
 	</select>
 
 	<select id="selectGameInfo" resultType="GameInfoDTO" parameterType="GameInfoDTO">
-		SELECT * FROM game_info_tbl
+		SELECT game_info_tbl.*,game_tbl.game_name,user_tbl.user_nickname as author_nickname FROM
+			game_info_tbl
+				INNER JOIN
+			game_tbl
+				ON game_info_tbl.game_id = game_tbl.game_id
+				INNER JOIN
+			user_tbl
+				ON game_info_tbl.author_id = user_tbl.user_id
 			<where>
 				<if test="mapId != 0">map_id = #{mapId}</if>
-				<if test="gameId != 0">game_id = #{gameId}</if>
-				<if test="mapName != null">map_name = #{mapName}</if>
-				<if test="authorId != 0 ">author_id = #{authorId}</if>
+				<if test="gameId != 0">AND game_info_tbl.game_id = #{gameId}</if>
+				<if test="mapName != null">AND map_name = #{mapName}</if>
+				<if test="authorId != null ">AND game_info_tbl.author_id = #{authorId}</if>
+				<if test="formal != -1 ">AND formal = #{formal}</if>
 			</where>
+			ORDER BY map_point ASC;
+	</select>
+
+	<select id="selectHotGameInfo" resultType="GameInfoDTO">
+		SELECT game_info_tbl.*,game_tbl.game_name,user_tbl.user_nickname as author_nickname FROM
+			game_info_tbl
+				INNER JOIN
+			game_tbl
+				ON game_info_tbl.game_id = game_tbl.game_id
+				INNER JOIN
+			user_tbl
+				ON game_info_tbl.author_id = user_tbl.user_id
+			ORDER BY reg_date DESC limit 4;
+	</select>
+
+	<select id="selectNewGameInfo" resultType="GameInfoDTO">
+		SELECT game_info_tbl.*,game_tbl.game_name,user_tbl.user_nickname as author_nickname FROM
+			game_info_tbl
+				INNER JOIN
+			game_tbl
+				ON game_info_tbl.game_id = game_tbl.game_id
+				INNER JOIN
+			user_tbl
+				ON game_info_tbl.author_id = user_tbl.user_id
+			ORDER BY reg_date DESC limit 4;
 	</select>
 
 	<select id="selectGameRecord" resultType="gameRecordDTO" parameterType="gameRecordDTO">
 		SELECT * FROM game_record_tbl
 			<where>
 				<if test="mapId != 0">map_id = #{mapId}</if>
-				<if test="userId != null">user_id = #{userId}</if>
+				<if test="userId != null">AND user_id = #{userId}</if>
 			</where>
 	</select>
 
