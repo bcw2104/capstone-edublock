@@ -135,7 +135,7 @@
 </div>
 </c:if>
 
-<header class="container-fluid bg-light py-0 px-3 m-0">
+<header class="container-fluid bg-light m-0">
 	<div class="navbar navbar-expand-lg navbar-light p-0 m-0 w-100">
 		<div class="navbar-header row m-0">
 			<a href="/" class="navbar-brand">
@@ -161,7 +161,7 @@
 		</nav>
 		<nav id="globalNavBar">
 			<ul class="navbar-nav font-weight-bold text-dark font-18 flex-row">
-				<li class="nav-item"><a class="nav-link" href="/game">GAME</a></li>
+				<li class="nav-item"><a class="nav-link" href="/game">학습하기</a></li>
 				<li class="nav-item"><a class="nav-link" href="">창작마당</a></li>
 				<li class="nav-item"><a class="nav-link" href="/game/rank">랭킹</a></li>
 				<li class="nav-item"><a class="nav-link" href="/customer">고객센터</a></li>

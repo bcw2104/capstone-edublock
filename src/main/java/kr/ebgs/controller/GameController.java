@@ -33,10 +33,9 @@ public class GameController {
 	private GameService gameService;
 
 	@GetMapping("")
-	@ResponseBody
 	public String game(Model model)throws Exception {
-		model.addAttribute("page", GlobalValues.rankPage);
-		model.addAttribute("pageTitle", GlobalValues.rankTitle);
+		model.addAttribute("page", GlobalValues.categoryPage);
+		model.addAttribute("pageTitle", GlobalValues.categoryTitle);
 		model.addAttribute("gameType", gameService.getGameTypeList());
 
 		return "frame";
@@ -102,9 +101,10 @@ public class GameController {
 
 		GameInfoDTO gameInfo = new GameInfoDTO();
 		gameInfo.setGameId(gameType.getGameId());
+		gameInfo.setFormal(1);
 
-		model.addAttribute("page", GlobalValues.rankPage);
-		model.addAttribute("pageTitle", GlobalValues.rankTitle);
+		model.addAttribute("page", GlobalValues.gameChoicePage);
+		model.addAttribute("pageTitle", GlobalValues.gameChoiceTitle);
 		model.addAttribute("gameType", gameType);
 		model.addAttribute("mapList", gameService.getGameInfoList(gameInfo));
 		model.addAttribute("clearList", clearList);
@@ -139,8 +139,8 @@ public class GameController {
 
 		if(gameType == null || gameInfo == null) throw new NoHandlerFoundException(null, null, null);
 
-		model.addAttribute("page", GlobalValues.rankPage);
-		model.addAttribute("pageTitle", GlobalValues.rankTitle);
+		model.addAttribute("page", "/WEB-INF/views/game/"+gameType.getGameName()+".jsp");
+		model.addAttribute("pageTitle", GlobalValues.gameTitle);
 		model.addAttribute("gameType", gameType);
 		model.addAttribute("gameInfo",gameInfo);
 		model.addAttribute("clear",clear);

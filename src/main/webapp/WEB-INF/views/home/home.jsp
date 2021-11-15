@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <link rel="stylesheet" type="text/css" href="/resources/css/home/style.css">
 
@@ -35,102 +36,52 @@
 	</div>
 </div>
 
-<div class="container mt-5">
-	<section id="popularMaps" class="mainContents">
-		<h3 id="popularTitle" class="sectionTitle">실시간 인기 맵</h3>
-		<div id="popular" class="mapFrame">
-			<div class="map">
-				<img data-src="holder.js/200x200" class="img-thumbnail" alt="맵 이미지"
-					src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9Ijc0LjA0Njg3NSIgeT0iMTAwIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MjAweDIwMDwvdGV4dD48L2c+PC9zdmc+"
-					data-holder-rendered="true" style="width: 200px; height: 200px;">
-				<div class="mapData">
-					<div>맵 이름</div>
-					<div>작성자</div>
-					<div>성공률 / 도전횟수</div>
+<div class="container mt-5 w-fix">
+	<div class="popular">
+		<div class="board-title font-18 font-weight-bold mt-3 mb-5">인기 작품</div>
+		<div class="row m-0">
+			<c:forEach items="${requestScope.hotMapList}" var="n" >
+			<div class="map-item mb-5">
+				<div class="card">
+					<img class="card-img-top" src="/resources/images/${n.gameName}/main.png" style="width:100%" />
+					<div class="card-body">
+						<div class="card-text font-weight-bold my-1">${n.mapName}</div>
+						<div class="card-text py-2">${n.authorNickname}</div>
+						<hr/>
+						<div class="card-text pt-2 text-right">
+							<img height="12px" src="/resources/images/icon_hits.png" alt="hits" />
+							<span class="font-12 text-secondary ml-1">${n.hits}</span>
+							<img class="ml-4" height="12px" src="/resources/images/icon_like.png" alt="like" />
+							<span class="font-12 text-secondary ml-1">${n.like}</span>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="map">
-				<img data-src="holder.js/200x200" class="img-thumbnail" alt="맵 이미지"
-					src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9Ijc0LjA0Njg3NSIgeT0iMTAwIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MjAweDIwMDwvdGV4dD48L2c+PC9zdmc+"
-					data-holder-rendered="true" style="width: 200px; height: 200px;">
-				<div class="mapData">
-					<div>맵 이름</div>
-					<div>작성자</div>
-					<div>성공률 / 도전횟수</div>
-				</div>
-			</div>
-			<div class="map">
-				<img data-src="holder.js/200x200" class="img-thumbnail" alt="맵 이미지"
-					src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9Ijc0LjA0Njg3NSIgeT0iMTAwIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MjAweDIwMDwvdGV4dD48L2c+PC9zdmc+"
-					data-holder-rendered="true" style="width: 200px; height: 200px;">
-				<div class="mapData">
-					<div>맵 이름</div>
-					<div>작성자</div>
-					<div>성공률 / 도전횟수</div>
-				</div>
-			</div>
-			<div class="map">
-				<img data-src="holder.js/200x200" class="img-thumbnail" alt="맵 이미지"
-					src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9Ijc0LjA0Njg3NSIgeT0iMTAwIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MjAweDIwMDwvdGV4dD48L2c+PC9zdmc+"
-					data-holder-rendered="true" style="width: 200px; height: 200px;">
-				<div class="mapData">
-					<div>맵 이름</div>
-					<div>작성자</div>
-					<div>성공률 / 도전횟수</div>
-				</div>
-			</div>
+			</c:forEach>
 		</div>
-		<div class="more">
-			<a class="moreLink" href="#">더보기</a>
-		</div>
-	</section>
+	</div>
 	<hr>
-	<section id="newMaps" class="mainContents">
-		<h3 id="newTitle" class="sectionTitle">새로운 맵</h3>
-		<div id="new" class="mapFrame">
-			<div class="map">
-				<img data-src="holder.js/200x200" class="img-thumbnail" alt="맵 이미지"
-					src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9Ijc0LjA0Njg3NSIgeT0iMTAwIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MjAweDIwMDwvdGV4dD48L2c+PC9zdmc+"
-					data-holder-rendered="true" style="width: 200px; height: 200px;">
-				<div class="mapData">
-					<div>맵 이름</div>
-					<div>작성자</div>
-					<div>성공률 / 도전횟수</div>
+	<div class="new">
+		<div class="board-title font-18 font-weight-bold mt-3 mb-5">새로운 작품</div>
+		<div class="row m-0">
+			<c:forEach items="${requestScope.newMapList}" var="n" >
+			<div class="map-item mb-5">
+				<div class="card">
+					<img class="card-img-top" src="/resources/images/${n.gameName}/main.png" style="width:100%" />
+					<div class="card-body">
+						<div class="card-text font-weight-bold my-1">${n.mapName}</div>
+						<div class="card-text py-2">${n.authorNickname}</div>
+						<hr/>
+						<div class="card-text pt-2 text-right">
+							<img height="12px" src="/resources/images/icon_hits.png" alt="hits" />
+							<span class="font-12 text-secondary ml-2">${n.hits}</span>
+							<img class="ml-4" height="12px" src="/resources/images/icon_like.png" alt="like" />
+							<span class="font-12 text-secondary ml-2">${n.like}</span>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="map">
-				<img data-src="holder.js/200x200" class="img-thumbnail" alt="맵 이미지"
-					src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9Ijc0LjA0Njg3NSIgeT0iMTAwIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MjAweDIwMDwvdGV4dD48L2c+PC9zdmc+"
-					data-holder-rendered="true" style="width: 200px; height: 200px;">
-				<div class="mapData">
-					<div>맵 이름</div>
-					<div>작성자</div>
-					<div>성공률 / 도전횟수</div>
-				</div>
-			</div>
-			<div class="map">
-				<img data-src="holder.js/200x200" class="img-thumbnail" alt="맵 이미지"
-					src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9Ijc0LjA0Njg3NSIgeT0iMTAwIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MjAweDIwMDwvdGV4dD48L2c+PC9zdmc+"
-					data-holder-rendered="true" style="width: 200px; height: 200px;">
-				<div class="mapData">
-					<div>맵 이름</div>
-					<div>작성자</div>
-					<div>성공률 / 도전횟수</div>
-				</div>
-			</div>
-			<div class="map">
-				<img data-src="holder.js/200x200" class="img-thumbnail" alt="맵 이미지"
-					src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxkZWZzLz48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9Ijc0LjA0Njg3NSIgeT0iMTAwIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+MjAweDIwMDwvdGV4dD48L2c+PC9zdmc+"
-					data-holder-rendered="true" style="width: 200px; height: 200px;">
-				<div class="mapData">
-					<div>맵 이름</div>
-					<div>작성자</div>
-					<div>성공률 / 도전횟수</div>
-				</div>
-			</div>
+			</c:forEach>
 		</div>
-		<div class="more">
-			<a class="moreLink" href="#">더보기</a>
-		</div>
-	</section>
+	</div>
 </div>

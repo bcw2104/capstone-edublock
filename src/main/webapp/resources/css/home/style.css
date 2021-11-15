@@ -1,196 +1,21 @@
-body {
-    margin: 0px;
-    font-size: 16px;
-    font-weight: 400;
+.map-item{
+	width: 25%;
+	cursor: pointer;
+	transition: transform 0.1s ease-out 0s;
 }
 
-#serviceNav {
-    margin-bottom: 20px;
+.map-item .card{
+	width: 90%;
 }
 
-.mainContents {
-    margin: 20px 0;
+.map-item:hover {
+	transform:translateY(-10px);
 }
-
-.mapFrame {
-    width: 100%;
-
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-}
-
-.map {
-
-    display: flex;
-    flex-direction: column;
-
-    flex-basis: 200px;
-    flex-shrink: 0;
-
-    /* width: 200px; */
-    height: auto;
-    margin: 10px;
-}
-
-.sectionTitle {
-    font-size: 20px;
-    font-weight: 400;
-
-    margin-left: 20px;
-    margin-bottom: 20px;
-}
-
-.more {
-    text-align: right;
-    margin: 10px 0;
-    padding: 0px 20px;
-}
-
-.moreLink {
-    color: slategray;
-}
-
-.moreLink:hover {
-    color: slategray;
-}
-
-.moreLink:visited {
-    color: slategray;
-}
-
-
-.dropdown-menu {
-	font-size: 13px;
-}
-
-.popup-login {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	z-index: 5;
-	transform: translate(-50%, -50%);
-	width: 500px;
-	height: 380px;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-	border-radius: 5px;
-	text-align: right;
-	padding: 20px;
-	box-sizing: border-box;
-	background: #fff;
-	display: none;
-}
-
-.popup-login a {
-	color: grey;
-	text-decoration: none;
-	z-index: 0;
-}
-
-.popup-login:target {
-	display: block;
-}
-
-.popup-login:target+.dim {
-	display: block;
-	z-index: 2;
-}
-
-.popup-member {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	z-index: 5;
-	transform: translate(-50%, -50%);
-	width: 500px;
-	height: 500px;
-	box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
-	border-radius: 5px;
-	text-align: right;
-	padding: 20px;
-	box-sizing: border-box;
-	background: #fff;
-	display: none;
-}
-
-.popup-member a {
-	color: grey;
-	text-decoration: none;
-}
-
-.popup-member:target {
-	display: block;
-}
-
-.popup-member:target+.dim {
-	display: block;
-	z-index: 2;
-}
-
-.popup-password {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	z-index: 5;
-	transform: translate(-50%, -50%);
-	width: 500px;
-	height: 500px;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-	border-radius: 5px;
-	text-align: right;
-	padding: 20px;
-	box-sizing: border-box;
-	background: #fff;
-	display: none;
-}
-
-.popup-password a {
-	color: grey;
-	text-decoration: none;
-}
-
-.popup-password:target {
-	display: block;
-}
-
-.popup-password:target+.dim {
-	display: block;
-	z-index: 2;
-}
-
-.popup-change-name {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	z-index: 5;
-	transform: translate(-50%, -50%);
-	width: 500px;
-	height: 400px;
-	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-	border-radius: 5px;
-	text-align: right;
-	padding: 20px;
-	box-sizing: border-box;
-	background: #fff;
-	display: none;
-}
-
-.popup-change-name a {
-	color: grey;
-	text-decoration: none;
-}
-
-.popup-change-name:target {
-	display: block;
-}
-
-.popup-change-name:target+.dim {
-	display: block;
-	z-index: 2;
-}
-
 @media screen and (max-width:1000px) {
-    .map:nth-child(4) {
+	.map-item{
+		width: 33%;
+	}
+    .map-item:nth-child(4) {
         display: none;
     }
 }

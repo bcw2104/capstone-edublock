@@ -1,0 +1,31 @@
+.game-item {
+	width: 33%;
+	cursor: pointer;
+	transition: transform 0.1s ease-out 0s;
+}
+
+.map-item{
+	width: 25%;
+	cursor: pointer;
+	transition: transform 0.1s ease-out 0s;
+}
+
+.game-item .card,
+.map-item .card {
+	width: 90%;
+}
+
+.game-item:hover,
+.map-item:hover {
+	transform: translateY(-10px);
+}
+
+@media screen and (max-width:1000px) {
+	.game-item {
+		width: 50%;
+	}
+	.map-item{
+		width: 33%;
+	}
+}
+
