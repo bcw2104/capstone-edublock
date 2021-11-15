@@ -18,6 +18,7 @@ public class GlobalValues {
 	public final static String gameChoicePage = "/WEB-INF/views/game/choice.jsp";
 
 	public final static String gameTitle = "게임플레이";
+	public final static String customTitle = "만들기";
 
 	//user
 	public final static String changePasswordTitle = "비밀번호 변경";

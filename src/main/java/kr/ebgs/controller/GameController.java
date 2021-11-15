@@ -139,11 +139,29 @@ public class GameController {
 
 		if(gameType == null || gameInfo == null) throw new NoHandlerFoundException(null, null, null);
 
-		model.addAttribute("page", "/WEB-INF/views/game/"+gameType.getGameName()+".jsp");
+		model.addAttribute("page", "/WEB-INF/views/game/"+gameType.getGameName()+"/play.jsp");
 		model.addAttribute("pageTitle", GlobalValues.gameTitle);
 		model.addAttribute("gameType", gameType);
 		model.addAttribute("gameInfo",gameInfo);
 		model.addAttribute("clear",clear);
+		return "frame";
+	}
+
+	@GetMapping("/custom/{gameName}")
+	public String custom(@PathVariable("gameName") String gameName
+							,Model model,HttpSession session)throws Exception {
+
+		GameTypeDTO gameType = new GameTypeDTO();
+		gameType.setGameName(gameName);
+
+		gameType = gameService.getGameType(gameType);
+
+		if(gameType == null) throw new NoHandlerFoundException(null, null, null);
+
+		model.addAttribute("page", "/WEB-INF/views/game/"+gameType.getGameName()+"/custom.jsp");
+		model.addAttribute("pageTitle", GlobalValues.customTitle);
+		model.addAttribute("gameType", gameType);
+
 		return "frame";
 	}
 
