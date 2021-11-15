@@ -162,7 +162,7 @@
 		<nav id="globalNavBar">
 			<ul class="navbar-nav font-weight-bold text-dark font-18 flex-row">
 				<li class="nav-item"><a class="nav-link" href="/game">학습하기</a></li>
-				<li class="nav-item"><a class="nav-link" href="">창작마당</a></li>
+				<li class="nav-item"><a class="nav-link" href="/custom">창작마당</a></li>
 				<li class="nav-item"><a class="nav-link" href="/game/rank">랭킹</a></li>
 				<li class="nav-item"><a class="nav-link" href="/customer">고객센터</a></li>
 			</ul>

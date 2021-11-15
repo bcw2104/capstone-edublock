@@ -8,17 +8,22 @@ public class GlobalValues {
 	public final static String homeTitle = "Educational Block Coding Games";
 	public final static String homePage = "/WEB-INF/views/home/home.jsp";
 
+	//custom
+	public final static String customTitle = "창작마당";
+	public final static String customPage = "/WEB-INF/views/custom/menu.jsp";
+	public final static String createTitle = "창작하기";
+	public final static String createPage = "/WEB-INF/views/custom/category.jsp";
+
 	//game
 	public final static String rankTitle = "랭킹";
 	public final static String rankPage = "/WEB-INF/views/game/rank.jsp";
-	public final static String categoryTitle = "단계별 게임하기";
+	public final static String categoryTitle = "단계별 학습하기";
 	public final static String categoryPage = "/WEB-INF/views/game/category.jsp";
 
 	public final static String gameChoiceTitle = "맵 선택";
 	public final static String gameChoicePage = "/WEB-INF/views/game/choice.jsp";
 
 	public final static String gameTitle = "게임플레이";
-	public final static String customTitle = "만들기";
 
 	//user
 	public final static String changePasswordTitle = "비밀번호 변경";

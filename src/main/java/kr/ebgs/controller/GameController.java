@@ -147,24 +147,6 @@ public class GameController {
 		return "frame";
 	}
 
-	@GetMapping("/custom/{gameName}")
-	public String custom(@PathVariable("gameName") String gameName
-							,Model model,HttpSession session)throws Exception {
-
-		GameTypeDTO gameType = new GameTypeDTO();
-		gameType.setGameName(gameName);
-
-		gameType = gameService.getGameType(gameType);
-
-		if(gameType == null) throw new NoHandlerFoundException(null, null, null);
-
-		model.addAttribute("page", "/WEB-INF/views/game/"+gameType.getGameName()+"/custom.jsp");
-		model.addAttribute("pageTitle", GlobalValues.customTitle);
-		model.addAttribute("gameType", gameType);
-
-		return "frame";
-	}
-
 	@GetMapping(value = "/game.do",produces = "application/json; charset=utf8")
 	@ResponseBody
 	public String gameInfo(@RequestParam("id") int id)throws Exception {

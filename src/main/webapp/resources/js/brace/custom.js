@@ -1,5 +1,6 @@
 var wSize = 10;
 var hSize = 10;
+var cursor = null;
 
 function drag(ev) {
 	ev.dataTransfer.setData("text", ev.target.id);
@@ -7,11 +8,23 @@ function drag(ev) {
 }
 
 function dragOver(ev) {
+	var target = $(ev.path[0]);
+	if(cursor != null && cursor != target.attr("id")){
+		$("#"+cursor).removeClass("map-hover");
+	}
+
+	$(ev.path[0]).addClass("map-hover");
+	cursor = target.attr("id");
+
 	ev.preventDefault();
 }
 
 function drop(ev) {
 	ev.preventDefault();
+
+	$("#"+cursor).removeClass("map-hover");
+	cursor = null;
+
 	var data = ev.dataTransfer.getData("text");
 	if (ev.dataTransfer.effectAllowed == "copy") {
 		var source = document.getElementById(data)
@@ -68,4 +81,11 @@ $(document).ready(function() {
 	createOption($("#hSize"),12);
 	createOption($("#limit"),12);
 	createBoard(wSize, hSize);
+
+	$(body).mousemove(function( ) {
+		if(cursor != null){
+			$("#"+cursor).removeClass("map-hover");
+			cursor = null;
+		}
+	});
 });

@@ -1,0 +1,14 @@
+.custom-item {
+	width: 50%;
+	cursor: pointer;
+	transition: transform 0.1s ease-out 0s;
+}
+
+.custom-item .card{
+	width: 90%;
+}
+
+.custom-item:hover{
+	transform: translateY(-10px);
+}
+
