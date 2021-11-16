@@ -1,4 +1,96 @@
 
+const none = 0;
+const startingPoint = 1;
+const goalPoint = 2;
+const trafLight = 3;
+
+class Point {
+    constructor(isLocatable, x, y ,elementType, initState = 0) { // type이 0이면 아무것도 없는 것
+        this.isLocatable = isLocatable;
+        this.elementType = elementType;
+        this.pos = { x: x, y: y};
+        this.element = null;
+
+        switch(elementType) {
+            case none:
+                break;
+            case startingPoint:
+                break;
+            case goalPoint:
+                break;
+            case trafLight:
+                this.element = new trafficLight(initState);
+                break;
+        }
+    }
+
+    draw(elementContext) {
+        if (this.element != null) {
+            this.element.drawState(elementContext, this.pos.x, this.pos.y);
+        }
+    }
+}
+
+class startPoint {
+    constructor(initState) {
+        this.state = initState;
+    }
+}
+
+class trafficLight {
+    constructor(initState) {
+        this.state = initState;
+        this.maxState = 9;
+        this.color = 0;
+        changeColor();
+    }
+
+    nextState() {
+        this.state += 1;
+        this.state %= this.maxState;
+        this.changeColor();
+    }
+
+    setState(state) {
+        this.state = state;
+    }
+
+    getState() {
+        return this.state;
+    }
+
+    getColor() {
+        return this.color;
+    }
+
+    changeColor() {
+        switch(this.state) {
+            case 0:
+            case 1:
+            case 2:
+                this.color = 0; // 초록불
+                break;
+            case 3:
+            case 4:
+                this.color = 1; // 노란불
+                break;
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+                this.color = 2; // 빨간불
+                break;
+        }
+    }
+
+    drawState(elementContext, x, y) {
+        elementContext.drawImage(imgEle, this.elementType * elementSize, this.element.color * elementSize, elementSize, elementSize,
+                                x * (tileLength + lineWidth) + lineWidth/2 - elementSize/2,
+                                y * (tileLength + lineWidth) + lineWidth/2 - elementSize/2,
+                                elementSize, elementSize);
+    }
+}
+
 let limitTurn = 0;
 let turn = 0; // 움직임 횟수. 시간같은 개념
 let fuel = 0; // 자동차 연료
@@ -7,227 +99,145 @@ let gameOver = false;
 let gameOverText = null;
 let gridOn = true;
 
-// const map = new Image();
-// map.src = "./element.png";
-// map.onload = function() {
-//     const mapCanvas = document.getElementById("mapImgCanvas");
-//     const mapContext = mapCanvas.getContext("2d");
+const imgCar = new Image();
+imgCar.src = "/resources/images/brace/car.png";
+const imgEle = new Image();
+imgEle.src = "/resources/images/brace/element.png"
+const imgMap = new Image();
+imgMap.src = "/resources/images/brace/road.png";
 
-//     mapContext.drawImage(map, 0, 0, 200, 200);
-// }
+const tileLength = 50;
+const lineWidth = 1;
+const onRoad = "#b97a57";
+const offRoad = "#b5e61d";
+
+const right = true;
+const left = false;
+
+const forward = 1;
+const leftForward = 2;
+const rightForward = 3;
+const backward = 4;
+const leftBackward = 5;
+const rightBackward = 6 ;
+const stay = 7;
+
+const compass = [{x: 0, y: -1}, {x: 1, y: 0}, {x: 0, y: 1}, {x: -1, y: 0}]
+const up = 0;
+const rig = 1;
+const down = 2;
+const lef = 3;
+
+const carWidth = 25;
+const carHeight = 41;
+
+const elementSize = 50;
+
+// const json = null; // DB에서 받아온 json파일
+// const mapObj = JSON.parse(json);
+
+const mapWidth = mapObj.mw;
+const mapHeight = mapObj.mh;
+const startingFuel = mapObj.sf;
+const originPoint = mapObj.op;
+const startingPos = mapObj.sp;
+const goalPos = mapObj.gp;
+const startingDirection = mapObj.sd; // 상(0,-1) 하(0, 1) 좌(-1, 0) 우(1, 0)
+const mapImgList = mapObj.mil;
+const pointList = new Array(mapHeight + 1).fill(null).map(() => new Array(mapWidth + 1)); // 각 점의 정보와 요소 세팅
+for (let y = 0; y < mapHeight + 1; y++) { // 포인트와 요소 초기화
+    for (let x = 0; x < mapWidth + 1; x++) {
+        pointList[y][x] = new Point(mapObj.pl[y][x].lct, x, y, mapObj.pl[y][x].et, mapObj.pl[y][x].ist);
+    }
+}
 
 window.onload = function() {
     resetCanvasOrigin();
     setCanvasOrigin();
+
+	$("#blockLimitCnt").text(mapObj.lb);
 
     console.log("set origin");
 
     fuel = startingFuel;
     console.log("set fule");
 
-    const mapCanvas = document.getElementById("mapImgCanvas");
-    const carCanvas = document.getElementById("carImgCanvas");
-    console.log("set canvas");
-
-    initMap(mapCanvas, mapImgList, pointList, mapHeight, mapWidth); // 맵 그리기
-    initCar(carCanvas, startingPos, startingDirection, tileLength, lineWidth); // 자동차 데이터 설정, 그리기
+    initMap(); // 맵 그리기
+    initCar(); // 자동차 데이터 설정, 그리기
     drawElement(); // 요소 그리기
-    drawBlackGrid();
+    gridEvent();
     console.log("set img");
 
     console.log(mapImgList[1][1].in);
+
+    console.log("1");
+    console.log(car.pos.x);
+    console.log(car.pos.y);
+    console.log(compass[car.dir]);
+    console.log(compass[car.dir]);
 }
 
-// const json = null; // DB에서 받아온 json파일
-// const mapObj = JSON.parse(json);
-const mapObj = {
-    mapId: 1111,
-    gameId: 1111,
-    authorId: "1111",
-    mapName: "1111",
-    mapPoint: 1111,
-    mapData: {
-      mw: 22,
-      mh: 22,
-      pl: [
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, lct: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, lct: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 1, ist: 2},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 1, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0}
-        ],
-        [
-            {lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},{lct: 0, et: 0, ist: 0},
-        ]
-      ],
-      mil: [
-        [
-            {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 2, d: 2}, {in: 2, d: 3}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 2, d: 2}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 2, d: 3}, {in: 2, d: 2}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 2, d: 3}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 3, d: 0}, {in: 3, d: 1}, {in: 1, d: 0}, {in: 1, d: 2}, {in: 3, d: 0}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 3, d: 1}, {in: 1, d: 0}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 1, d: 2}, {in: 3, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 3, d: 2}, {in: 1, d: 0}, {in: 1, d: 2}, {in: 3, d: 3}, {in: 3, d: 2}, {in: 3, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 3, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 2, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 3, d: 1}, {in: 3, d: 0}, {in: 1, d: 1}, {in: 2, d: 0}, {in: 1, d: 2}, {in: 3, d: 0}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 2, d: 0}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 3, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 2, d: 3}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 2, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 3, d: 1}, {in: 3, d: 0}, {in: 3, d: 1}, {in: 1, d: 0}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 3, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 3, d: 2}, {in: 1, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 3, d: 0}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 3, d: 1}, {in: 1, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 2, d: 2}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 3, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 1, d: 2}, {in: 3, d: 0}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 3, d: 1}, {in: 1, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 2, d: 2}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 3, d: 2}, {in: 1, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 1, d: 2}, {in: 3, d: 0}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 3, d: 1}, {in: 3, d: 0}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 2, d: 0}, {in: 2, d: 1}, {in: 2, d: 0}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 2, d: 2}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 2, d: 3}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 2, d: 1}, {in: 2, d: 0}, {in: 1, d: 2}, {in: 3, d: 0}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 3, d: 1}, {in: 1, d: 0}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 1, d: 2}, {in: 3, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 3, d: 2}, {in: 3, d: 3}, {in: 3, d: 2}, {in: 3, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 3, d: 2}, {in: 3, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 1, d: 3}, {in: 2, d: 3}, {in: 1, d: 2}, {in: 1, d: 0}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 2, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 1, d: 1}, {in: 2, d: 0}, {in: 2, d: 1}, {in: 2, d: 0}, {in: 0, d: 0}
-        ],
-        [
-            {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}, {in: 0, d: 0}
-        ],
-      ],
-      sp: {
-        x: 2,
-        y: 3
-      },
-      gp : {
-        x : 21,
-        y : 20
-      },
-      op : {
-        x : 0,
-        y : 0
-      },
-      sf: 50,
-      sd: {
-        x: 0,
-        y: 1
-      },
-      lb: 1111
-    }
-  }
+function initMap() {
+    const mapCanvas = document.getElementById("mapImgCanvas");
+    const mapContext = mapCanvas.getContext("2d");
+    mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height);
+    drawMap(mapContext, mapImgList, pointList, mapHeight, mapWidth);
+    console.log("맵 초기화");
+}
 
-const mapId = mapObj.mapId;
-const gameId = mapObj.gameId;
-const authorId = mapObj.authorId;
-const mapName = mapObj.mapName;
-const mapPoint = mapObj.mapPoint;
+function clearMap() {
+    const mapCanvas = document.getElementById("mapImgCanvas");
+    const mapContext = mapCanvas.getContext("2d");
 
-const mapWidth = mapObj.mapData.mw;
-const mapHeight = mapObj.mapData.mh;
-const startingFuel = mapObj.mapData.sf;
-const originPoint = mapObj.mapData.op;
-const startingPos = mapObj.mapData.sp;
-const goalPos = mapObj.mapData.gp;
-const startingDirection = mapObj.mapData.sd; // 상(0,-1) 하(0, 1) 좌(-1, 0) 우(1, 0)
-const mapImgList = mapObj.mapData.mil;
-const pointList = new Array(mapHeight + 1).fill(null).map(() => new Array(mapWidth + 1)); // 각 점의 정보와 요소 세팅
-for (let y = 0; y < mapHeight + 1; y++) { // 포인트와 요소 초기화
-    for (let x = 0; x < mapWidth + 1; x++) {
-        pointList[y][x] = new Point(mapObj.mapData.pl[y][x].lct, x, y, mapObj.mapData.pl[y][x].et, mapObj.mapData.pl[y][x].ist);
+    mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height);
+}
+
+function drawMap(mapContext, mapImgList, pointList, mapHeight, mapWidth) {
+    drawGrid(mapContext, pointList, mapHeight, mapWidth);
+
+    console.log(mapImgList);
+
+    // mapImg를 통해 그림을 그림.
+    for (let row = 0; row < mapHeight; row++) {
+        for (let column = 0; column < mapWidth; column++) {
+            mapContext.drawImage(imgMap, tileLength * mapImgList[row][column].in, tileLength * mapImgList[row][column].d, tileLength, tileLength,
+                (tileLength + lineWidth) * column + lineWidth, (tileLength + lineWidth) * row + lineWidth, tileLength, tileLength);
+        }
     }
+}
+
+function drawGrid(mapContext, pointList, mapHeight, mapWidth) {
+    //테두리 그리기
+
+    mapContext.save();
+
+    for (let y = 0; y < mapHeight + 1; y++) {
+        for (let x = 0; x < mapWidth + 1; x++) {
+                if (pointList[y][x].isLocatable == 1) { mapContext.strokeStyle = onRoad; }
+                else { mapContext.strokeStyle = offRoad; }
+
+                mapContext.lineWidth = lineWidth;
+                drawCross(mapContext, x, y);
+        }
+    }
+
+    mapContext.restore();
+}
+
+function drawCross(mapContext, x, y) {
+    // 가로선
+    mapContext.beginPath();
+    mapContext.moveTo((tileLength + lineWidth) * x - tileLength/2, (tileLength + lineWidth) * y + lineWidth/2);
+    mapContext.lineTo((tileLength + lineWidth) * x + tileLength/2 + lineWidth, (tileLength + lineWidth) * y + lineWidth/2);
+    mapContext.stroke();
+    mapContext.closePath();
+
+    // 세로선
+    mapContext.beginPath();
+    mapContext.moveTo((tileLength + lineWidth) * x + lineWidth/2, (tileLength + lineWidth) * y - tileLength/2);
+    mapContext.lineTo((tileLength + lineWidth) * x + lineWidth/2, (tileLength + lineWidth) * y + tileLength/2 + lineWidth);
+    mapContext.stroke();
+    mapContext.closePath();
 }
 
 function setCanvasOrigin() {
@@ -270,7 +280,7 @@ function drawElement() {
 
     for (let y = 0; y < mapHeight; y++) {
         for (let x = 0; x < mapWidth; x++) {
-            pointList[y][x].draw(elementContext, tileLength,lineWidth);
+            pointList[y][x].draw(elementContext, tileLength, lineWidth);
         }
     }
 }
@@ -279,36 +289,11 @@ function initElementState() {
     for (let y = 0; y < mapHeight; y++) {
         for (let x = 0; x < mapWidth; x++) {
             if (pointList[y][x].element != null) {
-                pointList[y][x].element.setState(mapObj.mapData.pl[y][x].ist);
+                pointList[y][x].element.setState(mapObj.pl[y][x].ist);
             }
         }
     }
 }
-
-function initGame() {
-    resetCanvasOrigin();
-    setCanvasOrigin();
-
-    fuel = startingFuel;
-    gridOn = true;
-
-    const mapCanvas = document.getElementById("mapImgCanvas");
-    const carCanvas = document.getElementById("carImgCanvas");
-
-    initMap(mapCanvas, mapImgList, pointList); // 맵 그리기
-    initCar(carCanvas, startingPos, startingDirection,tileLength,lineWidth); // 자동차 데이터 설정, 그리기
-    initElementState(); // 요소 상태 초기화
-    drawElement(); // 요소 그리기
-    drawBlackGrid();
-}
-
-// function useElement(elementType) { // 특정 요소와 상호작용 함수
-//     switch (elementType) {
-//         case 3 : // 요소 타입에 따라 함수를 정의하고 실행.
-//             // doSomething();
-//             break;
-//     }
-// }
 
 // 검은색 격자무늬를 그림
 function drawBlackGrid() {
@@ -351,23 +336,409 @@ function gridEvent() {
     }
 }
 
+const car = {
+    pos : {x: -1, y: -1},
+    dir : -1,
+    turn : function(isRight) { // true는 우회전 false는 좌회전
+        if (isRight) {
+            this.dir++;
+        }
+        else {
+            this.dir += 3;
+        }
+
+        this.dir %= 4;
+    },
+    go : function() {
+        this.pos.x += compass[this.dir].x;
+        this.pos.y += compass[this.dir].y;
+    },
+    back : function() {
+        this.pos.x -= compass[this.dir].x;
+        this.pos.y -= compass[this.dir].y;
+    },
+    forward : function() {
+        this.go();
+        this.go();
+    },
+    rightForward : function() {
+        this.go();
+        this.turn(right);
+        this.go();
+    },
+    leftForward : function() {
+        this.go();
+        this.turn(left);
+        this.go();
+    },
+    backward : function() {
+        this.back();
+        this.back();
+    },
+    rightBackward : function() {
+        this.back();
+        this.turn(left);
+        this.back();
+    },
+    leftBackward : function() {
+        this.back();
+        this.turn(right);
+        this.back();
+    }
+}
+
+function calPos(dir) {
+    switch(dir) {
+        case forward: // 전진
+            car.forward();
+            break;
+        case leftForward: // 전진 좌회전
+            car.leftForward();
+            break;
+        case rightForward: // 전진 우회전
+            car.rightForward();
+            break;
+        case backward: // 후진
+            car.backward();
+            break;
+        case leftBackward: // 후진 좌회전
+            car.leftBackward();
+            break;
+        case rightBackward: // 후진 우회전
+            car.rightBackward();
+            break;
+        case stay: // 대기
+            break;
+    }
+}
+
+function rotateCar(carContext, dir = car.dir) {
+    carContext.rotate(dir * Math.PI/2);
+}
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function forwardAnimation(carCanvas, carContext, startPos, distance = 0) {
+
+    carContext.clearRect(0, 0, carCanvas.width, carCanvas.height);
+    carContext.save();
+    if (distance + (speed * 2*(tileLength + lineWidth)/100) < 2*(tileLength + lineWidth)) {
+        carContext.translate(startPos.x * (tileLength + lineWidth) + lineWidth/2 + compass[car.dir].x * (distance + speed * 2*(tileLength + lineWidth)/100),
+                             startPos.y * (tileLength + lineWidth) + lineWidth/2 + compass[car.dir].y * (distance + speed * 2*(tileLength + lineWidth)/100));
+        rotateCar(carContext);
+        carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
+        carContext.restore();
+
+        console.log(distance);
+        await delay(5);
+        await forwardAnimation(carCanvas, carContext, startPos, distance + speed * 2*(tileLength+lineWidth)/100);
+    } else {
+        carContext.translate(car.pos.x * (tileLength + lineWidth) + lineWidth/2, car.pos.y * (tileLength + lineWidth) + lineWidth/2);
+        rotateCar(carContext);
+        carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
+        carContext.restore();
+    }
+}
+
+async function backwardAnimation(carCanvas, carContext, startPos, distance = 0) {
+
+    carContext.clearRect(0, 0, carCanvas.width, carCanvas.height);
+    carContext.save();
+    if (distance + (speed * 2*(tileLength + lineWidth)/100) < 2 * (tileLength + lineWidth)) {
+        carContext.translate(startPos.x * (tileLength + lineWidth) + lineWidth/2 - compass[car.dir].x * (distance + speed * 2*(tileLength+lineWidth)/100),
+                             startPos.y * (tileLength + lineWidth) + lineWidth/2 - compass[car.dir].y * (distance + speed * 2*(tileLength+lineWidth)/100));
+        rotateCar(carContext);
+        carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
+        carContext.restore();
+
+        console.log(distance);
+        await delay(5);
+        await backwardAnimation(carCanvas, carContext, startPos, distance + speed * 2*(tileLength+lineWidth)/100);
+    } else {
+        carContext.translate(compass[car.dir].x * 2*(tileLength + lineWidth) + lineWidth/2, compass[car.dir].y * 2*(tileLength + lineWidth) + lineWidth/2);
+        rotateCar(carContext);
+        carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
+        carContext.restore();
+    }
+
+}
+
+async function leftForwardAnimation(carCanvas, carContext, startPos, startDir, radian = 0) {
+    carContext.clearRect(0, 0, carCanvas.width, carCanvas.height);
+    carContext.save();
+    if (radian + speed * Math.PI/200 < Math.PI/2) {
+        carContext.translate(startPos.x * (tileLength + lineWidth) + lineWidth/2, startPos.y * (tileLength + lineWidth) + lineWidth/2);
+        carContext.translate(compass[(startDir+3)%4].x * (tileLength + lineWidth), compass[(startDir+3)%4].y * (tileLength + lineWidth));
+        carContext.rotate(-(radian + speed * Math.PI/200));
+        carContext.translate(-compass[(startDir+3)%4].x * (tileLength + lineWidth), -compass[(startDir+3)%4].y * (tileLength + lineWidth));
+        rotateCar(carContext, startDir);
+        carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
+        carContext.restore();
+
+        console.log(radian);
+        await delay(5)
+        await leftForwardAnimation(carCanvas, carContext, startPos, startDir, radian + speed * Math.PI/200);
+    }
+    else {
+        carContext.translate(car.pos.x * (tileLength + lineWidth) + lineWidth/2, car.pos.y * (tileLength + lineWidth) + lineWidth/2);
+        rotateCar(carContext);
+        carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
+        carContext.restore();
+        console.log("애니메이션 마지막 else");
+    }
+}
+
+async function rightForwardAnimation(carCanvas, carContext, startPos, startDir, radian = 0) {
+    carContext.clearRect(0, 0, carCanvas.width, carCanvas.height);
+    carContext.save();
+    if (radian + speed * Math.PI/200 < Math.PI/2) {
+        carContext.translate(startPos.x * (tileLength + lineWidth) + lineWidth/2, startPos.y * (tileLength + lineWidth) + lineWidth/2);
+        carContext.translate(compass[(startDir + 1)%4].x * (tileLength + lineWidth), compass[(startDir + 1)%4].y * (tileLength + lineWidth));
+        carContext.rotate(radian + speed * Math.PI/200);
+        carContext.translate(-compass[(startDir + 1)%4].x * (tileLength + lineWidth), -compass[(startDir + 1)%4].y * (tileLength + lineWidth));
+        rotateCar(carContext, startDir);
+        carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
+        carContext.restore();
+
+        console.log(radian);
+        await delay(5)
+        await rightForwardAnimation(carCanvas, carContext, startPos, startDir, radian + speed * Math.PI/200);
+    }
+    else {
+        carContext.translate(car.pos.x * (tileLength + lineWidth) + lineWidth/2, car.pos.y * (tileLength + lineWidth) + lineWidth/2);
+        rotateCar(carContext);
+        carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
+        carContext.restore();
+    }
+}
+
+async function leftBackwardAnimation(carCanvas, carContext, startPos, startDir, radian = 0) {
+    carContext.clearRect(0, 0, carCanvas.width, carCanvas.height);
+    carContext.save();
+    if (radian + speed * Math.PI/200 < Math.PI/2) {
+        carContext.translate(startPos.x * (tileLength + lineWidth) + lineWidth/2, startPos.y * (tileLength + lineWidth) + lineWidth/2);
+        carContext.translate(compass[(startDir+3)%4].x, compass[(startDir+3)%4].y);
+        carContext.rotate(radian + speed * Math.PI/200);
+        carContext.translate(-compass[(startDir+3)%4].x, -compass[(startDir+3)%4].y);
+        rotateCar(carContext, startDir);
+        carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
+        carContext.restore();
+
+        console.log(radian);
+        await delay(5)
+        await leftBackwardAnimation(carCanvas, carContext, startPos, startDir, radian + speed * Math.PI/200);
+    }
+    else {
+        carContext.translate(car.pos.x * (tileLength + lineWidth) + lineWidth/2, car.pos.y * (tileLength + lineWidth) + lineWidth/2);
+        rotateCar(carContext);
+        carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
+        carContext.restore();
+    }
+}
+
+async function rightBackwardAnimation(carCanvas, carContext, startPos, startDir, radian = 0) {
+    carContext.clearRect(0, 0, carCanvas.width, carCanvas.height);
+    carContext.save();
+    if (radian + speed * Math.PI/200 < Math.PI/2) {
+        carContext.translate(startPos.x * (tileLength + lineWidth) + lineWidth/2, startPos.y * (tileLength + lineWidth) + lineWidth/2);
+        carContext.translate(compass[(startDir+1)%4].x * (tileLength + lineWidth), compass[(startDir+1)%4].y * (tileLength + lineWidth));
+        carContext.rotate(-(radian + speed * Math.PI/200));
+        carContext.translate(-compass[(startDir+1)%4].x * (tileLength + lineWidth), -compass[(startDir+1)%4].y * (tileLength + lineWidth));
+        rotateCar(carContext, startDir);
+        carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
+        carContext.restore();
+
+        console.log(radian);
+        await delay(5)
+        await rightBackwardAnimation(carCanvas, carContext, startPos, startDir, radian + speed * Math.PI/200);
+    }
+    else {
+        carContext.translate(car.pos.x * (tileLength + lineWidth) + lineWidth/2, car.pos.y * (tileLength + lineWidth) + lineWidth/2);
+        rotateCar(carContext);
+        carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
+        carContext.restore();
+    }
+}
+
+async function stayAnimation(time = 0) {
+    if (time < 100) {
+        await delay(5);
+        await stayAnimation(time + speed);
+    }
+}
+
+function createCar(carCanvas) {
+    const carContext = carCanvas.getContext("2d");
+    carContext.clearRect(0, 0, carCanvas.width, carCanvas.height);
+    carContext.save();
+    carContext.translate(car.pos.x * (tileLength + lineWidth) + lineWidth/2, car.pos.y * (tileLength + lineWidth) + lineWidth/2);
+    rotateCar(carContext);
+    carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
+    carContext.restore();
+    console.log("차 생성")
+}
+
+function initCar() {
+    const carCanvas = document.getElementById("carImgCanvas");
+    car.pos.x = startingPos.x;
+    car.pos.y = startingPos.y;
+    car.dir = startingDirection;
+    createCar(carCanvas);
+}
+
+async function carAnimation(dir, startPos, startDir) {
+    const carCanvas = document.getElementById("carImgCanvas");
+    const carContext = carCanvas.getContext("2d");
+
+    switch (dir) {
+        case forward: // 전진
+            await forwardAnimation(carCanvas, carContext, startPos);
+            break;
+        case leftForward:
+            console.log("leftForwardAnimation 시작");
+            await leftForwardAnimation(carCanvas, carContext, startPos, startDir);
+            console.log("leftForwardAnimation 종료");
+            break;
+        case rightForward:
+            await rightForwardAnimation(carCanvas, carContext, startPos, startDir);
+            break;
+        case backward:
+            await backwardAnimation(carCanvas, carContext, startPos);
+            break;
+        case leftBackward:
+            await leftBackwardAnimation(carCanvas, carContext, startPos, startDir);
+            break;
+        case rightBackward:
+            await rightForwardAnimation(carCanvas, carContext, startPos, startDir);
+            break;
+        case stay:
+            await stayAnimation();
+            break;
+    }
+
+    if (gameOver) {
+        // await failAnimation();
+        console.log(gameOver);
+        car.pos.x = startPos.x;
+        car.pos.y = startPos.y;
+        car.dir = startDir;
+        carContext.clearRect(0, 0, carCanvas.width, carCanvas.height);
+        carContext.save();
+        carContext.translate(startPos.x * (tileLength + lineWidth) + lineWidth/2, startPos.y * (tileLength + lineWidth) + lineWidth/2);
+        rotateCar(carContext);
+        carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
+        carContext.restore();
+        console.log(gameOver);
+    }
+}
+
+async function moveCar(dir) {
+    const startPos = {x: car.pos.x, y: car.pos.y};
+    const startDir = car.dir;
+    calPos(dir);
+
+    console.log("moveCar 시작");
+    await carAnimation(dir, startPos, startDir);
+    console.log("moveCar 끝");
+}
+
+// 방향별 실패시 애니메이션 추가
+
+function getCarDir() {
+    return compass[car.dir];
+}
+
+function getCarPos() {
+    return car.pos;
+}
+
+function getNextPos(dir) {
+    let pos = {x : car.pos.x, y : car.pos.y};
+
+    switch(dir) {
+        case forward:
+            pos.x = pos.x + 2 * compass[car.dir].x;
+            pos.y = pos.y + 2 * compass[car.dir].y;
+            break;
+        case backward:
+            pos.x = pos.x - 2 * compass[car.dir].x;
+            pos.y = pos.y - 2 * compass[car.dir].y;
+            break;
+        case leftForward:
+            pos.x = pos.x + compass[car.dir].x + compass[(car.dir+3)%4].x;
+            pos.y = pos.y + compass[car.dir].y + compass[(car.dir+3)%4].y;
+            break;
+        case rightForward:
+            pos.x = pos.x + compass[car.dir].x + compass[(car.dir+1)%4].x;
+            pos.y = pos.y + compass[car.dir].y + compass[(car.dir+1)%4].y;
+            break;
+        case leftBackward:
+            pos.x = pos.x - compass[car.dir].x - compass[(car.dir+1)%4].x;
+            pos.y = pos.y - compass[car.dir].y - compass[(car.dir+1)%4].y;
+            break;
+        case rightBackward:
+            pos.x = pos.x - compass[car.dir].x - compass[(car.dir+3)%4].y;
+            pos.y = pos.y - compass[car.dir].x - compass[(car.dir+3)%4].x;
+            break;
+        case stay:
+            break;
+
+    }
+    return pos;
+}
+
+
+function initGame() {
+    resetCanvasOrigin();
+    setCanvasOrigin();
+
+    fuel = startingFuel;
+    gridOn = false;
+    gameOver = false;
+    gameOverText = null;
+    turn = 0;
+
+    initMap(); // 맵 그리기
+    initCar(); // 자동차 데이터 설정, 그리기
+    initElementState(); // 요소 상태 초기화
+    drawElement(); // 요소 그리기
+    gridEvent();
+}
+
 // 다음 포인트를 반환
 function nextPos(dir) {
     return getNextPos(dir);
 }
 
 // 다음 블록이 갈 수 있는지 판단하는 함수
-
+function canGoTo(dir) {
+    console.log(nextPos(dir));
+    console.log(pointList[nextPos(dir).y][nextPos(dir).x].isLocatable);
+    if (pointList[nextPos(dir).y][nextPos(dir).x].isLocatable == 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 function checkGoal() { // 코드가 실행된 뒤 마지막에 결과를 확인하는 함수
-    if (block_isCarIn(2)) { // 2 == 골인지점
+    console.log('goalPoint : ' + goalPoint);
+    if (block_isCarIn(goalPoint)) { // 2 == 골인지점
+        console.log('nowPoint : ' + block_isCarIn(goalPoint));
         // 골인 했을 때 실행할 것
         alert("도착했습니다.");
+    } else {
+        gameOver = true;
+        gameOverText = "도착하지 못했습니다.";
+        throw gameOverText;
     }
 }
 
 // 게임 오버 확인하고 블록에서 빠져나오기
 function checkGameOver() {
+    console.log(gameOver);
     if (gameOver) {
         throw gameOverText;
     }
@@ -376,11 +747,11 @@ function checkGameOver() {
 // 블록의 시작에 필요한 함수
 function readyBeforeMove(dir) {
     // 다음 위치가 갈 수 있는 곳인지 판단
-    gameOver = !block_canGoTo(dir);
+    gameOver = !canGoTo(dir);
     gameOverText = '갈 수 없는 곳입니다.';
 
     // 앞 요소에 걸리는지 판단
-    const point = pointList[getCarPos().y + getCarDir().y][getCarPos().x + getCarDir().x];
+    const point = pointList[car.pos.y + compass[car.dir].y][car.pos.x + compass[car.dir].x];
     switch (point.elementType) {
         case trafLight:
             if (point.getColor() == 2) {gameOver == true;}
@@ -390,10 +761,9 @@ function readyBeforeMove(dir) {
 }
 
 // 블록의 끝에 필요한 함수
-function setBeforeMove() {
+function setAfterMove() {
     // 게임오버 조건 확인 (연료 체크)
-    if (fuel == 0) {gameOver = true;}
-    gameOverText = '연료가 바닥났습니다.';
+    if (fuel == 0) {gameOver = true; gameOverText = '연료가 바닥났습니다.';}
     checkGameOver();
 
     // 맵 요소 상태 변경
@@ -407,104 +777,118 @@ function setBeforeMove() {
     drawElement();
 }
 
-function action(dir) {
-    const carCanvas = document.getElementById("carImgCanvas")
+async function action(dir) {
+    console.log(gameOver);
+    console.log("action 시작");
     readyBeforeMove(dir);
-    moveCar(carCanvas, dir, speed, tileLength, lineWidth, gameOver)
+    console.log("애니메이션 시작");
+    await moveCar(dir);
+    console.log("애니메이션 끝");
     checkGameOver();
-    setBeforeMove();
+    if (dir != stay) {fuel -= 1;}
+    turn++;
+    setAfterMove();
+    console.log("action 종료");
 }
 
-function block_forward() {
-    action(forward);
+async function block_forward() {
+    console.log("전진 시작");
+    await action(forward);
+    console.log("전진 끝");
 }
 
-function block_leftForward() {
-    action(leftForward);
+async function block_leftForward() {
+    console.log("좌회전 시작");
+    await action(leftForward);
+    console.log("좌회전 끝");
 }
 
-function block_rightForward() {
-    action(rightForward);
+async function block_rightForward() {
+    console.log("우회전 시작");
+    await action(rightForward);
+    console.log("우회전 끝");
 }
 
-function block_backward() {
-    action(backward);
+async function block_backward() {
+    console.log("후진 시작");
+    await action(backward);
+    console.log("후진 끝");
 }
 
-function block_leftBackward() {
-    action(leftBackward);
+async function block_leftBackward() {
+    await action(leftBackward);
 }
 
-function block_rightBackward() {
-    action(rightBackward);
+async function block_rightBackward() {
+    await action(rightBackward);
 }
 
-function block_stay() {
-    action(stay);
+async function block_stay() {
+    await action(stay);
 }
 
-function block_frontOfCar(elementType) { // 인자에 해당하는 요소가 앞에 있다면 true 없다면 false
-    if (elementType == mapPoint[getCarPos().y + getCarDir().y][getCarPos().x + getCarDir().x].elementType) {
+async function block_frontOfCar(elementType) { // 인자에 해당하는 요소가 앞에 있다면 true 없다면 false
+    if (elementType == pointList[car.pos.y + compass[car.dir].y][car.pos.x + compass[car.dir].x].elementType) {
         return true;
     }
     return false;
 }
 
-function block_canGoTo(dir) {
+async function block_canGoTo(dir) {
     const next = nextPos(dir);
     const result = pointList[next.y][next.x].isLocatable;
 
     return result;
 }
 
-function block_getFuel() { // 정수형 반환
+async function block_getFuel() { // 남은 연료 반환
     return fuel;
 }
 
-function block_isCarIn(elementType) {
-    if (pointList[getCarPos().y][getCarPos().x].elementType == elementType) {
+function block_isCarIn(elementType) { // 현재
+    if (pointList[car.pos.y][car.pos.x].elementType == elementType) {
         return true;
     } else {
         return false;
     }
 }
 
-function block_directionForward() {
+async function block_directionForward() { // 전진 번호 출력
     return forward;
 }
 
-function block_directionLeftForword() {
+async function block_directionLeftForword() { // 좌회전 번호 출력
     return leftForward;
 }
 
-function block_directionRightForword() {
+async function block_directionRightForword() { // 우회전 번호 출력
     return rightForward;
 }
 
-function block_directionBackword() {
+async function block_directionBackword() { // 후진 번호 출력
     return backward;
 }
 
-function block_directionLeftbackward() {
+async function block_directionLeftbackward() { // 좌후진 번호 출력
     return leftBackward;
 }
 
-function block_directionRightBackword() {
+async function block_directionRightBackword() { // 우후진 번호 출력
     return rightBackward;
 }
 
-function block_directionStay() {
+async function block_directionStay() { // 대기 번호 출력
     return stay;
 }
 
-function block_startingPoint() {
+async function block_startingPoint() {
     return startingPoint;
 }
 
-function block_goalPoint() {
+async function block_goalPoint() {
     return goalPoint;
 }
 
-function block_trafficLight() {
+async function block_trafficLight() {
     return trafLight;
 }

@@ -146,15 +146,6 @@ public class GameController {
 		model.addAttribute("clear",clear);
 		return "frame";
 	}
-
-	@GetMapping(value = "/game.do",produces = "application/json; charset=utf8")
-	@ResponseBody
-	public String gameInfo(@RequestParam("id") int id)throws Exception {
-		GameInfoDTO gameInfo = gameService.getGameInfoById(id);
-
-		return JsonTool.objectToJson(gameInfo);
-	}
-
 	@Ajax
 	@PostMapping("/clear.do")
 	public void clear(@RequestParam("mid") int mapId,HttpSession session)throws Exception {
