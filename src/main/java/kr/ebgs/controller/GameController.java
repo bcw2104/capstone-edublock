@@ -76,6 +76,13 @@ public class GameController {
 	public String gameType(@PathVariable("gameName") String gameName,Model model,HttpSession session)throws Exception {
 		StringBuffer clearList = new StringBuffer("_");
 
+		GameTypeDTO gameType = new GameTypeDTO();
+		gameType.setGameName(gameName);
+
+		gameType = gameService.getGameType(gameType);
+
+		if(gameType == null) throw new NoHandlerFoundException(null, null, null);
+
 		if(session.getAttribute("user") != null) {
 			UserDTO loginUser = (UserDTO) session.getAttribute("user");
 
@@ -92,12 +99,6 @@ public class GameController {
 			clearList = (StringBuffer) session.getAttribute("clear");
 		}
 
-		GameTypeDTO gameType = new GameTypeDTO();
-		gameType.setGameName(gameName);
-
-		gameType = gameService.getGameType(gameType);
-
-		if(gameType == null) throw new NoHandlerFoundException(null, null, null);
 
 		GameInfoDTO gameInfo = new GameInfoDTO();
 		gameInfo.setGameId(gameType.getGameId());
@@ -116,20 +117,6 @@ public class GameController {
 							,@PathVariable("mapId") int mapId
 							,Model model,HttpSession session)throws Exception {
 
-		boolean clear = false;
-		if(session.getAttribute("user") != null) {
-			UserDTO loginUser = (UserDTO) session.getAttribute("user");
-			if(gameService.getGameRecordByPK(loginUser.getUserId(), mapId) != null) {
-				clear = true;
-			}
-		}
-		else if(session.getAttribute("clear") != null) {
-			StringBuffer clearList = (StringBuffer) session.getAttribute("clear");
-			if(!clearList.toString().contains(Integer.toString(mapId)+"_")) {
-				clear = true;
-			}
-		}
-
 		GameInfoDTO gameInfo = new GameInfoDTO();
 		GameTypeDTO gameType = new GameTypeDTO();
 		gameType.setGameName(gameName);
@@ -139,6 +126,21 @@ public class GameController {
 
 		if(gameType == null || gameInfo == null) throw new NoHandlerFoundException(null, null, null);
 
+		boolean clear = false;
+		if(session.getAttribute("user") != null) {
+			UserDTO loginUser = (UserDTO) session.getAttribute("user");
+			if(gameService.getGameRecordByPK(loginUser.getUserId(), mapId) != null) {
+				clear = true;
+			}
+		}
+		else if(session.getAttribute("clear") != null) {
+			StringBuffer clearList = (StringBuffer) session.getAttribute("clear");
+			if(clearList.toString().contains("_"+Integer.toString(mapId)+"_")) {
+				clear = true;
+			}
+		}
+		session.setAttribute("recent", mapId);
+
 		model.addAttribute("page", "/WEB-INF/views/game/"+gameType.getGameName()+"/play.jsp");
 		model.addAttribute("pageTitle", GlobalValues.gameTitle);
 		model.addAttribute("gameType", gameType);
@@ -146,23 +148,31 @@ public class GameController {
 		model.addAttribute("clear",clear);
 		return "frame";
 	}
+
 	@Ajax
 	@PostMapping("/clear.do")
-	public void clear(@RequestParam("mid") int mapId,HttpSession session)throws Exception {
-		if(session.getAttribute("user") != null) {
-			UserDTO loginUser = (UserDTO) session.getAttribute("user");
-			if(gameService.getGameRecordByPK(loginUser.getUserId(), mapId) == null) {
-				gameService.addGameClearRecord(loginUser.getUserId(), mapId);
+	@ResponseBody
+	public String clear(HttpSession session)throws Exception {
+		if(session.getAttribute("recent") != null) {
+			int mapId = (int) session.getAttribute("recent");
+
+			if(session.getAttribute("user") != null) {
+				UserDTO loginUser = (UserDTO) session.getAttribute("user");
+				if(gameService.getGameRecordByPK(loginUser.getUserId(), mapId) == null) {
+					gameService.addGameClearRecord(loginUser.getUserId(), mapId);
+				}
 			}
+			else {
+				if(session.getAttribute("clear") == null) {
+					session.setAttribute("clear", new StringBuffer("_"));
+				}
+				StringBuffer clearList = (StringBuffer) session.getAttribute("clear");
+				if(!clearList.toString().contains(Integer.toString(mapId))) {
+					clearList.append(Integer.toString(mapId)+"_");
+				}
+			}
+			return "success";
 		}
-		else {
-			if(session.getAttribute("clear") == null) {
-				session.setAttribute("clear", new StringBuffer("_"));
-			}
-			StringBuffer clearList = (StringBuffer) session.getAttribute("clear");
-			if(!clearList.toString().contains(Integer.toString(mapId))) {
-				clearList.append(Integer.toString(mapId)+"_");
-			}
-		}
+		return "fail";
 	}
 }

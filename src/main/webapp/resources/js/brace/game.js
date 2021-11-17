@@ -723,23 +723,37 @@ function canGoTo(dir) {
     }
 }
 
-function checkGoal() { // 코드가 실행된 뒤 마지막에 결과를 확인하는 함수
-    console.log('goalPoint : ' + goalPoint);
+async function checkGoal() { // 코드가 실행된 뒤 마지막에 결과를 확인하는 함수
     if (block_isCarIn(goalPoint)) { // 2 == 골인지점
-        console.log('nowPoint : ' + block_isCarIn(goalPoint));
         // 골인 했을 때 실행할 것
-        alert("도착했습니다.");
+		$.ajax({
+			url : "/game/clear.do",
+			type:"post",
+			success:function(res){
+				if(res == "success"){
+					alert("도착했습니다.");
+					$("#passMark").removeClass("d-none");
+					initCar();
+				}
+				else if(res == "fail"){
+					alert("서버에 오류가 발생했습니다.");
+					location.reload();
+				}
+			}
+		});
+
     } else {
-        gameOver = true;
-        gameOverText = "도착하지 못했습니다.";
-        throw gameOverText;
+		if(!gameOver){
+			alert("도착하지 못했습니다.");
+			initCar();
+		}
     }
 }
 
 // 게임 오버 확인하고 블록에서 빠져나오기
 function checkGameOver() {
-    console.log(gameOver);
     if (gameOver) {
+		initCar();
         throw gameOverText;
     }
 }
@@ -779,40 +793,28 @@ function setAfterMove() {
 
 async function action(dir) {
     console.log(gameOver);
-    console.log("action 시작");
     readyBeforeMove(dir);
-    console.log("애니메이션 시작");
     await moveCar(dir);
-    console.log("애니메이션 끝");
     checkGameOver();
     if (dir != stay) {fuel -= 1;}
     turn++;
     setAfterMove();
-    console.log("action 종료");
 }
 
 async function block_forward() {
-    console.log("전진 시작");
     await action(forward);
-    console.log("전진 끝");
 }
 
 async function block_leftForward() {
-    console.log("좌회전 시작");
     await action(leftForward);
-    console.log("좌회전 끝");
 }
 
 async function block_rightForward() {
-    console.log("우회전 시작");
     await action(rightForward);
-    console.log("우회전 끝");
 }
 
 async function block_backward() {
-    console.log("후진 시작");
     await action(backward);
-    console.log("후진 끝");
 }
 
 async function block_leftBackward() {

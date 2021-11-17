@@ -27,9 +27,7 @@
 		<div class="mb-5">
 			<div class="map-title">
 				<span class="font-18 font-weight-bold">${requestScope.gameInfo.mapName}</span>
-				<c:if test="${requestScope.clear}">
-					<img class="pass" src="/resources/images/icon_pass.png" alt="pass"/>
-				</c:if>
+				<img id="passMark" class="pass ${requestScope.clear ? '' : 'd-none'}" src="/resources/images/icon_pass.png" alt="pass"/>
 			</div>
 			<c:if test="${requestScope.gameInfo.formal == 0}">
 			<span class="font-15 text-secondary">${requestScope.gameInfo.authorId}</span>
@@ -59,7 +57,7 @@
 		<button class="btn btn-success" onclick="">확대</button>
 		<button class="btn btn-success" onclick="">축소</button>
 		<button class="btn btn-success" onclick="gridEvent()">격자무늬</button>
-		<button class="btn btn-success" onclick="initGame()">초기화</button>
+		<button class="btn btn-success" onclick="initCar()">초기화</button>
 	</div>
 	<button class="btn btn-primary" onclick="runWorkspace()">시작</button>
 </div>
@@ -90,6 +88,7 @@
 		$("#blockLimitCnt").text(limitBlock);
 	}
 
+	workspace.addChangeListener(Blockly.Events.disableOrphans);
 	workspace.addChangeListener(blockChange);
 
 	const generateCode = () => {
