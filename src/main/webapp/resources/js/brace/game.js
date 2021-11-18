@@ -100,7 +100,7 @@ let gameOverText = null;
 let gridOn = true;
 
 const imgCar = new Image();
-imgCar.src = "/resources/images/brace/car.png";
+imgCar.src = "/resources/images/brace/cars/car1.png";
 const imgEle = new Image();
 imgEle.src = "/resources/images/brace/element.png"
 const imgMap = new Image();

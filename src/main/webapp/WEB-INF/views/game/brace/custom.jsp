@@ -33,17 +33,18 @@
 		<div class="map-nav">
 			<div class="map-nav-title text-white p-2">작업 도구</div>
 			<ul class="map-ele-list">
-			    <li class = "map-ele-item"><img id="drag1" src="/resources/images/brace/map/road_1_1.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag2" src="/resources/images/brace/map/road_1_2.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag3" src="/resources/images/brace/map/road_2_1.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag4" src="/resources/images/brace/map/road_2_2.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag5" src="/resources/images/brace/map/road_2_3.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag6" src="/resources/images/brace/map/road_2_4.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag7" src="/resources/images/brace/map/road_3_1.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag8" src="/resources/images/brace/map/road_3_2.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag9" src="/resources/images/brace/map/road_3_3.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag10" src="/resources/images/brace/map/road_3_4.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag11" src="/resources/images/brace/map/road_4.png" ondragstart="drag(event)"></li>
+				<li class = "map-ele-item"><img id="drag0" src="/resources/images/brace/maps/map1/road_0.png" ondragstart="drag(event)"></li>
+			    <li class = "map-ele-item"><img id="drag1" src="/resources/images/brace/maps/map1/road_1_1.png" ondragstart="drag(event)"></li>
+			    <li class = "map-ele-item"><img id="drag2" src="/resources/images/brace/maps/map1/road_1_2.png" ondragstart="drag(event)"></li>
+			    <li class = "map-ele-item"><img id="drag3" src="/resources/images/brace/maps/map1/road_2_1.png" ondragstart="drag(event)"></li>
+			    <li class = "map-ele-item"><img id="drag4" src="/resources/images/brace/maps/map1/road_2_2.png" ondragstart="drag(event)"></li>
+			    <li class = "map-ele-item"><img id="drag5" src="/resources/images/brace/maps/map1/road_2_3.png" ondragstart="drag(event)"></li>
+			    <li class = "map-ele-item"><img id="drag6" src="/resources/images/brace/maps/map1/road_2_4.png" ondragstart="drag(event)"></li>
+			    <li class = "map-ele-item"><img id="drag7" src="/resources/images/brace/maps/map1/road_3_1.png" ondragstart="drag(event)"></li>
+			    <li class = "map-ele-item"><img id="drag8" src="/resources/images/brace/maps/map1/road_3_2.png" ondragstart="drag(event)"></li>
+			    <li class = "map-ele-item"><img id="drag9" src="/resources/images/brace/maps/map1/road_3_3.png" ondragstart="drag(event)"></li>
+			    <li class = "map-ele-item"><img id="drag10" src="/resources/images/brace/maps/map1/road_3_4.png" ondragstart="drag(event)"></li>
+			    <li class = "map-ele-item"><img id="drag11" src="/resources/images/brace/maps/map1/road_4.png" ondragstart="drag(event)"></li>
 			</ul>
 		</div>
 		<div class="map-custom-box">
