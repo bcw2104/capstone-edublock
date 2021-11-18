@@ -161,6 +161,7 @@ window.onload = function() {
 
     fuel = startingFuel;
     console.log("set fule");
+	resizeCanvas();
 
     initMap(); // 맵 그리기
     initCar(); // 자동차 데이터 설정, 그리기
@@ -176,6 +177,14 @@ window.onload = function() {
     console.log(compass[car.dir]);
     console.log(compass[car.dir]);
 }
+
+function resizeCanvas(){
+    $("canvas").each(function(i, element) {
+    	element.width = mapWidth*tileLength;
+    	element.height = mapHeight*tileLength;
+    })
+}
+
 
 function initMap() {
     const mapCanvas = document.getElementById("mapImgCanvas");
@@ -688,7 +697,6 @@ function getNextPos(dir) {
     }
     return pos;
 }
-
 
 function initGame() {
     resetCanvasOrigin();

@@ -42,8 +42,8 @@
 		<div class="row m-0">
 			<c:forEach items="${requestScope.hotMapList}" var="n" >
 			<div class="map-item mb-5">
-				<div class="card">
-					<img class="card-img-top" src="/resources/images/${n.gameName}/main.png" style="width:100%" />
+				<div class="card" onclick="location.href='/game/${n.gameName}/${n.mapId}'">
+					<img class="card-img-top" src="/resources/images/game/thumbnail/${n.mapId}/thumbnail.png" style="width:100%" />
 					<div class="card-body">
 						<div class="card-text font-weight-bold my-1">${n.mapName}</div>
 						<div class="card-text py-2">${n.authorNickname}</div>
@@ -66,8 +66,8 @@
 		<div class="row m-0">
 			<c:forEach items="${requestScope.newMapList}" var="n" >
 			<div class="map-item mb-5">
-				<div class="card">
-					<img class="card-img-top" src="/resources/images/${n.gameName}/main.png" style="width:100%" />
+				<div class="card" onclick="location.href='/game/${n.gameName}/${n.mapId}'">
+					<img class="card-img-top" src="/resources/images/game/thumbnail/${n.mapId}/thumbnail.png" style="width:100%" />
 					<div class="card-body">
 						<div class="card-text font-weight-bold my-1">${n.mapName}</div>
 						<div class="card-text py-2">${n.authorNickname}</div>

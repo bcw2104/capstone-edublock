@@ -17,7 +17,7 @@
 		</div>
 		<div class="mb-5 custom-item">
 			<div class="card" onclick="location.href='/custom/community'">
-				<img class="card-img-top" src="/resources/images/brace/main.png" style="width:100%" />
+				<img class="card-img-top" src="/resources/images/community/main.jpg" style="width:100%" />
 				<div class="card-body">
 					<div class="card-text font-weight-bold my-1">커뮤니티</div>
 					<div class="card-text">커뮤니티에서 작품을 플레이해보세요!</div>

@@ -1,5 +1,5 @@
 .game-container{
-    margin: 50px;
+    margin: 30px 30px 80px 30px;
 }
 
 .block-board-header{
@@ -39,17 +39,66 @@
 }
 .map-container{
 	position: relative;
-	width: 700px;
-    height: 700px;
+	width: 500px;
+    height: 500px;
+}
+
+.map-help{
+	position: absolute;
+	top:570px;
+	width: 500px;
+
+	background-color: #7a87e5;
+	border-radius: 5px;
+}
+
+.map-aim{
+	background-color: #ffffff;
+	border-radius: 5px;
+}
+
+.map-aim-title{
+	display:inline-block;
+	width:50px;
+	height:50px;
+	background-color: #7a87e5;
+	border-radius: 25px;
+
+	text-align:center;
+	font:24px;
+	font-weight:bold;
+	color:#ffffff;
+	line-height:50px;
+}
+
+.map-aim-content{
+	font:20px;
+}
+
+.btn-hint{
+	background-color: rgb(224 234 255);
+	border-radius: 5px;
+	width: 100%;
+}
+
+.btn-hint > span{
+	font-weight: bold;
+	vertical-align: middle;
+}
+
+.btn-hint > img{
+	width: 30px;
+	margin-right: 5px;
 }
 
 .btn-container{
-	text-align: end;
-    margin: 50px;
+	position: absolute;
+	top:510px;
+	width: 500px;
 }
 
 .btn-container .btn{
-	width: 150px;
+	width: 166.6px;
 	height: 50px;
 	font-size:18px;
 }

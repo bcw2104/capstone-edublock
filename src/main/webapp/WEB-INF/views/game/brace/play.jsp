@@ -38,10 +38,26 @@
 	</div>
 	<div class="row m-0">
 		<div class="map-container mr-4">
-			<canvas id="mapImgCanvas" class="canvas" width="1123" height="1123"></canvas>
-	        <canvas id="gridCanvas" class="canvas" width="1123" height="1123"></canvas>
-	        <canvas id="carImgCanvas" class="canvas" width="1123" height="1123"></canvas>
-	        <canvas id="elementImgCanvas" class="canvas" width="1123" height="1123">이 브라우저를 지원하지 않습니다.</canvas>
+			<canvas id="mapImgCanvas" class="canvas" width="1125" height="1125"></canvas>
+	        <canvas id="gridCanvas" class="canvas" width="1125" height="1125"></canvas>
+	        <canvas id="carImgCanvas" class="canvas" width="1125" height="1125"></canvas>
+	        <canvas id="elementImgCanvas" class="canvas" width="1125" height="1125">이 브라우저를 지원하지 않습니다.</canvas>
+	        <div class="btn-container">
+				<div class="btn-group">
+					<button class="btn btn-success" onclick="gridEvent()">격자무늬</button>
+					<button class="btn btn-success" onclick="initCar()">초기화</button>
+					<button class="btn btn-primary" onclick="runWorkspace()">시작</button>
+				</div>
+			</div>
+	        <div class="map-help p-3">
+        		<div class="map-aim mb-2 p-2">
+	            	<div class="map-aim-title mr-2">목표</div>
+	            	<span class="map-aim-content">자동차를 목적지까지 이동시켜주세요!</span>
+	            </div>
+	            <div class="py-2">
+					<button class="btn btn-hint"><img src="/resources/images/icon_hint.png" alt="hint" /><span>힌트 보기</span></button>
+	            </div>
+	        </div>
 		</div>
 		<div id="blocklyDiv" class="block-nav">
 			<div class="block-board-header text-white p-2">
@@ -51,15 +67,6 @@
 			</div>
 		</div>
 	</div>
-</div>
-<div class="btn-container">
-	<div class="btn-group">
-		<button class="btn btn-success" onclick="">확대</button>
-		<button class="btn btn-success" onclick="">축소</button>
-		<button class="btn btn-success" onclick="gridEvent()">격자무늬</button>
-		<button class="btn btn-success" onclick="initCar()">초기화</button>
-	</div>
-	<button class="btn btn-primary" onclick="runWorkspace()">시작</button>
 </div>
 
 <script>
@@ -102,12 +109,8 @@
 	}
 	const runWorkspace = async () => {
 	    var code = generateCode();
-	    //console.log(code);
 	    try {
-	        console.log('Now running...');
 	        await eval(code);
-
-	        console.log('Done.');
 	    } catch (e) {
 	        alert(e);
 	    } finally {

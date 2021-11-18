@@ -9,7 +9,7 @@
 		<c:forEach items="${requestScope.mapList}" var="n" >
 		<div class="map-item mb-5">
 			<div class="card" onclick="location.href='/game/${requestScope.gameType.gameName}/${n.mapId}'">
-				<img class="card-img-top" src="/resources/images/${requestScope.gameType.gameName}/main.png" style="width:100%" />
+				<img class="card-img-top" src="/resources/images/game/thumbnail/${n.mapId}/thumbnail.png" style="width:100%" />
 				<div class="card-body">
 					<div class="card-text font-weight-bold my-1">${n.mapName}</div>
 					<div class="card-text">점수 : ${n.mapPoint}</div>
@@ -17,59 +17,5 @@
 			</div>
 		</div>
 		</c:forEach>
-		<div class="map-item mb-5">
-			<div class="card" onclick="location.href='/game/${requestScope.gameType.gameName}/${n.mapId}'">
-				<img class="card-img-top" src="/resources/images/${requestScope.gameType.gameName}/main.png" style="width:100%" />
-				<div class="card-body">
-					<div class="card-text font-weight-bold my-1">${n.mapName}</div>
-					<div class="card-text">점수 : ${n.mapPoint}</div>
-				</div>
-			</div>
-		</div>
-		<div class="map-item mb-5">
-			<div class="card" onclick="location.href='/game/${requestScope.gameType.gameName}/${n.mapId}'">
-				<img class="card-img-top" src="/resources/images/${requestScope.gameType.gameName}/main.png" style="width:100%" />
-				<div class="card-body">
-					<div class="card-text font-weight-bold my-1">${n.mapName}</div>
-					<div class="card-text">점수 : ${n.mapPoint}</div>
-				</div>
-			</div>
-		</div>
-		<div class="map-item mb-5">
-			<div class="card" onclick="location.href='/game/${requestScope.gameType.gameName}/${n.mapId}'">
-				<img class="card-img-top" src="/resources/images/${requestScope.gameType.gameName}/main.png" style="width:100%" />
-				<div class="card-body">
-					<div class="card-text font-weight-bold my-1">${n.mapName}</div>
-					<div class="card-text">점수 : ${n.mapPoint}</div>
-				</div>
-			</div>
-		</div>
-		<div class="map-item mb-5">
-			<div class="card" onclick="location.href='/game/${requestScope.gameType.gameName}/${n.mapId}'">
-				<img class="card-img-top" src="/resources/images/${requestScope.gameType.gameName}/main.png" style="width:100%" />
-				<div class="card-body">
-					<div class="card-text font-weight-bold my-1">${n.mapName}</div>
-					<div class="card-text">점수 : ${n.mapPoint}</div>
-				</div>
-			</div>
-		</div>
-		<div class="map-item mb-5">
-			<div class="card" onclick="location.href='/game/${requestScope.gameType.gameName}/${n.mapId}'">
-				<img class="card-img-top" src="/resources/images/${requestScope.gameType.gameName}/main.png" style="width:100%" />
-				<div class="card-body">
-					<div class="card-text font-weight-bold my-1">${n.mapName}</div>
-					<div class="card-text">점수 : ${n.mapPoint}</div>
-				</div>
-			</div>
-		</div>
-		<div class="map-item mb-5">
-			<div class="card" onclick="location.href='/game/${requestScope.gameType.gameName}/${n.mapId}'">
-				<img class="card-img-top" src="/resources/images/${requestScope.gameType.gameName}/main.png" style="width:100%" />
-				<div class="card-body">
-					<div class="card-text font-weight-bold my-1">${n.mapName}</div>
-					<div class="card-text">점수 : ${n.mapPoint}</div>
-				</div>
-			</div>
-		</div>
 	</div>
 </div>
