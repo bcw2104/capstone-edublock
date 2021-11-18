@@ -46,7 +46,7 @@
 				<div class="btn-group">
 					<button class="btn btn-success" onclick="gridEvent()">격자무늬</button>
 					<button class="btn btn-success" onclick="initCar()">초기화</button>
-					<button class="btn btn-primary" onclick="runWorkspace()">시작</button>
+					<button id="startBtn" class="btn btn-primary" onclick="runWorkspace()">시작</button>
 				</div>
 			</div>
 	        <div class="map-help p-3">
@@ -108,13 +108,18 @@
 	    return code;
 	}
 	const runWorkspace = async () => {
+		$("#startBtn").attr("disabled","disabled");
+		runningSound.play();
 	    var code = generateCode();
 	    try {
 	        await eval(code);
 	    } catch (e) {
 	        alert(e);
 	    } finally {
+	    	runningSound.pause();
 	        checkGoal();
+	        $("#startBtn").removeAttr("disabled");
+
 	    }
 	}
 </script>

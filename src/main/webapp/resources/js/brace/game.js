@@ -99,6 +99,10 @@ let gameOver = false;
 let gameOverText = null;
 let gridOn = true;
 
+const runningSound = new Audio("/resources/sounds/brace/running.mp3");
+runningSound.loop = true;
+runningSound.volume = 1;
+
 const imgCar = new Image();
 imgCar.src = "/resources/images/brace/cars/car1.png";
 const imgEle = new Image();
@@ -157,25 +161,13 @@ window.onload = function() {
 
 	$("#blockLimitCnt").text(mapObj.lb);
 
-    console.log("set origin");
-
     fuel = startingFuel;
-    console.log("set fule");
 	resizeCanvas();
 
     initMap(); // 맵 그리기
     initCar(); // 자동차 데이터 설정, 그리기
     drawElement(); // 요소 그리기
     gridEvent();
-    console.log("set img");
-
-    console.log(mapImgList[1][1].in);
-
-    console.log("1");
-    console.log(car.pos.x);
-    console.log(car.pos.y);
-    console.log(compass[car.dir]);
-    console.log(compass[car.dir]);
 }
 
 function resizeCanvas(){
