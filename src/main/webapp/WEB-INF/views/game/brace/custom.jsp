@@ -23,32 +23,40 @@
 			</div>
 			<div class="mr-2">
 				<select id="limit" class="form-control">
-					<option value="1">사용 가능 블록</option>
+					<option value="20">사용 가능 블록</option>
 				</select>
 			</div>
-			<button class="btn btn-primary" onclick="setConfig()">적용</button>
+			<div class="mr-2">
+				<input type="text" id="fuel" class="form-control" placeholder="제한 연료(기본 50)"/>
+			</div>
+			<button class="btn btn-purple" onclick="setConfig()">적용</button>
 		</div>
 	</div>
 	<div class="custom-wrap row mx-0 my-3">
 		<div class="map-nav">
 			<div class="map-nav-title text-white p-2">작업 도구</div>
 			<div class="map-ele-list">
-				<button type="button" class="btn w-100 dropdown-toggle" data-toggle="collapse" data-target="#start">출발지</button>
-				<ul id="start" class="p-0 collapse"> </ul>
-				<button type="button" class="btn w-100 dropdown-toggle" data-toggle="collapse" data-target="#dest">도착지</button>
-				<ul id="dest" class="p-0 collapse"> </ul>
-				<button type="button" class="btn w-100 dropdown-toggle" data-toggle="collapse" data-target="#road">도로</button>
-				<ul id="road"class="p-0 collapse"> </ul>
+				<button type="button" class="step1 btn w-100 dropdown-toggle" data-toggle="collapse" data-target="#start">출발지</button>
+				<ul id="start" class="step1-list p-0 collapse show"> </ul>
+				<button type="button" class="step1 btn w-100 dropdown-toggle" data-toggle="collapse" data-target="#dest">도착지</button>
+				<ul id="dest" class="step1-list p-0 collapse"> </ul>
+				<button type="button" class="step1 btn w-100 dropdown-toggle" data-toggle="collapse" data-target="#road">도로</button>
+				<ul id="road"class="step1-list p-0 collapse"> </ul>
+				<button type="button" class="step2 btn w-100 dropdown-toggle" data-toggle="collapse" data-target="#road">장애물</button>
+				<ul id="element"class="step2-list p-0 collapse"> </ul>
 			</div>
 		</div>
 		<div class="map-custom-box">
 			<div class="map-nav-title text-white p-2">작업 공간</div>
-		    <div class="map-board"></div>
+			<div class="custom-board">
+			    <div class="map-board"></div>
+		    </div>
 			<div class="text-right mt-5">
-			    <button class="btn btn-primary" onclick="reset()">초기화</button>
-			    <button class="btn btn-primary" onclick="save()">저장</button>
-				</div>
+			    <button class="btn btn-purple" onclick="reset()">초기화</button>
+			    <button id="progressBtn" class="btn btn-purple" onclick="next()">다음</button>
+			    <button class="btn btn-purple" onclick="save()">저장</button>
 			</div>
 		</div>
 	</div>
 	<div class="map-thumbnail"></div>
+</div>

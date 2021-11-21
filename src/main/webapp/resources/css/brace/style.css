@@ -30,7 +30,7 @@
 	border-radius: 0 0 0 15px;
 }
 .blocklyFlyoutBackground{
-	fill: rgb(224 234 255) !important;
+	fill:  #e0eaff !important;
 }
 .blocklySvg{
 	width: 100% !important;
@@ -76,7 +76,7 @@
 }
 
 .btn-hint{
-	background-color: rgb(224 234 255);
+	background-color:  #e0eaff;
 	border-radius: 5px;
 	width: 100%;
 }
