@@ -1,6 +1,7 @@
 var wSize = 10;
 var hSize = 10;
 var cursor = null;
+var eleCnt = 23;
 
 function drag(ev) {
 	ev.dataTransfer.setData("text", ev.target.id);
@@ -82,10 +83,13 @@ $(document).ready(function() {
 	createOption($("#limit"),12);
 	createBoard(wSize, hSize);
 
-	$(body).mousemove(function( ) {
+	$("body").mousemove(function( ) {
 		if(cursor != null){
 			$("#"+cursor).removeClass("map-hover");
 			cursor = null;
 		}
 	});
+	for(var i=1; i<=4; i++){
+		$("#start").append('<li class = "map-ele-item"><img id="drag'+i+'" src="/resources/images/brace/maps/map1/index'+i+'.jpg" ondragstart="drag(event)"></li>')
+	}
 });

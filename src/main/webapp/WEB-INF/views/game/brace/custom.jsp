@@ -32,20 +32,14 @@
 	<div class="custom-wrap row mx-0 my-3">
 		<div class="map-nav">
 			<div class="map-nav-title text-white p-2">작업 도구</div>
-			<ul class="map-ele-list">
-				<li class = "map-ele-item"><img id="drag0" src="/resources/images/brace/maps/map1/road_0.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag1" src="/resources/images/brace/maps/map1/road_1_1.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag2" src="/resources/images/brace/maps/map1/road_1_2.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag3" src="/resources/images/brace/maps/map1/road_2_1.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag4" src="/resources/images/brace/maps/map1/road_2_2.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag5" src="/resources/images/brace/maps/map1/road_2_3.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag6" src="/resources/images/brace/maps/map1/road_2_4.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag7" src="/resources/images/brace/maps/map1/road_3_1.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag8" src="/resources/images/brace/maps/map1/road_3_2.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag9" src="/resources/images/brace/maps/map1/road_3_3.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag10" src="/resources/images/brace/maps/map1/road_3_4.png" ondragstart="drag(event)"></li>
-			    <li class = "map-ele-item"><img id="drag11" src="/resources/images/brace/maps/map1/road_4.png" ondragstart="drag(event)"></li>
-			</ul>
+			<div class="map-ele-list">
+				<button type="button" class="btn w-100 dropdown-toggle" data-toggle="collapse" data-target="#start">출발지</button>
+				<ul id="start" class="p-0 collapse"> </ul>
+				<button type="button" class="btn w-100 dropdown-toggle" data-toggle="collapse" data-target="#dest">도착지</button>
+				<ul id="dest" class="p-0 collapse"> </ul>
+				<button type="button" class="btn w-100 dropdown-toggle" data-toggle="collapse" data-target="#road">도로</button>
+				<ul id="road"class="p-0 collapse"> </ul>
+			</div>
 		</div>
 		<div class="map-custom-box">
 			<div class="map-nav-title text-white p-2">작업 공간</div>

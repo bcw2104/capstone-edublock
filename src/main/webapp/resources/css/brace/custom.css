@@ -24,6 +24,14 @@
 	border-radius:0 0 15px 15px;
 }
 
+.map-ele-list *{
+	background-color:  rgb(224 234 255);
+}
+
+.map-ele-list .btn:focus{
+	box-shadow:0 !important;
+}
+
 .map-board{
 	font-size: 0px;
 	width: 850px;
@@ -54,7 +62,7 @@
 	}
 }
 
-.map-ele-list > .map-ele-item{
+.map-ele-item{
 	 list-style: none;
 	 display: inline-block;
 }

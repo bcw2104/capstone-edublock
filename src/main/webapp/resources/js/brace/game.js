@@ -8,7 +8,7 @@ class Point {
     constructor(isLocatable, x, y ,elementType, initState = 0) { // type이 0이면 아무것도 없는 것
         this.isLocatable = isLocatable;
         this.elementType = elementType;
-        this.pos = { x: x, y: y};
+        this.pos = {x: x, y: y};
         this.element = null;
 
         switch(elementType) {
@@ -108,7 +108,7 @@ imgCar.src = "/resources/images/brace/cars/car1.png";
 const imgEle = new Image();
 imgEle.src = "/resources/images/brace/element.png"
 const imgMap = new Image();
-imgMap.src = "/resources/images/brace/road.png";
+imgMap.src = "/resources/images/brace/maps/map1/road.jpg";
 
 const tileLength = 50;
 const lineWidth = 1;
@@ -172,8 +172,8 @@ window.onload = function() {
 
 function resizeCanvas(){
     $("canvas").each(function(i, element) {
-    	element.width = mapWidth*tileLength;
-    	element.height = mapHeight*tileLength;
+    	element.width = mapWidth*tileLength+tileLength-2;
+    	element.height = mapHeight*tileLength+tileLength-2;
     })
 }
 
@@ -182,7 +182,7 @@ function initMap() {
     const mapCanvas = document.getElementById("mapImgCanvas");
     const mapContext = mapCanvas.getContext("2d");
     mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height);
-    drawMap(mapContext, mapImgList, pointList, mapHeight, mapWidth);
+    drawMap(mapContext, mapImgList, mapHeight, mapWidth);
     console.log("맵 초기화");
 }
 
@@ -193,52 +193,21 @@ function clearMap() {
     mapContext.clearRect(0, 0, mapCanvas.width, mapCanvas.height);
 }
 
-function drawMap(mapContext, mapImgList, pointList, mapHeight, mapWidth) {
-    drawGrid(mapContext, pointList, mapHeight, mapWidth);
+function drawMap(mapContext, mapImgList, mapHeight, mapWidth) {
 
     console.log(mapImgList);
 
-    // mapImg를 통해 그림을 그림.
+    // imgMap을 통해 그림을 그림.
     for (let row = 0; row < mapHeight; row++) {
         for (let column = 0; column < mapWidth; column++) {
-            mapContext.drawImage(imgMap, tileLength * mapImgList[row][column].in, tileLength * mapImgList[row][column].d, tileLength, tileLength,
-                (tileLength + lineWidth) * column + lineWidth, (tileLength + lineWidth) * row + lineWidth, tileLength, tileLength);
+            mapContext.drawImage(imgMap,
+                (tileLength + 2*lineWidth) * mapImgList[row][column].in,
+                (tileLength + 2*lineWidth) * mapImgList[row][column].d,
+                (tileLength + 2*lineWidth), (tileLength + 2*lineWidth),
+                (tileLength + lineWidth) * column, (tileLength + lineWidth) * row,
+                (tileLength + 2*lineWidth), (tileLength + 2*lineWidth));
         }
     }
-}
-
-function drawGrid(mapContext, pointList, mapHeight, mapWidth) {
-    //테두리 그리기
-
-    mapContext.save();
-
-    for (let y = 0; y < mapHeight + 1; y++) {
-        for (let x = 0; x < mapWidth + 1; x++) {
-                if (pointList[y][x].isLocatable == 1) { mapContext.strokeStyle = onRoad; }
-                else { mapContext.strokeStyle = offRoad; }
-
-                mapContext.lineWidth = lineWidth;
-                drawCross(mapContext, x, y);
-        }
-    }
-
-    mapContext.restore();
-}
-
-function drawCross(mapContext, x, y) {
-    // 가로선
-    mapContext.beginPath();
-    mapContext.moveTo((tileLength + lineWidth) * x - tileLength/2, (tileLength + lineWidth) * y + lineWidth/2);
-    mapContext.lineTo((tileLength + lineWidth) * x + tileLength/2 + lineWidth, (tileLength + lineWidth) * y + lineWidth/2);
-    mapContext.stroke();
-    mapContext.closePath();
-
-    // 세로선
-    mapContext.beginPath();
-    mapContext.moveTo((tileLength + lineWidth) * x + lineWidth/2, (tileLength + lineWidth) * y - tileLength/2);
-    mapContext.lineTo((tileLength + lineWidth) * x + lineWidth/2, (tileLength + lineWidth) * y + tileLength/2 + lineWidth);
-    mapContext.stroke();
-    mapContext.closePath();
 }
 
 function setCanvasOrigin() {
@@ -290,7 +259,7 @@ function initElementState() {
     for (let y = 0; y < mapHeight; y++) {
         for (let x = 0; x < mapWidth; x++) {
             if (pointList[y][x].element != null) {
-                pointList[y][x].element.setState(mapObj.pl[y][x].ist);
+                pointList[y][x].element.setState(mapObj2.mapData.pl[y][x].ist);
             }
         }
     }
@@ -690,6 +659,7 @@ function getNextPos(dir) {
     return pos;
 }
 
+
 function initGame() {
     resetCanvasOrigin();
     setCanvasOrigin();
@@ -793,28 +763,40 @@ function setAfterMove() {
 
 async function action(dir) {
     console.log(gameOver);
+    console.log("action 시작");
     readyBeforeMove(dir);
+    console.log("애니메이션 시작");
     await moveCar(dir);
+    console.log("애니메이션 끝");
     checkGameOver();
     if (dir != stay) {fuel -= 1;}
     turn++;
     setAfterMove();
+    console.log("action 종료");
 }
 
 async function block_forward() {
+    console.log("전진 시작");
     await action(forward);
+    console.log("전진 끝");
 }
 
 async function block_leftForward() {
+    console.log("좌회전 시작");
     await action(leftForward);
+    console.log("좌회전 끝");
 }
 
 async function block_rightForward() {
+    console.log("우회전 시작");
     await action(rightForward);
+    console.log("우회전 끝");
 }
 
 async function block_backward() {
+    console.log("후진 시작");
     await action(backward);
+    console.log("후진 끝");
 }
 
 async function block_leftBackward() {
