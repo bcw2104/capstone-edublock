@@ -60,8 +60,8 @@ function save() {
 	});
 }
 
-function createOption(target, max) {
-	for (var i = 1; i <= max; i++) {
+function createOption(target, max,start,add) {
+	for (var i = start; i <= max; i+=add) {
 		target.append("<option value='"+i+"'>"+i+"</option>");
 	}
 }
@@ -158,9 +158,10 @@ function initMapElements(){
 
 
 $(document).ready(function() {
-	createOption($("#wSize"),10);
-	createOption($("#hSize"),10);
-	createOption($("#limit"),50);
+	createOption($("#wSize"),10,1,1);
+	createOption($("#hSize"),10,1,1);
+	createOption($("#limit"),50,1,1);
+	createOption($("#score"),30,5,5);
 	createMapBoard();
 
 	$("body").mousemove(function( ) {

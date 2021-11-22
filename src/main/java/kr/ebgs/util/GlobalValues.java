@@ -14,6 +14,10 @@ public class GlobalValues {
 	public final static String createTitle = "창작하기";
 	public final static String createPage = "/WEB-INF/views/custom/category.jsp";
 
+	//custom
+	public final static String communityTitle = "커뮤니티";
+	public final static String communityPage = "/WEB-INF/views/community/home.jsp";
+
 	//game
 	public final static String rankTitle = "랭킹";
 	public final static String rankPage = "/WEB-INF/views/game/rank.jsp";

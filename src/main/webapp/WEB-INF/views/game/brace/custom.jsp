@@ -12,6 +12,9 @@
 		<div class="setting-title text-white p-2">맵 설정</div>
 		<div class="row m-0 setting-form">
 			<div class="mr-2">
+				<input type="text" id="mapName" class="form-control" placeholder="맵 이름"/>
+			</div>
+			<div class="mr-2">
 				<select id="wSize" class="form-control">
 					<option value="10">가로</option>
 				</select>
@@ -27,9 +30,14 @@
 				</select>
 			</div>
 			<div class="mr-2">
-				<input type="text" id="fuel" class="form-control" placeholder="제한 연료(기본 50)"/>
+				<select id="score" class="form-control">
+					<option value="5">점수</option>
+				</select>
 			</div>
-			<button class="btn btn-purple" onclick="setConfig()">적용</button>
+			<div class="mr-2">
+				<input type="number" id="fuel" style="width:120px;" class="form-control" placeholder="제한 연료"/>
+			</div>
+			<button class="btn btn-primary" onclick="setConfig()">적용</button>
 		</div>
 	</div>
 	<div class="custom-wrap row mx-0 my-3">
@@ -52,9 +60,9 @@
 			    <div class="map-board"></div>
 		    </div>
 			<div class="text-right mt-5">
-			    <button class="btn btn-purple" onclick="reset()">초기화</button>
-			    <button id="progressBtn" class="btn btn-purple" onclick="next()">다음</button>
-			    <button class="btn btn-purple" onclick="save()">저장</button>
+			    <button class="btn btn-primary" onclick="reset()">초기화</button>
+			    <button id="progressBtn" class="btn btn-primary" onclick="next()">다음</button>
+			    <button class="btn btn-primary" onclick="save()">저장</button>
 			</div>
 		</div>
 	</div>

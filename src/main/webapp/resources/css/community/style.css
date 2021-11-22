@@ -1,0 +1,43 @@
+
+.search-form-wrap{
+	position: absolute;
+	top:0px;
+	right: 0px;
+}
+
+.search-form{
+	border :1px solid #ced4da;
+}
+
+.search-form .form-control:focus,
+.search-form .btn:focus{
+	outline:0 !important;
+	box-shadow: none !important;
+}
+
+.sort-nav-warp{
+	position:relative;
+}
+
+.sort-nav-warp > a{
+	position: absolute;
+    top: 0px;
+    right: 0px;
+}
+.nav-pills .nav-link{
+	font-size: 18px;
+	width: 150px;
+    text-align: center;
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .nav-link:hover,
+.nav-pills .show >.nav-link {
+    color: #ffffff !important;
+    background-color: #7a87e5 !important;
+}
+
+.tab-pane{
+	padding:30px 0;
+}
+

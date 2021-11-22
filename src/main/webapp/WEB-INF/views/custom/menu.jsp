@@ -16,7 +16,7 @@
 			</div>
 		</div>
 		<div class="mb-5 custom-item">
-			<div class="card" onclick="location.href='/custom/community'">
+			<div class="card" onclick="location.href='/community'">
 				<img class="card-img-top" src="/resources/images/community/main.jpg" style="width:100%" />
 				<div class="card-body">
 					<div class="card-text font-weight-bold my-1">커뮤니티</div>

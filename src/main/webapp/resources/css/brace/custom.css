@@ -9,15 +9,6 @@
 	border-radius: 0 0 15px 15px;
 }
 
-.btn-purple{
-	background-color: #7a87e5 !important;
-	color:#ffffff;
-}
-
-.btn-purple:hover{
-	background-color: #bed2ff !important;
-}
-
 .map-nav {
 	margin-right: 20px;
 }

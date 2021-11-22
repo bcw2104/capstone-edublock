@@ -11,6 +11,15 @@ pre{
 	font-size:100% !important;
 }
 
+.btn-primary{
+	background-color: #7a87e5 !important;
+	color:#ffffff;
+}
+
+.btn-primary:hover{
+	background-color: #535fb4 !important;
+}
+
 a:hover {
     text-decoration: none;
     color: black;
@@ -53,7 +62,7 @@ a:hover {
 
 .board-title{
 	display: inline-block;
-    border-bottom: 3px solid #007bff;
+	border-bottom: 5px solid #7a87e5;
 }
 
 .board-wrap {
