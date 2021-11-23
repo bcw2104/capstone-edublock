@@ -4,6 +4,7 @@
 
 <link rel="stylesheet" type="text/css" href="/resources/css/brace/custom.css">
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="/resources/js/brace/custom_logic.js"></script>
 <script src="/resources/js/brace/custom.js"></script>
 
 <div class="container board-wrap" >
@@ -44,14 +45,17 @@
 		<div class="map-nav">
 			<div class="map-nav-title text-white p-2">작업 도구</div>
 			<div class="map-ele-list">
-				<button type="button" class="step1 btn w-100 dropdown-toggle" data-toggle="collapse" data-target="#start">출발지</button>
+				<button id="startEleBtn" type="button" class="step1 btn w-100 dropdown-toggle" data-toggle="collapse" data-target="#start">출발지</button>
 				<ul id="start" class="step1-list p-0 collapse show"> </ul>
-				<button type="button" class="step1 btn w-100 dropdown-toggle" data-toggle="collapse" data-target="#dest">도착지</button>
+				<button id="endEleBtn" type="button" class="step1 btn w-100 dropdown-toggle" data-toggle="collapse" data-target="#dest">도착지</button>
 				<ul id="dest" class="step1-list p-0 collapse"> </ul>
 				<button type="button" class="step1 btn w-100 dropdown-toggle" data-toggle="collapse" data-target="#road">도로</button>
 				<ul id="road"class="step1-list p-0 collapse"> </ul>
-				<button type="button" class="step2 btn w-100 dropdown-toggle" data-toggle="collapse" data-target="#road">장애물</button>
+				<button type="button" class="step2 btn w-100 dropdown-toggle" data-toggle="collapse" data-target="#element">장애물</button>
 				<ul id="element"class="step2-list p-0 collapse"> </ul>
+				<div class="tool-wrap">
+					<img id="trash" class ="trash" src = "/resources/images/brace/trash1.png" onmouseover="this.src = '/resources/images/brace/trash2.png'" onmouseout="this.src = '/resources/images/brace/trash1.png'" ondragover="dragOver(event)" ondrop="drop(event)"></img>
+				</div>
 			</div>
 		</div>
 		<div class="map-custom-box">

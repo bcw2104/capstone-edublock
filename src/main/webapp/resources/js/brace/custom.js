@@ -5,42 +5,100 @@ var cursor = null;
 var limit = 20;
 var fuel = 50;
 var mapEleCnt = 23;
+var dragged;
 
 function drag(ev) {
-	ev.dataTransfer.setData("text", ev.target.id);
-	ev.dataTransfer.effectAllowed = "copy";
+	ev.dataTransfer.setData("src", $(ev.target).attr("src"));
+	ev.dataTransfer.setData("blockId", $(ev.target).attr("alt"));
+	ev.dataTransfer.setData("type", "drag");
+}
+
+function move(ev) {
+	ev.dataTransfer.setData("parentId", $(ev.target).parent().attr("id"));
+	ev.dataTransfer.setData("src", $(ev.target).attr("src"));
+	ev.dataTransfer.setData("blockId", $(ev.target).attr("alt"));
+	ev.dataTransfer.setData("type", "move");
 }
 
 function dragOver(ev) {
+	ev.preventDefault();
+
 	var target = $(ev.path[0]);
-	if(cursor != null && cursor != target.attr("id")){
-		$("#"+cursor).removeClass("map-hover");
+	if (cursor != null && cursor != target.attr("id")) {
+		$("#" + cursor).removeClass("map-hover");
 	}
 
-	$(ev.path[0]).addClass("map-hover");
+	target.addClass("map-hover");
 	cursor = target.attr("id");
-
-	ev.preventDefault();
 }
 
 function drop(ev) {
 	ev.preventDefault();
 
-	$("#"+cursor).removeClass("map-hover");
+	$("#" + cursor).removeClass("map-hover");
 	cursor = null;
 
-	var data = ev.dataTransfer.getData("text");
-	if (ev.dataTransfer.effectAllowed == "copy") {
-		var source = document.getElementById(data)
-		ev.target.style.backgroundImage = "url('" + source.src + "')";
+	var blockId = parseInt(ev.dataTransfer.getData("blockId").substring(4));
+	var source = ev.dataTransfer.getData("src");
+	var check = 0;
+	var index = parseInt(ev.target.id.substring(3));
+	var type = ev.dataTransfer.getData("type");
+
+	if (type == "drag") {	//작업 도구-> 작업 공간 이동
+		if (ev.target.id.indexOf('map') == 0 || ev.target.id.indexOf('ele') == 0) {
+			check = putBlock(index, blockId, wSize);
+			if (check == 1) {
+				$(ev.target).append('<img style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
+				if(blockId <=4){
+					$("#startEleBtn").attr("disabled", "disabled");
+					$("#start").removeClass("show");
+				}
+				else if(blockId <=8){
+					$("#endEleBtn").attr("disabled", "disabled").removeClass("show");
+					$("#dest").removeClass("show");
+				}
+			}
+			else {
+				alert("길이 연결되지 않습니다");
+			}
+		}
 	}
+	else if (type == "move") {
+		var parentId = ev.dataTransfer.getData("parentId");
+		var pIndex = parseInt(parentId.substring(3));
+		deleteBlock(pIndex, wSize);
+
+		if(ev.target.id.indexOf('map') == 0 || ev.target.id.indexOf('ele') == 0){
+			check = putBlock(index, blockId, wSize);
+			if (check == 1) {
+				$("#"+parentId).empty();
+				$(ev.target).append('<img style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
+			}
+			else {
+				putBlock(pIndex, blockId, wSize);
+				alert("길이 연결되지 않습니다");
+			}
+		}
+		else{
+			$("#"+parentId).empty();
+			if(blockId <=4){
+				$("#startEleBtn").removeAttr("disabled");
+			}
+			else if(blockId <=8){
+				$("#endEleBtn").removeAttr("disabled");
+			}
+		}
+	}
+
 }
 
 function reset() {
 	var ans = confirm("정말 초기화하시겠습니까?");
-	if(ans){
+	if (ans) {
 		$(".map-board").empty();
 		$(".element-board").empty();
+		initPoints();
+		initBoxes(wSize,hSize);
 		createMapBoard();
 	}
 }
@@ -60,15 +118,15 @@ function save() {
 	});
 }
 
-function createOption(target, max,start,add) {
-	for (var i = start; i <= max; i+=add) {
-		target.append("<option value='"+i+"'>"+i+"</option>");
+function createOption(target, max, start, add) {
+	for (var i = start; i <= max; i += add) {
+		target.append("<option value='" + i + "'>" +  i + "</option>");
 	}
 }
 
 function createMapBoard() {
 	for (var i = 1; i <= wSize * hSize; i++) {
-		$(".map-board").append("<div id='map" + i + "' class='guide-line' ondrop='drop(event)' ondragover='dragOver(event)' style='width:" + canvasSize + "%;height:" + canvasSize + "%'></div>")
+		$(".map-board").append("<div id='map" + i + "' class='custom-item guide-line' ondrop='drop(event)' ondragover='dragOver(event)' style='width:" + canvasSize + "%;height:" + canvasSize + "%'></div>")
 	}
 }
 
@@ -76,7 +134,7 @@ function createElementBoard() {
 	$(".map-board").after('<div class="element-board"></div>');
 
 	for (var i = 1; i <= wSize * hSize; i++) {
-		$(".element-board").append("<div id='ele" + i + "' class='element-item' ondrop='drop(event)' ondragover='dragOver(event)' style='width:" + canvasSize + "%;height:" + canvasSize + "%'></div>")
+		$(".element-board").append("<div id='ele" + i + "' class='custom-item guide-line' ondrop='drop(event)' ondragover='dragOver(event)' style='width:" + canvasSize + "%;height:" + canvasSize + "%'></div>")
 	}
 }
 
@@ -94,82 +152,95 @@ function setConfig() {
 	fuel = $("#fuel").val();
 }
 
-function enableStep1(){
+function enableStep1() {
 	$(".step1").removeAttr("disabled");
 }
-function disableStep1(){
-	$(".step1").attr("disabled","disabled").remove;
+function disableStep1() {
+	$(".step1").attr("disabled", "disabled");
 	$(".step1-list").removeClass("show");
 }
 
-function enableStep2(){
+function enableStep2() {
 	$(".step2").removeAttr("disabled");
 }
-function disableStep2(){
-	$(".step2").attr("disabled","disabled");
+function disableStep2() {
+	$(".step2").attr("disabled", "disabled");
 	$(".step2-list").removeClass("show");
 }
 
-function enableResize(){
+function enableResize() {
 	$("#wSize").removeAttr("disabled");
 	$("#hSize").removeAttr("disabled");
 }
 
-function disableResize(){
-	$("#wSize").attr("disabled","disabled");
-	$("#hSize").attr("disabled","disabled");
+function disableResize() {
+	$("#wSize").attr("disabled", "disabled");
+	$("#hSize").attr("disabled", "disabled");
 }
 
 //이전 단계로 이동 (맵 설정)
 function prev() {
 	var ans = confirm("이전 단계로 이동시 2단계 설정이 초기화됩니다. 정말 이동하시겠습니까?");
-	if(ans){
+	if (ans) {
 		$(".element-board").remove();
 		enableResize();
 		enableStep1();
 		disableStep2();
-		$("#progressBtn").attr("onclick","next()").text("다음");
+		$("#progressBtn").attr("onclick", "next()").text("다음");
 	}
 }
 
 //다음 단계로 이동 (요소 설정)
 function next() {
-	createElementBoard();
-	disableResize();
-	enableStep2();
-	disableStep1();
-	$("#progressBtn").attr("onclick","prev()").text("이전");
+	if(boxValidation(wSize,hSize)){
+		createElementBoard();
+		disableResize();
+		enableStep2();
+		disableStep1();
+		$("#progressBtn").attr("onclick", "prev()").text("이전");
+
+		mapEncoding(wSize,hSize);
+		console.log(createMap());
+	}
+	else{
+		alert("맵을 완성해주세요.");
+	}
 }
 
-function initMapElements(){
-	var i=1;
-	for(; i<=4; i++){
-		$("#start").append('<li class = "map-ele-item"><img id="drag'+i+'" src="/resources/images/brace/maps/map1/index'+i+'.jpg" ondragstart="drag(event)"></li>')
+function initMapElements() {
+	var i = 1;
+	for (; i <= 4; i++) {
+		$("#start").append('<li class = "map-ele-item"><img alt="drag' + i + '" src="/resources/images/brace/maps/map1/index' + i + '.jpg" ondragstart="drag(event)"></li>')
 	}
-	for(; i<=8; i++){
-		$("#dest").append('<li class = "map-ele-item"><img id="drag'+i+'" src="/resources/images/brace/maps/map1/index'+i+'.jpg" ondragstart="drag(event)"></li>')
+	for (; i <= 8; i++) {
+		$("#dest").append('<li class = "map-ele-item"><img alt="drag' + i + '" src="/resources/images/brace/maps/map1/index' + i +   '.jpg" ondragstart="drag(event)"></li>')
 	}
-	for(; i<=mapEleCnt; i++){
-		$("#road").append('<li class = "map-ele-item"><img id="drag'+i+'" src="/resources/images/brace/maps/map1/index'+i+'.jpg" ondragstart="drag(event)"></li>')
+	for (; i <= mapEleCnt; i++) {
+		$("#road").append('<li class = "map-ele-item"><img alt="drag' + i + '" src="/resources/images/brace/maps/map1/index' +  i + '.jpg" ondragstart="drag(event)"></li>')
 	}
 
+	for (i = 1; i <= 4; i++) {
+		$("#element").append('<li class = "map-ele-item"><img alt="drag' + i + '" src="/resources/images/brace/maps/map1/index' + i + '.jpg" ondragstart="drag(event)"></li>')
+	}
 	disableStep2();
 }
 
 
 $(document).ready(function() {
-	createOption($("#wSize"),10,1,1);
-	createOption($("#hSize"),10,1,1);
-	createOption($("#limit"),50,1,1);
-	createOption($("#score"),30,5,5);
+	createOption($("#wSize"), 10, 1, 1);
+	createOption($("#hSize"), 10, 1, 1);
+	createOption($("#limit"), 50, 1, 1);
+	createOption($("#score"), 30, 5, 5);
 	createMapBoard();
 
-	$("body").mousemove(function( ) {
-		if(cursor != null){
-			$("#"+cursor).removeClass("map-hover");
+	initPoints();
+	initBoxes(wSize, hSize);
+	initMapElements();
+
+	$("body").mousemove(function() {
+		if (cursor != null) {
+			$("#" + cursor).removeClass("map-hover");
 			cursor = null;
 		}
 	});
-
-	initMapElements();
 });
