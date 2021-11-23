@@ -66,6 +66,7 @@ function drop(ev) {
 	else if (type == "move") {
 		var parentId = ev.dataTransfer.getData("parentId");
 		var pIndex = parseInt(parentId.substring(3));
+
 		deleteBlock(pIndex, wSize);
 
 		if(ev.target.id.indexOf('map') == 0 || ev.target.id.indexOf('ele') == 0){
@@ -81,7 +82,7 @@ function drop(ev) {
 		}
 		else{
 			$("#"+parentId).empty();
-			if(blockId <=4){
+			if(pIndex <=4){
 				$("#startEleBtn").removeAttr("disabled");
 			}
 			else if(blockId <=8){
@@ -98,8 +99,14 @@ function reset() {
 		$(".map-board").empty();
 		$(".element-board").empty();
 		initPoints();
+		initImgs();
 		initBoxes(wSize,hSize);
 		createMapBoard();
+
+		enableResize();
+		enableStep1();
+		disableStep2();
+		$("#progressBtn").attr("onclick", "next()").text("다음");
 	}
 }
 
@@ -141,12 +148,20 @@ function createElementBoard() {
 // 부가 요소 설정
 function setConfig() {
 	if (wSize != $("#wSize").val() || hSize != $("#hSize").val()) {
-		wSize = $("#wSize").val();
-		hSize = $("#hSize").val();
-		canvasSize = (Number(wSize) > Number(hSize) ? 100 / wSize : 100 / hSize);
+		wSize = parseInt($("#wSize").val());
+		hSize = parseInt($("#hSize").val());
+		canvasSize = (wSize > hSize ? 100 / wSize : 100 / hSize);
 
 		$(".map-board").empty();
 		createMapBoard();
+
+		enableResize();
+		enableStep1();
+		disableStep2();
+
+		initPoints();
+		initImgs();
+		initBoxes(wSize, hSize);
 	}
 	limit = $("#limit").val();
 	fuel = $("#fuel").val();
@@ -186,6 +201,8 @@ function prev() {
 		enableResize();
 		enableStep1();
 		disableStep2();
+		initPoints();
+		initImgs();
 		$("#progressBtn").attr("onclick", "next()").text("다음");
 	}
 }
@@ -199,7 +216,12 @@ function next() {
 		disableStep1();
 		$("#progressBtn").attr("onclick", "prev()").text("이전");
 
-		mapEncoding(wSize,hSize);
+		try{
+			mapEncoding(wSize,hSize);
+		}
+		catch(e){
+			console.log(e);
+		}
 		console.log(createMap());
 	}
 	else{
@@ -227,9 +249,9 @@ function initMapElements() {
 
 
 $(document).ready(function() {
-	createOption($("#wSize"), 10, 1, 1);
-	createOption($("#hSize"), 10, 1, 1);
-	createOption($("#limit"), 50, 1, 1);
+	createOption($("#wSize"), 10, 3, 1);
+	createOption($("#hSize"), 10, 3, 1);
+	createOption($("#limit"), 50, 5, 1);
 	createOption($("#score"), 30, 5, 5);
 	createMapBoard();
 

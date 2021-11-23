@@ -23,7 +23,6 @@ public class CenterCommentDTO {
 
 	public CenterCommentDTO(int commentId, String commentAuthor, String commentAuthorNickname, String commentContent,
 			Date commentDate, int parentId, int postId) {
-		super();
 		this.commentId = commentId;
 		this.commentAuthor = commentAuthor;
 		this.commentAuthorNickname = commentAuthorNickname;

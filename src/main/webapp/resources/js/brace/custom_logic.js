@@ -1,15 +1,15 @@
 class CustomPoint {
-	constructor(isLocatable, elementType, initState = 0) {
-		this.isLocatable = isLocatable;
-		this.elementType = elementType;
-		this.initState = initState;
+	constructor(lct, et, ist = 0) {
+		this.lct = lct;
+		this.et = et;
+		this.ist = ist;
 	}
 }
 
 class CustomMapImg {
-	constructor(imgNum, direction) {
-		this.imgNum = imgNum;
-		this.direction = direction;
+	constructor(_in, d) {
+		this.in = _in;
+		this.d = d;
 	}
 }
 
@@ -57,7 +57,7 @@ class Block {
 				];
 				this.pointMember = [
 					[new CustomPoint(false, 0), new CustomPoint(true, 0), new CustomPoint(false, 0)],
-					[new CustomPoint(false, 0), new CustomPoint(true, 0), new CustomPoint(false, 0)],
+					[new CustomPoint(false, 0), new CustomPoint(false, 0), new CustomPoint(false, 0)],
 					[new CustomPoint(false, 0), new CustomPoint(false, 0), new CustomPoint(false, 0)]
 				];
 				break;
@@ -114,16 +114,16 @@ class Block {
 
 		for (let y = 0; y < 3; y++) {
 			for (let x = 0; x < 3; x++) {
-				temp.pointMember[y][x].isLocatable = this.pointMember[y][x].isLocatable;
-				temp.pointMember[y][x].elementType = this.pointMember[y][x].elementType;
-				temp.pointMember[y][x].initState = this.pointMember[y][x].initState;
+				temp.pointMember[y][x].lct = this.pointMember[y][x].lct;
+				temp.pointMember[y][x].et = this.pointMember[y][x].et;
+				temp.pointMember[y][x].ist = this.pointMember[y][x].ist;
 			}
 		}
 
 		for (let y = 0; y < 2; y++) {
 			for (let x = 0; x < 2; x++) {
-				temp.imgList[y][x].imgNum = this.imgList[y][x].imgNum;
-				temp.imgList[y][x].direction = this.imgList[y][x].direction;
+				temp.imgList[y][x].in = this.imgList[y][x].in;
+				temp.imgList[y][x].d = this.imgList[y][x].d;
 			}
 		}
 
@@ -139,7 +139,7 @@ const startingPoint = { x: -1, y: -1 };
 // 도착점
 const goalPoint = { x: -1, y: -1 };
 // 시작 방향
-let startingDirection = -1;
+let startingd = -1;
 // 점들의 데이터
 const points = new Array(maxHeight + 1).fill(null).map(() => new Array(maxWidth + 1));
 // 이미지 번호를 담는 리스트
@@ -216,96 +216,31 @@ function initImgs() {
 }
 
 // 맵의 사이즈 계산. 맵이 만들어져있지 않으면 null 리턴
-function calSize() {
-	const leftUpPos = { x: 0, y: 0 };
-	const rightDownPos = { x: maxWidth, y: maxHeight };
-	const flag = { x: 1, y: 1, endX: false, endY: false };
+function calSize(wSize,hSize) {
+	const leftUpPos = { x: wSize, y: hSize };
+	const rightDownPos = { x: 0, y: 0 };
 
-	// 좌상단 좌표 구하기
-	while (true) {
-		if (!flag.endY) {
-			for (let x = flag.x; x < maxWidth; x += 2) {
-				if (points[flag.y][x] != null) {
-					leftUpPos.y = flag.y - 1;
-					flag.endY = true;
-					break;
-				}
+	for (let y = 1; y <= hSize; y++) {
+		for (let x = 1; x <= wSize; x++) {
+			if(boxes[y][x] != null && boxes[y][x].blockId > 0){
+				leftUpPos.y = leftUpPos.y > y ? y : leftUpPos.y;
+				leftUpPos.x = leftUpPos.x > x ? x : leftUpPos.x;
+				rightDownPos.y = rightDownPos.y < y ? y : rightDownPos.y;
+				rightDownPos.x = rightDownPos.x < x ? x : rightDownPos.x;
 			}
-		}
-
-		if (!flag.endX) {
-			for (let y = flag.y; y < maxHeight; y += 2) {
-				if (points[y][flag.x] != null) {
-					leftUpPos.x = flag.x - 1;
-					flag.endX = true;
-					break;
-				}
-			}
-		}
-
-		flag.x += 2;
-		flag.y += 2;
-
-		if (flag.endX && flag.endY) {
-			break;
-		}
-
-		if (!(flag.x < maxWidth)) {
-			leftUpPos.x = -1;
-			leftUpPos.y = -1;
-			break;
-		}
-
-	}
-
-	// 블록이 하나도 없는 경우
-	if (leftUpPos.x == -1) {
-		mapWidth = 0;
-		mapHeight = 0;
-	}
-
-	// 우하단 좌표 구하기 준비
-	flag.x = maxWidth - 1;
-	flag.y = maxHeight - 1;
-	flag.endX = false;
-	flag.endY = false;
-
-	// 우하단 좌표 구하기
-	while (true) {
-		if (!flag.endY) {
-			for (let x = flag.x; x > 0; x -= 2) {
-				if (points[flag.y][x] != null) {
-					rightDownPos.y = flag.y + 1;
-					flag.endY = true;
-					break;
-				}
-			}
-		}
-
-		if (!flag.endX) {
-			for (let y = flag.y; y > 0; y -= 2) {
-				if (points[y][flag.x] != null) {
-					rightDownPos.x = flag.x + 1;
-					flag.endX = true;
-					break;
-				}
-			}
-		}
-
-		flag.x -= 2;
-		flag.y -= 2;
-
-		if (flag.endX && flag.endY) {
-			rightDownPos.x = flag.x;
-			rightDownPos.y = flag.y;
-			break;
 		}
 	}
 
-	mapWidth = rightDownPos.x - leftUpPos.x;
-	mapHeight = rightDownPos.y - leftUpPos.y;
-	originPoint.x = leftUpPos.x;
-	originPoint.y = leftUpPos.y;
+	leftUpPos.x = leftUpPos.x*2-1;
+	leftUpPos.y = leftUpPos.y*2-1;
+	rightDownPos.x = rightDownPos.x*2;
+	rightDownPos.y = rightDownPos.y*2;
+
+	mapWidth = rightDownPos.x - leftUpPos.x + 1;
+	mapHeight = rightDownPos.y - leftUpPos.y + 1;
+	originPoint.x = leftUpPos.x - 1;
+	originPoint.y = leftUpPos.y - 1;
+
 }
 
 // 블록 시계방향 회전
@@ -317,46 +252,46 @@ function turnBlock(block, dir) {
 
 	const temp = block.copy();
 
-	block.imgList[0][0].imgNum = temp.imgList[1][0].imgNum;
-	block.imgList[0][0].direction = (temp.imgList[1][0].direction + 1) % 4;
-	block.imgList[0][1].imgNum = temp.imgList[0][0].imgNum;
-	block.imgList[0][1].direction = (temp.imgList[0][0].direction + 1) % 4;
-	block.imgList[1][0].imgNum = temp.imgList[1][1].imgNum;
-	block.imgList[1][0].direction = (temp.imgList[1][1].direction + 1) % 4;
-	block.imgList[1][1].imgNum = temp.imgList[0][1].imgNum;
-	block.imgList[1][1].direction = (temp.imgList[0][1].direction + 1) % 4;
+	block.imgList[0][0].in = temp.imgList[1][0].in;
+	block.imgList[0][0].d = (temp.imgList[1][0].d + 1) % 4;
+	block.imgList[0][1].in = temp.imgList[0][0].in;
+	block.imgList[0][1].d = (temp.imgList[0][0].d + 1) % 4;
+	block.imgList[1][0].in = temp.imgList[1][1].in;
+	block.imgList[1][0].d = (temp.imgList[1][1].d + 1) % 4;
+	block.imgList[1][1].in = temp.imgList[0][1].in;
+	block.imgList[1][1].d = (temp.imgList[0][1].d + 1) % 4;
 
-	block.pointMember[0][0].isLocatable = temp.pointMember[1][0].isLocatable;
-	block.pointMember[0][0].elementType = temp.pointMember[1][0].elementType;
-	block.pointMember[0][0].initState = temp.pointMember[1][0].initState;
+	block.pointMember[0][0].lct = temp.pointMember[2][0].lct;
+	block.pointMember[0][0].et = temp.pointMember[2][0].et;
+	block.pointMember[0][0].ist = temp.pointMember[2][0].ist;
 
-	block.pointMember[0][1].isLocatable = temp.pointMember[0][0].isLocatable;
-	block.pointMember[0][1].elementType = temp.pointMember[0][0].elementType;
-	block.pointMember[0][1].initState = temp.pointMember[0][0].initState;
+	block.pointMember[0][1].lct = temp.pointMember[1][0].lct;
+	block.pointMember[0][1].et = temp.pointMember[1][0].et;
+	block.pointMember[0][1].ist = temp.pointMember[1][0].ist;
 
-	block.pointMember[0][2].isLocatable = temp.pointMember[0][1].isLocatable;
-	block.pointMember[0][2].elementType = temp.pointMember[0][1].elementType;
-	block.pointMember[0][2].initState = temp.pointMember[0][1].initState;
+	block.pointMember[0][2].lct = temp.pointMember[0][0].lct;
+	block.pointMember[0][2].et = temp.pointMember[0][0].et;
+	block.pointMember[0][2].ist = temp.pointMember[0][0].ist;
 
-	block.pointMember[1][0].isLocatable = temp.pointMember[2][0].isLocatable;
-	block.pointMember[1][0].elementType = temp.pointMember[2][0].elementType;
-	block.pointMember[1][0].initState = temp.pointMember[2][0].initState;
+	block.pointMember[1][0].lct = temp.pointMember[2][1].lct;
+	block.pointMember[1][0].et = temp.pointMember[2][1].et;
+	block.pointMember[1][0].ist = temp.pointMember[2][1].ist;
 
-	block.pointMember[1][2].isLocatable = temp.pointMember[0][2].isLocatable;
-	block.pointMember[1][2].elementType = temp.pointMember[0][2].elementType;
-	block.pointMember[1][2].initState = temp.pointMember[0][2].initState;
+	block.pointMember[1][2].lct = temp.pointMember[0][1].lct;
+	block.pointMember[1][2].et = temp.pointMember[0][1].et;
+	block.pointMember[1][2].ist = temp.pointMember[0][1].ist;
 
-	block.pointMember[2][0].isLocatable = temp.pointMember[2][1].isLocatable;
-	block.pointMember[2][0].elementType = temp.pointMember[2][1].elementType;
-	block.pointMember[2][0].initState = temp.pointMember[2][1].initState;
+	block.pointMember[2][0].lct = temp.pointMember[2][2].lct;
+	block.pointMember[2][0].et = temp.pointMember[2][2].et;
+	block.pointMember[2][0].ist = temp.pointMember[2][2].ist;
 
-	block.pointMember[2][1].isLocatable = temp.pointMember[2][2].isLocatable;
-	block.pointMember[2][1].elementType = temp.pointMember[2][2].elementType;
-	block.pointMember[2][1].initState = temp.pointMember[2][2].initState;
+	block.pointMember[2][1].lct = temp.pointMember[1][2].lct;
+	block.pointMember[2][1].et = temp.pointMember[1][2].et;
+	block.pointMember[2][1].ist = temp.pointMember[1][2].ist;
 
-	block.pointMember[2][2].isLocatable = temp.pointMember[2][0].isLocatable;
-	block.pointMember[2][2].elementType = temp.pointMember[2][0].elementType;
-	block.pointMember[2][2].initState = temp.pointMember[1][2].initState;
+	block.pointMember[2][2].lct = temp.pointMember[0][2].lct;
+	block.pointMember[2][2].et = temp.pointMember[0][2].et;
+	block.pointMember[2][2].ist = temp.pointMember[0][2].ist;
 
 	turnBlock(block, dir - 1);
 }
@@ -364,33 +299,33 @@ function turnBlock(block, dir) {
 function setBlock(pos, block) {
 	for (let blockY = 0; blockY < 3; blockY++) {
 		for (let blockX = 0; blockX < 3; blockX++) {
-			if (points[pos.y - 1 + blockY][pos.x - 1 + blockX] == null) {
-				points[pos.y - 1 + blockY][pos.x - 1 + blockX] = new CustomPoint(block.pointMember[blockY][blockX].isLocatable, block.pointMember[blockY][blockX].elementType, block.pointMember[blockY][blockX].initState);
+			points[pos.y - 1 + blockY][pos.x - 1 + blockX] = new CustomPoint(block.pointMember[blockY][blockX].lct, block.pointMember[blockY][blockX].et, block.pointMember[blockY][blockX].ist);
 
-				switch (points[pos.y - 1 + blockY][pos.x - 1 + blockX].elementType) {
-					case 1:
-						startingPoint.x = pos.x - 1 + blockX;
-						startingPoint.y = pos.y - 1 + blockY;
-						break;
-					case 2:
-						goalPoint.x = pos.x - 1 + blockX;
-						goalPoint.y = pos.y - 1 + blockY;
-						break;
-				}
+			switch (points[pos.y - 1 + blockY][pos.x - 1 + blockX].et) {
+				case 1:
+					console.log(pos.x,pos.y);
+					startingPoint.x = pos.x-originPoint.x - 1 + blockX;
+					startingPoint.y = pos.y-originPoint.y - 1 + blockY;
+					console.log("st : "+startingPoint.x,startingPoint.y)
+					break;
+				case 2:
+					console.log(pos.x,pos.y);
+					goalPoint.x = pos.x-originPoint.x - 1 + blockX;
+					goalPoint.y = pos.y-originPoint.y - 1 + blockY;
+					console.log("gt : "+ goalPoint.x ,goalPoint.y )
+					break;
 			}
 		}
 	}
-
 	for (let blockY = 0; blockY < 2; blockY++) {
 		for (let blockX = 0; blockX < 2; blockX++) {
-			images[pos.y - 1 + blockY][pos.x - 1 + blockX] = new CustomMapImg(block.imgList[blockY][blockX].imgNum, block.imgList[blockY][blockX].direction);
+			images[pos.y - 1 + blockY][pos.x - 1 + blockX] = new CustomMapImg(block.imgList[blockY][blockX].in, block.imgList[blockY][blockX].d);
 		}
 	}
 }
 
 // points와 images로 newMapData 정보들을 저장.
 function setMapData() {
-	calSize();
 	if (newMapData.mw == 0) {
 		initNewMap();
 		throw "맵이 존재하지 않습니다."
@@ -400,12 +335,12 @@ function setMapData() {
 	newMapData.pl = new Array(newMapData.mh + 1).fill(null).map(() => new Array(newMapData.mw + 1));
 	for (let y = 0; y < newMapData.mh + 1; y++) {
 		for (let x = 0; x < newMapData.mw + 1; x++) {
-			if (x == 0 || y == 0 || x == newMapData.mw || y == newMapData.mh) {
+			if (x == 0 || y == 0 || x == newMapData.mw+1 || y == newMapData.mh+1) {
 				newMapData.pl[y][x] = new CustomPoint(false, 0);
 			}
 			else {
-				if (points[originPoint.y + y - 1][originPoint.x + x - 1] != null) {
-					newMapData.pl[y][x] = points[originPoint.y + y - 1][originPoint.x + x - 1];
+				if (points[originPoint.y + y-1][originPoint.x + x -1] != null) {
+					newMapData.pl[y][x] = points[originPoint.y + y -1][originPoint.x + x -1];
 				}
 				else {
 					newMapData.pl[y][x] = new CustomPoint(false, 0);
@@ -417,12 +352,13 @@ function setMapData() {
 	newMapData.mil = new Array(newMapData.mh).fill(null).map(() => Array(newMapData.mw));
 	for (let y = 0; y < newMapData.mh; y++) {
 		for (let x = 0; x < newMapData.mw; x++) {
-			if (x == 0 || y == 0 || x == newMapData.mw - 1 || y == newMapData.mh - 1) {
-				newMapData.pl[y][x] = new CustomMapImg(0, 0);
+			if (x == 0 || y == 0 || x == newMapData.mw-1 || y == newMapData.mh-1) {
+				newMapData.mil[y][x] = new CustomMapImg(0, 0);
 			}
 			else {
-				if (images[originPoint.y + y - 1][originPoint.x + x - 1] != null) {
-					newMapData.mil[y][x] = images[originPoint.y + y - 1][originPoint.x + x - 1];
+				console.log(originPoint.x + x-1,originPoint.y + y-1)
+				if (images[originPoint.y + y-1][originPoint.x + x-1] != null) {
+					newMapData.mil[y][x] = images[originPoint.y + y-1][originPoint.x + x-1];
 				}
 				else {
 					newMapData.mil[y][x] = new CustomMapImg(0, 0);
@@ -435,14 +371,14 @@ function setMapData() {
 		initNewMap();
 		throw "시작점이 정해지지 않았습니다."
 	}
-	newMapData.sp.x = startingPoint.x + 1;
-	newMapData.sp.y = startingPoint.y + 1;
+	newMapData.sp.x = startingPoint.x + 1 - originPoint.x;
+	newMapData.sp.y = startingPoint.y + 1 - originPoint.y;
 	if (goalPoint.x == -1) {
 		initNewMap();
 		throw "도착지가 정해지지 않았습니다."
 	}
-	newMapData.gp.x = goalPoint.x + 1;
-	newMapData.gp.y = goalPoint.y + 1;
+	newMapData.gp.x = goalPoint.x + 1 - originPoint.x;
+	newMapData.gp.y = goalPoint.y + 1 - originPoint.y;
 	newMapData.op.x = Math.floor((maxWidth - mapWidth) / 2) + 1;
 	newMapData.op.y = Math.floor((maxHeight - mapHeight) / 2) + 1;
 	newMapData.sf = document.getElementById("");
@@ -512,7 +448,7 @@ function mapEncoding(wSize,hSize) {
 						break;
 					case 14:
 						blockType = 1;
-						direction = 2;
+						direction = 1;
 						break;
 					case 15:
 						blockType = 2;
@@ -553,77 +489,76 @@ function mapEncoding(wSize,hSize) {
 				}
 			}
 			else {
-				if (boxes[y][x] == null){
-					boxes[y][x] = new box(-1, false, false, false, false);
-				}
 				blockType = -1;
 				direction = 0;
 			}
 
 			let block = new Block(blockType);
 
-			switch (boxes[y][x].blockId) {
-				case 1:
-					block.pointMember[0][1].elementType = 1;
-					block.pointMember[0][1].initState = 2;
-					startingDirection = 0;
-					break;
-				case 2:
-					block.pointMember[0][1].elementType = 1;
-					block.pointMember[0][1].initState = 3;
-					startingDirection = 1;
-					break;
-				case 3:
-					block.pointMember[0][1].elementType = 1;
-					block.pointMember[0][1].initState = 0;
-					startingDirection = 2;
-					break;
-				case 4:
-					block.pointMember[0][1].elementType = 1;
-					block.pointMember[0][1].initState = 1;
-					startingDirection = 3;
-					break;
-				case 5:
-					block.pointMember[0][1].elementType = 2;
-					block.pointMember[0][1].initState = 2;
-					break;
-				case 6:
-					block.pointMember[0][1].elementType = 2;
-					block.pointMember[0][1].initState = 3;
-					break;
-				case 7:
-					block.pointMember[0][1].elementType = 2;
-					block.pointMember[0][1].initState = 0;
-					break;
-				case 8:
-					block.pointMember[0][1].elementType = 2;
-					block.pointMember[0][1].initState = 1;
-					break;
+			if (boxes[y][x] != null){
+				switch (boxes[y][x].blockId) {
+					case 1:
+						block.pointMember[0][1].et = 1;
+						block.pointMember[0][1].ist = 2;
+						startingDirection = 0;
+						break;
+					case 2:
+						block.pointMember[0][1].et = 1;
+						block.pointMember[0][1].ist = 3;
+						startingDirection = 1;
+						break;
+					case 3:
+						block.pointMember[0][1].et = 1;
+						block.pointMember[0][1].ist = 0;
+						startingDirection = 2;
+						break;
+					case 4:
+						block.pointMember[0][1].et = 1;
+						block.pointMember[0][1].ist = 1;
+						startingDirection = 3;
+						break;
+					case 5:
+						block.pointMember[0][1].et = 2;
+						block.pointMember[0][1].ist = 2;
+						break;
+					case 6:
+						block.pointMember[0][1].et = 2;
+						block.pointMember[0][1].ist = 3;
+						break;
+					case 7:
+						block.pointMember[0][1].et = 2;
+						block.pointMember[0][1].ist = 0;
+						break;
+					case 8:
+						block.pointMember[0][1].et = 2;
+						block.pointMember[0][1].ist = 1;
+						break;
+				}
+
+				turnBlock(block, direction);
+				const pos = { x: 2 * x - 1, y: 2 * y - 1 };
+				setBlock(pos, block);
 			}
-
-			turnBlock(block, direction);
-
-			const pos = { x: 2 * x - 1, y: 2 * y - 1 };
-			setBlock(pos, block);
 		}
 	}
+	calSize(wSize,hSize);
 
 	setMapData();
 }
 
 //*** 요소 데이터 newMapData에 추가
-function addElement(index, elementType, initState) {
+function addElement(index, et, ist) {
 	let x = 2 * (index % 10) + 2 - originPoint.x;
 	let y = 2 * parseInt(index / 10) + 2 - originPoint.y;
 
-	if (newMapData.pl[y][x].isLocatable) {
-		switch (elementType) {
+	if (newMapData.pl[y][x].lct) {
+		switch (et) {
 			case trafficLight:
-				newMapData.pl[y][x].elementType = trafficLight;
-				newMapData.pl[y][x].initState = initState;
+				newMapData.pl[y][x].et = trafficLight;
+				newMapData.pl[y][x].ist = ist;
 			case gasStation:
-				newMapData.pl[y][x].elementType = gasStation;
-				newMapData.pl[y][x].initState = initState;
+				newMapData.pl[y][x].et = gasStation;
+				newMapData.pl[y][x].ist = ist;
 		}
 	}
 	else {
@@ -636,8 +571,8 @@ function deleteElement(index) {
 	let x = 2 * (index % 10) + 2 - originPoint.x;
 	let y = 2 * parseInt(index / 10) + 2 - originPoint.y;
 
-	newMapData.pl[y][x].elementType = 0;
-	newMapData.pl[y][x].initState = 0;
+	newMapData.pl[y][x].et = 0;
+	newMapData.pl[y][x].ist = 0;
 }
 
 // 만든 맵을 저장할 때 호출되는 함수
@@ -693,8 +628,8 @@ function initBoxes(wSize, hSize) {
 }
 // *** 주변 box가 null인 경우를 제외하지 않음
 function putBlock(index, blockId, wSize) {
-	const x = index % wSize + 1;
-	const y = parseInt(index / wSize) + 1;
+	const x = (index-1) % wSize + 1;
+	const y = parseInt((index-1) / wSize) + 1;
 	var curbox = null;
 	var blockId = Number(blockId);
 	switch (blockId) {
@@ -778,8 +713,8 @@ function putBlock(index, blockId, wSize) {
 }
 
 function deleteBlock(index, wSize) {
-	const x = index % wSize + 1;
-	const y = parseInt(index / wSize) + 1;
+	const x = (index-1) % wSize + 1;
+	const y = parseInt((index-1) / wSize) + 1;
 	boxes[y][x] = null;
 }
 
