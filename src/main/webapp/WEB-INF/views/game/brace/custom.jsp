@@ -9,6 +9,7 @@
 
 <div class="container board-wrap" >
 	<div class="mb-5 board-title font-32 font-weight-bold">만들기</div>
+	<div id="gId" class="d-none">${gameType.gameId}</div>
 	<div class="setting">
 		<div class="setting-title text-white p-2">맵 설정</div>
 		<div class="row m-0 setting-form">
@@ -63,10 +64,9 @@
 			<div class="custom-board">
 			    <div class="map-board"></div>
 		    </div>
-			<div class="text-right mt-5">
+			<div id="progressBtnGroup" class="text-right mt-5">
 			    <button class="btn btn-primary" onclick="reset()">초기화</button>
 			    <button id="progressBtn" class="btn btn-primary" onclick="next()">다음</button>
-			    <button class="btn btn-primary" onclick="save()">저장</button>
 			</div>
 		</div>
 	</div>

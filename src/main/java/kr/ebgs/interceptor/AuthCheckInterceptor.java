@@ -40,7 +40,7 @@ public class AuthCheckInterceptor implements HandlerInterceptor {
 
 			if(user.getUserType().equals(Auth.Type.ADMIN.name())) return true;
 
-			response.sendError(401);
+			response.sendError(403);
 			return false;
 		}
 

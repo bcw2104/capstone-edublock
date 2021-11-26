@@ -87,6 +87,10 @@ public class GameService {
 		return gameMapper.selectGameRecord(gameRecord);
 	}
 
+	public void addGameContent(GameInfoDTO gameInfo){
+		gameMapper.addGameContent(gameInfo);
+	}
+
 	public void addGameClearRecord(String userId,int mapId){
 		GameRecordDTO gameRecord = new GameRecordDTO();
 		gameRecord.setMapId(mapId);

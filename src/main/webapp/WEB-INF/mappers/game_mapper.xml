@@ -11,7 +11,7 @@
 			</where>
 	</select>
 
-	<select id="selectGameInfo" resultType="GameInfoDTO" parameterType="GameInfoDTO">
+	<select id="selectGameInfo" resultType="gameInfoDTO" parameterType="gameInfoDTO">
 		SELECT game_info_tbl.*,game_tbl.game_name,user_tbl.user_nickname as author_nickname FROM
 			game_info_tbl
 				INNER JOIN
@@ -30,7 +30,7 @@
 			ORDER BY map_point ASC;
 	</select>
 
-	<select id="selectHotGameInfo" resultType="GameInfoDTO">
+	<select id="selectHotGameInfo" resultType="gameInfoDTO">
 		SELECT game_info_tbl.*,game_tbl.game_name,user_tbl.user_nickname as author_nickname FROM
 			game_info_tbl
 				INNER JOIN
@@ -42,7 +42,7 @@
 			ORDER BY reg_date DESC limit 4;
 	</select>
 
-	<select id="selectNewGameInfo" resultType="GameInfoDTO">
+	<select id="selectNewGameInfo" resultType="gameInfoDTO">
 		SELECT game_info_tbl.*,game_tbl.game_name,user_tbl.user_nickname as author_nickname FROM
 			game_info_tbl
 				INNER JOIN
@@ -61,6 +61,11 @@
 				<if test="userId != null">AND user_id = #{userId}</if>
 			</where>
 	</select>
+
+	<insert id="addGameContent" parameterType="gameInfoDTO">
+		INSERT INTO game_info_tbl(game_id,map_name,author_id,map_data,map_point,formal)
+			VALUES(#{gameId},#{mapName},#{authorId},#{mapData},#{mapPoint},#{formal})
+	</insert>
 
 	<insert id="addGameRecord" parameterType="gameRecordDTO">
 		INSERT INTO game_record_tbl(user_id,map_id) VALUES(#{userId},#{mapId})

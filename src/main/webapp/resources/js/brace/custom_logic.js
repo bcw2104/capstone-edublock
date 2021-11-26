@@ -25,6 +25,7 @@ const threeWay = 3;
 const intersection = 4;
 
 // *** 요소의 종류
+const used = -1;
 const none = 0;
 const sPoint = 1;
 const gPoint = 2;
@@ -174,7 +175,7 @@ const newMapData = {
 	},
 	sf: null,
 	sd: null,
-	lb: null
+	lb: 20
 }
 
 function initNewMap() {
@@ -299,20 +300,17 @@ function turnBlock(block, dir) {
 function setBlock(pos, block) {
 	for (let blockY = 0; blockY < 3; blockY++) {
 		for (let blockX = 0; blockX < 3; blockX++) {
-			points[pos.y - 1 + blockY][pos.x - 1 + blockX] = new CustomPoint(block.pointMember[blockY][blockX].lct, block.pointMember[blockY][blockX].et, block.pointMember[blockY][blockX].ist);
-
+			if(points[pos.y - 1 + blockY][pos.x - 1 + blockX] == null || points[pos.y - 1 + blockY][pos.x - 1 + blockX].et == 0){
+				points[pos.y - 1 + blockY][pos.x - 1 + blockX] = new CustomPoint(block.pointMember[blockY][blockX].lct, block.pointMember[blockY][blockX].et, block.pointMember[blockY][blockX].ist);
+			}
 			switch (points[pos.y - 1 + blockY][pos.x - 1 + blockX].et) {
 				case 1:
-					console.log(pos.x,pos.y);
 					startingPoint.x = pos.x-originPoint.x - 1 + blockX;
 					startingPoint.y = pos.y-originPoint.y - 1 + blockY;
-					console.log("st : "+startingPoint.x,startingPoint.y)
 					break;
 				case 2:
-					console.log(pos.x,pos.y);
 					goalPoint.x = pos.x-originPoint.x - 1 + blockX;
 					goalPoint.y = pos.y-originPoint.y - 1 + blockY;
-					console.log("gt : "+ goalPoint.x ,goalPoint.y )
 					break;
 			}
 		}
@@ -335,15 +333,17 @@ function setMapData() {
 	newMapData.pl = new Array(newMapData.mh + 1).fill(null).map(() => new Array(newMapData.mw + 1));
 	for (let y = 0; y < newMapData.mh + 1; y++) {
 		for (let x = 0; x < newMapData.mw + 1; x++) {
-			if (x == 0 || y == 0 || x == newMapData.mw+1 || y == newMapData.mh+1) {
-				newMapData.pl[y][x] = new CustomPoint(false, 0);
-			}
-			else {
-				if (points[originPoint.y + y-1][originPoint.x + x -1] != null) {
-					newMapData.pl[y][x] = points[originPoint.y + y -1][originPoint.x + x -1];
+			if(newMapData.pl[y][x] == null || newMapData.pl[y][x].et == 0){
+				if (x == 0 || y == 0 || x == newMapData.mw || y == newMapData.mh) {
+					newMapData.pl[y][x] = new CustomPoint(false, 0);
 				}
 				else {
-					newMapData.pl[y][x] = new CustomPoint(false, 0);
+					if (points[originPoint.y + y-1][originPoint.x + x -1] != null) {
+						newMapData.pl[y][x] = points[originPoint.y + y -1][originPoint.x + x -1];
+					}
+					else {
+						newMapData.pl[y][x] = new CustomPoint(false, 0);
+					}
 				}
 			}
 		}
@@ -356,7 +356,6 @@ function setMapData() {
 				newMapData.mil[y][x] = new CustomMapImg(0, 0);
 			}
 			else {
-				console.log(originPoint.x + x-1,originPoint.y + y-1)
 				if (images[originPoint.y + y-1][originPoint.x + x-1] != null) {
 					newMapData.mil[y][x] = images[originPoint.y + y-1][originPoint.x + x-1];
 				}
@@ -381,9 +380,7 @@ function setMapData() {
 	newMapData.gp.y = goalPoint.y + 1 - originPoint.y;
 	newMapData.op.x = Math.floor((maxWidth - mapWidth) / 2) + 1;
 	newMapData.op.y = Math.floor((maxHeight - mapHeight) / 2) + 1;
-	newMapData.sf = document.getElementById("");
 	newMapData.sd = startingDirection;
-	newMapData.lb = document.getElementById("");
 }
 
 //  boxes로 points, images 데이터 추가
@@ -498,38 +495,46 @@ function mapEncoding(wSize,hSize) {
 			if (boxes[y][x] != null){
 				switch (boxes[y][x].blockId) {
 					case 1:
+						block.pointMember[1][1].et = -1;
 						block.pointMember[0][1].et = 1;
 						block.pointMember[0][1].ist = 2;
 						startingDirection = 0;
 						break;
 					case 2:
+						block.pointMember[1][1].et = -1;
 						block.pointMember[0][1].et = 1;
 						block.pointMember[0][1].ist = 3;
 						startingDirection = 1;
 						break;
 					case 3:
+						block.pointMember[1][1].et = -1;
 						block.pointMember[0][1].et = 1;
 						block.pointMember[0][1].ist = 0;
 						startingDirection = 2;
 						break;
 					case 4:
+						block.pointMember[1][1].et = -1;
 						block.pointMember[0][1].et = 1;
 						block.pointMember[0][1].ist = 1;
 						startingDirection = 3;
 						break;
 					case 5:
+						block.pointMember[1][1].et = -1;
 						block.pointMember[0][1].et = 2;
 						block.pointMember[0][1].ist = 2;
 						break;
 					case 6:
+						block.pointMember[1][1].et = -1;
 						block.pointMember[0][1].et = 2;
 						block.pointMember[0][1].ist = 3;
 						break;
 					case 7:
+						block.pointMember[1][1].et = -1;
 						block.pointMember[0][1].et = 2;
 						block.pointMember[0][1].ist = 0;
 						break;
 					case 8:
+						block.pointMember[1][1].et = -1;
 						block.pointMember[0][1].et = 2;
 						block.pointMember[0][1].ist = 1;
 						break;
@@ -547,35 +552,57 @@ function mapEncoding(wSize,hSize) {
 }
 
 //*** 요소 데이터 newMapData에 추가
-function addElement(index, et, ist) {
-	let x = 2 * (index % 10) + 2 - originPoint.x;
-	let y = 2 * parseInt(index / 10) + 2 - originPoint.y;
+function addElement(index, et, ist,wSize) {
+	var x = (index-1) % wSize + 1;
+	var y = parseInt((index-1) / wSize) + 1;
 
-	if (newMapData.pl[y][x].lct) {
-		switch (et) {
-			case trafficLight:
-				newMapData.pl[y][x].et = trafficLight;
-				newMapData.pl[y][x].ist = ist;
-			case gasStation:
-				newMapData.pl[y][x].et = gasStation;
-				newMapData.pl[y][x].ist = ist;
-		}
+	if(boxes[y][x] == null){
+		return 0;
 	}
-	else {
-		throw "둘 수 없는 곳입니다."
+
+	x = 2*x-originPoint.x;
+	y = 2*y - originPoint.y;
+
+	if(newMapData.pl[y][x].et != 0){
+		return 0;
 	}
+
+	switch (et) {
+		case trafficLight:
+			newMapData.pl[y][x].et = trafficLight;
+			newMapData.pl[y][x].ist = ist;
+			break;
+		case gasStation:
+			newMapData.pl[y][x].et = gasStation;
+			newMapData.pl[y][x].ist = ist;
+			break;
+	}
+	return 1;
 }
 
 // *** 요소 데이터 newMapData에서 제거
-function deleteElement(index) {
-	let x = 2 * (index % 10) + 2 - originPoint.x;
-	let y = 2 * parseInt(index / 10) + 2 - originPoint.y;
+function deleteElement(index,wSize) {
+	var x = (index-1) % wSize + 1;
+	var y = parseInt((index-1) / wSize) + 1;
+
+	if(boxes[y][x] == null){
+		return 0;
+	}
+
+	x = 2*x - originPoint.x;
+	y = 2*y - originPoint.y;
 
 	newMapData.pl[y][x].et = 0;
 	newMapData.pl[y][x].ist = 0;
 }
 
 // 만든 맵을 저장할 때 호출되는 함수
+
+function setLimitElement(limit,fuel){
+	newMapData.sf = fuel;
+	newMapData.lb = limit;
+}
+
 function createMap() {
 	return JSON.stringify(newMapData);
 }

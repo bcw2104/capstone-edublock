@@ -43,11 +43,22 @@
 	        <canvas id="carImgCanvas" class="canvas" width="1125" height="1125"></canvas>
 	        <canvas id="elementImgCanvas" class="canvas" width="1125" height="1125">이 브라우저를 지원하지 않습니다.</canvas>
 	        <div class="btn-container">
-				<div class="btn-group">
+				<div class="btn-group w-100">
 					<button class="btn btn-success" onclick="gridEvent()">격자무늬</button>
-					<button class="btn btn-success" onclick="initCar()">초기화</button>
-					<button id="startBtn" class="btn btn-primary" onclick="runWorkspace()">시작</button>
+					<button class="btn btn-success" onclick="resetGame()">초기화</button>
+					<select id="speed" class="form-control btn btn-success">
+						<option value="1">진행 속도</option>
+						<option value="0.5">x0.5</option>
+						<option value="0.75">x0.75</option>
+						<option value="1">x1</option>
+						<option value="1.25">x1.25</option>
+						<option value="1.5">x1.5</option>
+						<option value="1.75">x1.75</option>
+						<option value="2">x2</option>
+						<option value="3">x3</option>
+					</select>
 				</div>
+				<button id="startBtn" class="btn btn-primary w-100 font-20" onclick="runWorkspace()">시작</button>
 			</div>
 	        <div class="map-help p-3">
         		<div class="map-aim mb-2 p-2">
@@ -63,6 +74,7 @@
 			<div class="block-board-header text-white p-2">
 				<div class="block-gen">블록 생성기</div>
 				<div class="block-ass">블록 조립판</div>
+				<div class="float-right mr-3">남은 연료 : <span id="fuelCnt"></span></div>
 				<div class="float-right mr-3">남은 블록 : <span id="blockLimitCnt"></span></div>
 			</div>
 		</div>
@@ -70,7 +82,7 @@
 </div>
 
 <script>
-	const mapObj = JSON.parse(${requestScope.gameInfo.mapData});
+	const mapObj = ${requestScope.gameInfo.mapData};
 	var limitBlock = mapObj.lb;
 	$("#blockLimitCnt").text(limitBlock);
 
@@ -85,8 +97,8 @@
 		});
 
 	function blockChange(event) {
-
 		if (event.type == Blockly.Events.BLOCK_CREATE) {
+			console.log(event.blockId);
 			limitBlock-=event.ids.length;
 	  	}
 		else if (event.type == Blockly.Events.BLOCK_DELETE) {

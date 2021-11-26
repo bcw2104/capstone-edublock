@@ -243,6 +243,11 @@
 		        </executions>
                 <configuration>
                 	<nosuffix>true</nosuffix>
+                	<excludes>
+				  		<exclude>**/ckeditor/**</exclude>
+				  		<exclude>**/blockly/**</exclude>
+				  		<exclude>**/brace/**.js</exclude>
+				    </excludes>
 				    <encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>

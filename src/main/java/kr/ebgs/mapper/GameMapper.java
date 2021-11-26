@@ -15,5 +15,6 @@ public interface GameMapper {
 	public ArrayList<GameInfoDTO> selectHotGameInfo();
 	public ArrayList<GameInfoDTO> selectNewGameInfo();
 	public ArrayList<GameRecordDTO> selectGameRecord(GameRecordDTO gameRecordDTO);
+	public void addGameContent(GameInfoDTO gameInfoDTO);
 	public void addGameRecord(GameRecordDTO gameRecordDTO);
 }

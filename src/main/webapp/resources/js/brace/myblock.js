@@ -44,11 +44,11 @@ Blockly.Blocks['start'] = {
    this.setHelpUrl("");
     }
   };
-  
+
   Blockly.Blocks['repeat'] = {
     init: function() {
       this.appendDummyInput()
-          .appendField(new Blockly.FieldNumber(0, 1, 6), "for")
+          .appendField(new Blockly.FieldNumber(0, 1, 20), "for")
           .appendField(new Blockly.FieldLabelSerializable("번 반복하기"), "반복");
       this.appendStatementInput("nextblock")
           .setCheck(null)
