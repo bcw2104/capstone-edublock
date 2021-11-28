@@ -47,7 +47,7 @@ function drop(ev) {
 		if (ev.target.id.indexOf('map') == 0) {
 			check = putBlock(index, blockId, wSize);
 			if (check == 1) {
-				$(ev.target).append('<img style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
+				$(ev.target).append('<img class="dragged-map" style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
 				if(blockId <=4){
 					$("#startEleBtn").attr("disabled", "disabled");
 					$("#start").removeClass("show");
@@ -64,7 +64,7 @@ function drop(ev) {
 		else if(ev.target.id.indexOf('ele') == 0){
 			if(addElement(index, blockId, 5,wSize)){
 				$("#"+parentId).empty();
-				$(ev.target).append('<img style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
+				$(ev.target).append('<img class="dragged-element" style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
 			}
 			else{
 				alert("놓을 수 없는 자리입니다.");
@@ -79,7 +79,7 @@ function drop(ev) {
 			check = putBlock(index, blockId, wSize);
 			if (check == 1) {
 				$("#"+parentId).empty();
-				$(ev.target).append('<img style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
+				$(ev.target).append('<img class="dragged-map" style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
 				deleteBlock(pIndex, wSize);
 			}
 			else {
@@ -89,7 +89,7 @@ function drop(ev) {
 		else if(ev.target.id.indexOf('ele') == 0){
 			if(addElement(index, blockId, 5,wSize)){
 				$("#"+parentId).empty();
-				$(ev.target).append('<img style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
+				$(ev.target).append('<img class="dragged-element" style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
 			}
 			else{
 				alert("놓을 수 없는 자리입니다.");
@@ -285,22 +285,53 @@ function next() {
 	}
 }
 
-function initMapElements() {
+function initElememt(){
+	for (i = 3; i <= 4; i++) {
+		$("#element").append('<li class = "ele-item"><img alt="drag' + i + '" src="/resources/images/brace/elements/element1/index' + i + '.png" ondragstart="drag(event)"></li>')
+	}
+}
+
+function initMapElements(idx) {
 	var i = 1;
 	for (; i <= 4; i++) {
-		$("#start").append('<li class = "map-ele-item"><img alt="drag' + i + '" src="/resources/images/brace/maps/map1/index' + i + '.png" ondragstart="drag(event)"></li>')
+		$("#start").append('<li class = "map-ele-item"><img alt="drag' + i + '" src="/resources/images/brace/maps/map'+idx+'/index' + i + '.png" ondragstart="drag(event)"></li>')
 	}
 	for (; i <= 8; i++) {
-		$("#dest").append('<li class = "map-ele-item"><img alt="drag' + i + '" src="/resources/images/brace/maps/map1/index' + i +   '.png" ondragstart="drag(event)"></li>')
+		$("#dest").append('<li class = "map-ele-item"><img alt="drag' + i + '" src="/resources/images/brace/maps/map'+idx+'/index' + i + '.png" ondragstart="drag(event)"></li>')
 	}
 	for (; i <= mapEleCnt; i++) {
-		$("#road").append('<li class = "map-ele-item"><img alt="drag' + i + '" src="/resources/images/brace/maps/map1/index' +  i + '.png" ondragstart="drag(event)"></li>')
-	}
-
-	for (i = 1; i <= 4; i++) {
-		$("#element").append('<li class = "map-ele-item"><img alt="drag' + i + '" src="/resources/images/brace/elements/element1/index' + i + '.png" ondragstart="drag(event)"></li>')
+		$("#road").append('<li class = "map-ele-item"><img alt="drag' + i + '" src="/resources/images/brace/maps/map'+idx+'/index' +  i + '.png" ondragstart="drag(event)"></li>')
 	}
 	disableStep2();
+}
+
+function changeMapElement(idx){
+	$(".map-ele-item").each(function(){
+		var blockId = parseInt($(this).find("img").attr("alt").substring(4));
+		$(this).find("img").attr("src","/resources/images/brace/maps/map"+idx+"/index"+ blockId + ".png");
+	});
+
+	$(".dragged-map").each(function(){
+		var blockId = parseInt($(this).attr("alt").substring(4));
+		$(this).attr("src","/resources/images/brace/maps/map"+idx+"/index"+ blockId + ".png");
+	});
+}
+
+function setCookie(name, value) {
+	var date = new Date();
+	date.setTime(date.getTime() + 24*60*60*1000);
+	document.cookie = name + '=' + value + ';expires=' + date.toUTCString() + ';path=/';
+};
+
+function getCookie(name) {
+	let matches = document.cookie.match(new RegExp(
+		"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+	));
+	return matches ? decodeURIComponent(matches[1]) : 1;
+}
+
+var deleteCookie = function(name) {
+	document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
 }
 
 
@@ -316,12 +347,20 @@ $(document).ready(function() {
 	initNewMap();
 	initPoints();
 	initBoxes(wSize, hSize);
-	initMapElements();
+	initElememt();
+	initMapElements(parseInt(getCookie("mid")));
 
 	$("body").mousemove(function() {
 		if (cursor != null) {
 			$("#" + cursor).removeClass("map-hover");
 			cursor = null;
 		}
+	});
+
+	$(".map-option-item").click(function(){
+		var idx = $(this).attr("id").substring(3);
+		changeMapElement(idx);
+		deleteCookie("mid");
+		setCookie("mid", idx, 1);
 	});
 });

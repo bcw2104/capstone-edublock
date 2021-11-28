@@ -38,10 +38,18 @@
 	background-color: #ffffff !important;
 	border-radius: 0 0 15px 15px;
 }
+
+.map-option{
+	min-width : 0px !important;
+}
+
+.map-option > img{
+	width: 120px;
+}
 .map-container{
 	position: relative;
-	width: 700px;
-    height: 800px;
+	width: 600px;
+    height: 860px;
 }
 
 #speed{
@@ -51,8 +59,8 @@
 
 .map-help{
 	position: absolute;
-	top:620px;
-	width: 700px;
+	top:720px;
+	width: 600px;
 
 	background-color: #7a87e5;
 	border-radius: 5px;
@@ -99,8 +107,8 @@
 
 .btn-container{
 	position: absolute;
-	top:513px;
-	width: 700px;
+	top:610px;
+	width: 600px;
 }
 
 .btn-container .btn{

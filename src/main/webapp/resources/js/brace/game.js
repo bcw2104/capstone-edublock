@@ -4,7 +4,9 @@ const startingPoint = 1;
 const goalPoint = 2;
 const trafficLight = 3;
 const gasStation = 4;
+const someObject = 5; // *** 추가
 
+// *** 수정
 class Point {
     constructor(isLocatable, x, y ,elementType, initState = 0) { // type이 0이면 아무것도 없는 것
         this.isLocatable = isLocatable;
@@ -26,6 +28,9 @@ class Point {
                 break;
             case gasStation:
                 this.element = new GasStation(initState);
+                break;
+            case someObject:
+                this.element = new SomeObject(initState);
                 break;
         }
     }
@@ -114,6 +119,20 @@ class GasStation {
     }
 }
 
+// *** 추가
+// 장애물 객체. 장애물 종류에 따라 something이 바뀌고 something에 따라 그림이 바뀜.
+class SomeObject {
+    constructor(initState) {
+        this.something = initState; // 0이면 없음, 1이상이면 어떤 장애물
+        this.exist = 1;
+    }
+
+    init(initState) {
+        this.something = initState;
+        this.exist = 1;
+    }
+}
+
 let limitTurn = 0;
 let turn = 0; // 움직임 횟수. 시간같은 개념
 let fuel = 0; // 자동차 연료
@@ -127,12 +146,20 @@ const runningSound = new Audio("/resources/sounds/brace/running.mp3");
 runningSound.loop = true;
 runningSound.volume = 1;
 
-const imgCar = new Image();
+let imgCar = new Image();
 imgCar.src = "/resources/images/brace/cars/car1.png";
-const imgEle = new Image();
+let imgEle = new Image();
 imgEle.src = "/resources/images/brace/elements/element1/element.png"
-const imgMap = new Image();
-imgMap.src = "/resources/images/brace/maps/map1/road.jpg";
+let imgMap = null;
+
+let imgMapList = [];
+
+for(var i=1; i<=4; i++){
+	let temp = new Image();
+	temp.src = "/resources/images/brace/maps/map"+i+"/road.png";
+	imgMapList.push(temp);
+}
+
 
 const tileLength = 50;
 const lineWidth = 1;
@@ -147,6 +174,7 @@ const backward = 4;
 const leftBackward = 5;
 const rightBackward = 6 ;
 const stay = 7;
+const honk = 8; // *** 추가
 
 const compass = [{x: 0, y: -1}, {x: 1, y: 0}, {x: 0, y: 1}, {x: -1, y: 0}]
 const up = 0;
@@ -175,10 +203,20 @@ window.onload = function() {
     resetCanvasOrigin();
     setCanvasOrigin();
 
+	imgMap = imgMapList[parseInt(getCookie("mid"))-1];
+
 	$("#blockLimitCnt").text(mapObj.lb);
 	$("#speed").change(function() {
 		changeSpeed(parseFloat($(this).val()));
 	});
+
+	$(".map-option-item").click(function(){
+		var idx = $(this).attr("id").substring(3);
+		changeImg(idx);
+		deleteCookie("mid");
+		setCookie("mid", idx, 1);
+	});
+
 	resizeCanvas();
 
 	initPoint();
@@ -189,22 +227,46 @@ window.onload = function() {
     gridEvent();
 }
 
+function setCookie(name, value) {
+	var date = new Date();
+	date.setTime(date.getTime() + 24*60*60*1000);
+	document.cookie = name + '=' + value + ';expires=' + date.toUTCString() + ';path=/';
+};
+
+function getCookie(name) {
+	let matches = document.cookie.match(new RegExp(
+		"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+	));
+	return matches ? decodeURIComponent(matches[1]) : 1;
+}
+
+var deleteCookie = function(name) {
+	document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
+}
+
+function changeImg(idx){
+	imgMap = imgMapList[idx-1];
+	initMap();
+}
+
+// *** 수정
 function initPoint(){
 	for (let y = 0; y < mapHeight + 1; y++) { // 포인트와 요소 초기화
-    for (let x = 0; x < mapWidth + 1; x++) {
-        pointList[y][x] = new Point(mapObj.pl[y][x].lct, x, y, mapObj.pl[y][x].et, mapObj.pl[y][x].ist);
+        for (let x = 0; x < mapWidth + 1; x++) {
+            pointList[y][x] = new Point(mapObj.pl[y][x].lct, x, y, mapObj.pl[y][x].et, mapObj.pl[y][x].ist);
+        }
     }
-}
 }
 
 function changeSpeed(m){
 	speed = speed * m;
 }
 
+// *** 수정
 function resizeCanvas(){
     $("canvas").each(function(i, element) {
-    	element.width = mapWidth*tileLength+tileLength-2;
-    	element.height = mapHeight*tileLength+tileLength-2;
+    	element.width = mapWidth*(tileLength + lineWidth) + lineWidth;
+    	element.height = mapHeight*(tileLength + lineWidth) + lineWidth;
     })
 }
 
@@ -290,7 +352,6 @@ function resetCanvasOrigin() {
     elementContext.setTransform(1, 0, 0, 1, 0, 0);
 }
 
-
 function drawElement() {
     const elementCanvas = document.getElementById("elementImgCanvas");
     const elementContext = elementCanvas.getContext("2d");
@@ -324,11 +385,40 @@ function drawElement() {
                         elementContext.translate((tileLength + lineWidth) * x + lineWidth, (tileLength + lineWidth) * y + lineWidth);
                         elementContext.drawImage(imgEle, (tileLength + lineWidth) * gasStation, (tileLength + lineWidth) * remainGas, tileLength, tileLength, -elementSize/2, -elementSize/2, elementSize, elementSize);
                         break;
+                    case someObject: // *** 추가
+                        elementContext.translate((tileLength + lineWidth) * x + lineWidth, (tileLength + lineWidth) * y + lineWidth);
+                        elementContext.drawImage(imgEle, (tileLength + lineWidth) * someObject, (tileLength + lineWidth) * pointList[y][x].element.something, tileLength, tileLength, -elementSize/2, -elementSize/2, elementSize, elementSize);
+                        break;
                 }
                 elementContext.restore();
             }
         }
     }
+}
+
+// *** 추가
+async function someObjectAnimation(pos, something) {
+    const startPos = {x: (tileLength + lineWidth) * pos.x + lineWidth, y: (tileLength + lineWidth) * pos.y + lineWidth};
+    const nowSize = {x: elementSize, y: elementSize};
+
+    const elementCanvas = document.getElementById("elementImgCanvas");
+    const elementContext = elementCanvas.getContext("2d");
+
+    while (nowSize.x < 0) {
+        elementContext.save();
+        elementCanvas.translate(startPos.x, startPos.y);
+        elementContext.clearMap(-nowSize.x/2, -nowSize.y/2, nowSize.x, nowSize.y);
+        elementContext.drawImage(imgEle, (tileLength + lineWidth) * someObject, (tileLength + lineWidth) * something, tileLength, tileLength, -nowSize.x/2, -nowSize.y/2, nowSize.x, nowSize.y);
+        elementContext.restore();
+        nowSize.x -= elementSize*speed/30;
+        nowSize.y -= elementSize*speed/30;
+        await delay(5);
+    }
+
+    elementContext.save();
+    elementCanvas.translate(startPos.x, startPos.y);
+    elementContext.clearMap(-elementSize/2, -elementSize/2, elementSize, elementSize);
+    elementContext.restore();
 }
 
 function initElement() {
@@ -458,6 +548,9 @@ function calPos(dir) {
             break;
         case stay: // 대기
             break;
+            // *** 추가
+        case hunk: // 경적
+            break;
     }
 }
 
@@ -472,16 +565,24 @@ function updateFuel(){
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-
+// *** 수정
 async function fueling(gas) {
-    if (gas > 0) {
-        fuel += 1;
-        updateFuel();
-        await delay(100);
-        await fueling(gas-1);
+    let time = 0;
+    let fuelTime = 0;
+
+    while(time < 100) {
+        while (time > fuelTime) {
+            fuel += 1;
+            updateFuel();
+            fuelTime += 100/gas;
+        }
+
+        time += speed;
+        await delay(5);
     }
 }
 
+// *** 각 애니메이션 주유소 처리 부분 수정
 async function forwardAnimation(carCanvas, carContext, startPos, startDir, distance = 0) {
 
     carContext.clearRect(0, 0, carCanvas.width, carCanvas.height);
@@ -493,10 +594,13 @@ async function forwardAnimation(carCanvas, carContext, startPos, startDir, dista
         carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
         carContext.restore();
 
+        // 주유소 처리
         if (getGas > 0 && distance + (speed * 2*(tileLength + lineWidth)/100) > (tileLength + lineWidth)) {
             await fueling(getGas);
             getGas = 0;
-            pointList[startPos.y + compass[startDir].y][startPos.x + compass[startDir].x].element.gas = 0
+            pointList[startPos.y + compass[startDir].y][startPos.x + compass[startDir].x].element.gas = 0;
+            turn++;
+            setAfterMove();
         }
 
         await delay(5);
@@ -509,6 +613,7 @@ async function forwardAnimation(carCanvas, carContext, startPos, startDir, dista
     }
 }
 
+// *** 각 애니메이션 주유소 처리 부분 수정
 async function backwardAnimation(carCanvas, carContext, startPos, startDir, distance = 0) {
 
     carContext.clearRect(0, 0, carCanvas.width, carCanvas.height);
@@ -520,10 +625,13 @@ async function backwardAnimation(carCanvas, carContext, startPos, startDir, dist
         carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
         carContext.restore();
 
+        // 주유소 처리
         if (getGas > 0 && distance + (speed * 2*(tileLength + lineWidth)/100) > (tileLength + lineWidth)) {
             await fueling(getGas);
             getGas = 0;
-            pointList[startPos.y + compass[startDir].y][startPos.x + compass[startDir].x].element.gas = 0
+            pointList[startPos.y + compass[startDir].y][startPos.x + compass[startDir].x].element.gas = 0;
+            turn++;
+            setAfterMove();
         }
 
         console.log(distance);
@@ -538,6 +646,7 @@ async function backwardAnimation(carCanvas, carContext, startPos, startDir, dist
 
 }
 
+// *** 각 애니메이션 주유소 처리 부분 수정
 async function leftForwardAnimation(carCanvas, carContext, startPos, startDir, radian = 0) {
     carContext.clearRect(0, 0, carCanvas.width, carCanvas.height);
     carContext.save();
@@ -550,10 +659,13 @@ async function leftForwardAnimation(carCanvas, carContext, startPos, startDir, r
         carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
         carContext.restore();
 
+        // 주유소 처리
         if (getGas > 0 && radian + speed * Math.PI/200 > Math.PI/4) {
             await fueling(getGas);
             getGas = 0;
             pointList[startPos.y + compass[startDir].y][startPos.x + compass[startDir].x].element.gas = 0
+            turn++;
+            setAfterMove();
         }
 
         console.log(radian);
@@ -569,6 +681,7 @@ async function leftForwardAnimation(carCanvas, carContext, startPos, startDir, r
     }
 }
 
+// *** 각 애니메이션 주유소 처리 부분 수정
 async function rightForwardAnimation(carCanvas, carContext, startPos, startDir, radian = 0) {
     carContext.clearRect(0, 0, carCanvas.width, carCanvas.height);
     carContext.save();
@@ -581,10 +694,13 @@ async function rightForwardAnimation(carCanvas, carContext, startPos, startDir, 
         carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
         carContext.restore();
 
+        // 주유소 처리
         if (getGas > 0 && radian + speed * Math.PI/200 > Math.PI/4) {
             await fueling(getGas);
             getGas = 0;
             pointList[startPos.y + compass[startDir].y][startPos.x + compass[startDir].x].element.gas = 0;
+            turn++;
+            setAfterMove();
         }
 
         console.log(radian);
@@ -599,6 +715,7 @@ async function rightForwardAnimation(carCanvas, carContext, startPos, startDir, 
     }
 }
 
+// *** 각 애니메이션 주유소 처리 부분 수정
 async function leftBackwardAnimation(carCanvas, carContext, startPos, startDir, radian = 0) {
     carContext.clearRect(0, 0, carCanvas.width, carCanvas.height);
     carContext.save();
@@ -611,10 +728,13 @@ async function leftBackwardAnimation(carCanvas, carContext, startPos, startDir, 
         carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
         carContext.restore();
 
+        // 주유소 처리
         if (getGas > 0 && radian + speed * Math.PI/200 > Math.PI/4) {
             await fueling(getGas);
             getGas = 0;
             pointList[startPos.y + compass[startDir].y][startPos.x + compass[startDir].x].element.gas = 0
+            turn++;
+            setAfterMove();
         }
 
         console.log(radian);
@@ -629,6 +749,7 @@ async function leftBackwardAnimation(carCanvas, carContext, startPos, startDir, 
     }
 }
 
+// *** 각 애니메이션 주유소 처리 부분 수정
 async function rightBackwardAnimation(carCanvas, carContext, startPos, startDir, radian = 0) {
     carContext.clearRect(0, 0, carCanvas.width, carCanvas.height);
     carContext.save();
@@ -641,10 +762,13 @@ async function rightBackwardAnimation(carCanvas, carContext, startPos, startDir,
         carContext.drawImage(imgCar, -carWidth/2, -carHeight/2);
         carContext.restore();
 
+        // 주유소 처리
         if (getGas > 0 && radian + speed * Math.PI/200 > Math.PI/4) {
             await fueling(getGas);
             getGas = 0;
             pointList[startPos.y + compass[startDir].y][startPos.x + compass[startDir].x].element.gas = 0
+            turn++;
+            setAfterMove();
         }
 
         console.log(radian);
@@ -663,6 +787,21 @@ async function stayAnimation(time = 0) {
     if (time < 100) {
         await delay(5);
         await stayAnimation(time + speed);
+    }
+}
+
+async function honkAnimation(startPos, startDir) { // *** 추가
+    // *** 여기에 경적소리 추가해야 함.
+    let time = 0;
+    const objectPoint = pointList[startPos.x + compass[startDir].x][startPos.y + compass[startDir].y];
+
+    while (time < 100) {
+        if (time > 50 && objectPoint.elementType == someObject && objectPoint.element.something != 0) {
+            someObjectAnimation(objectPoint.pos, objectPoint.element.something);
+            objectPoint.element.something = 0;
+        }
+        await delay(5);
+        time += speed;
     }
 }
 
@@ -709,10 +848,13 @@ async function carAnimation(dir, startPos, startDir) {
             await leftBackwardAnimation(carCanvas, carContext, startPos, startDir);
             break;
         case rightBackward:
-            await rightForwardAnimation(carCanvas, carContext, startPos, startDir);
+            await rightBackwardAnimation(carCanvas, carContext, startPos, startDir); // *** 오타 수정
             break;
         case stay:
             await stayAnimation();
+            break;
+        case honk: // *** 추가.
+            await honkAnimation(startPos, startDir);
             break;
     }
 }
@@ -778,6 +920,8 @@ function resetGame(){
 
 	initPoint();
 	initCar(); // 자동차 데이터 설정, 그리기
+
+	drawElement();
 }
 
 // 다음 포인트를 반환
@@ -804,6 +948,7 @@ async function checkGoal() { // 코드가 실행된 뒤 마지막에 결과를 �
 				if(res == "success"){
 					alert("도착했습니다.");
 					$("#passMark").removeClass("d-none");
+					resetGame();
 				}
 				else if(res == "fail"){
 					alert("서버에 오류가 발생했습니다.");
@@ -822,6 +967,7 @@ async function checkGoal() { // 코드가 실행된 뒤 마지막에 결과를 �
 
 // 블록의 시작에 필요한 함수
 function readyBeforeMove(dir) {
+    turn++;
     // 다음 위치가 갈 수 있는 곳인지 판단
     if(!canGoTo(dir)) {
         gameOver = true;
@@ -842,14 +988,25 @@ function readyBeforeMove(dir) {
 	                getGas = point.element.gas;
 	            }
 	            break;
+            case someObject: // *** 추가
+                if (point.element.something != 0) {
+                    gameOver = true;
+                    gameOverText = '무언가를 치었습니다.'
+                }
 	    }
 	}
 }
 
+// *** 수정. 카톡에 말한 부분
 // 블록의 끝에 필요한 함수
 function setAfterMove() {
     // 게임오버 조건 확인
     // 연료 확인
+    if (fuel == 0 && !block_isCarIn(goalPoint)) {
+        gameOver = true;
+        gameOverText = '연료가 바닥났습니다.';
+    }
+
 	// 맵 요소 상태 변경
     for (let y = 0; y < mapHeight + 1; y++) {
         for (let x = 0; x < mapWidth + 1; x++) {
@@ -868,23 +1025,16 @@ function setAfterMove() {
     drawElement();
 }
 
+// *** 수정. 카톡에 말한 부분
 async function action(dir) {
     if(!gameOver){
 	    readyBeforeMove(dir);
 	    await moveCar(dir);
-
-	    if (dir != stay) {
+	    if (dir != stay || dir != honk) {
 			fuel -= 1;
 			updateFuel();
-			if (fuel == 0 && !block_isCarIn(goalPoint)) {
-		        gameOver = true;
-		        gameOverText = '연료가 바닥났습니다.';
-		    }
 		}
-		else{
-		    turn++;
-		    setAfterMove();
-		}
+        setAfterMove();
 	}
 }
 
