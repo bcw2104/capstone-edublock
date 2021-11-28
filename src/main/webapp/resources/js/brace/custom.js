@@ -1,7 +1,6 @@
 var wSize = 10;
 var hSize = 10;
 var canvasSize = 10;
-var cursor = null;
 var gid;
 var mapEleCnt = 23;
 var dragged;
@@ -23,10 +22,9 @@ function dragOver(ev) {
 	ev.preventDefault();
 
 	var target = $(ev.path[0]);
-	if (cursor != null && cursor != target.attr("id")) {
-		$("#" + cursor).removeClass("map-hover");
-	}
-
+	$(".map-hover").each(function(){
+		$(this).removeClass("map-hover");
+	})
 	target.addClass("map-hover");
 	cursor = target.attr("id");
 }
@@ -34,8 +32,9 @@ function dragOver(ev) {
 function drop(ev) {
 	ev.preventDefault();
 
-	$("#" + cursor).removeClass("map-hover");
-	cursor = null;
+	$(".map-hover").each(function(){
+		$(this).removeClass("map-hover");
+	})
 
 	var blockId = parseInt(ev.dataTransfer.getData("blockId").substring(4));
 	var source = ev.dataTransfer.getData("src");
@@ -76,26 +75,28 @@ function drop(ev) {
 		var pIndex = parseInt(parentId.substring(3));
 
 		if(ev.target.id.indexOf('map') == 0){
+			deleteBlock(pIndex, wSize);
 			check = putBlock(index, blockId, wSize);
 			if (check == 1) {
 				$("#"+parentId).empty();
 				$(ev.target).append('<img class="dragged-map" style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
-				deleteBlock(pIndex, wSize);
 			}
 			else {
+				putBlock(pIndex, blockId, wSize);
 				alert("길이 연결되지 않습니다");
 			}
 		}
 		else if(ev.target.id.indexOf('ele') == 0){
 			if(addElement(index, blockId, 5,wSize)){
 				$("#"+parentId).empty();
+				deleteElement(pIndex, wSize);
 				$(ev.target).append('<img class="dragged-element" style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
 			}
 			else{
 				alert("놓을 수 없는 자리입니다.");
 			}
 		}
-		else{
+		else if(ev.target.id.indexOf('trash')== 0){
 			$("#"+parentId).empty();
 
 			if(parentId.indexOf('map') == 0 ){
@@ -135,19 +136,6 @@ function reset() {
 
 //저장 - 서버에 전송
 function save() {
-	/*
-	$(".map-board").find("div").each(function() {
-		$(this).removeClass("guide-line");
-	});
-
-	html2canvas(document.querySelector("div.map-board")).then(canvas => {
-		$(".map-thumbnail").append(canvas);
-	});
-
-	$(".map-board").find("div").each(function() {
-		$(this).addClass("guide-line");
-	});
-	*/
 
 	var limit = $("#limit").val();
 	var fuel = 20;
@@ -196,7 +184,7 @@ function createElementBoard() {
 	$(".map-board").after('<div class="element-board"></div>');
 
 	for (var i = 1; i <= wSize * hSize; i++) {
-		$(".element-board").append("<div id='ele" + i + "' class='custom-item guide-line' ondrop='drop(event)' ondragover='dragOver(event)' style='width:" + canvasSize + "%;height:" + canvasSize + "%'></div>")
+		$(".element-board").append("<div id='ele" + i + "' class='custom-item' ondrop='drop(event)' ondragover='dragOver(event)' style='width:" + canvasSize + "%;height:" + canvasSize + "%'></div>")
 	}
 }
 
@@ -349,13 +337,6 @@ $(document).ready(function() {
 	initBoxes(wSize, hSize);
 	initElememt();
 	initMapElements(parseInt(getCookie("mid")));
-
-	$("body").mousemove(function() {
-		if (cursor != null) {
-			$("#" + cursor).removeClass("map-hover");
-			cursor = null;
-		}
-	});
 
 	$(".map-option-item").click(function(){
 		var idx = $(this).attr("id").substring(3);
