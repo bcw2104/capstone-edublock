@@ -3,8 +3,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <link rel="stylesheet" type="text/css" href="/resources/css/brace/custom.css">
+<link rel="stylesheet" href="/resources/css/brace/canvas.css">
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script src="/resources/js/brace/custom_logic.js"></script>
+<script src="/resources/js/brace/draw.js"></script>
 <script src="/resources/js/brace/custom.js"></script>
 
 <div class="container board-wrap" >
@@ -81,5 +83,8 @@
 			</div>
 		</div>
 	</div>
-	<div class="map-thumbnail"></div>
+	<div class="map-thumbnail">
+		<canvas id="thumbnailCanvas" class="canvas" width="1125" height="1125"></canvas>
+	</div>
+	<div id="temp" class="d-none"></div>
 </div>

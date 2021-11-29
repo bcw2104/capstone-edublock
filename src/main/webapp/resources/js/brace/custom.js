@@ -136,12 +136,10 @@ function reset() {
 
 //저장 - 서버에 전송
 function save() {
-
 	var limit = $("#limit").val();
 	var fuel = 20;
 	var mapPoint = $("#score").val();
 	var mapName;
-
 
 	if($("#mapName").val().length == 0){
 		alert("맵에 이름을 지어주세요.");
@@ -152,19 +150,49 @@ function save() {
 	fuel = isNaN(parseInt($("#fuel").val())) ? fuel : parseInt($("#fuel").val());
 
 	setLimitElement(limit,fuel);
+
 	var mapData = createMap();
+	var thumbnailCanvas = document.getElementById("thumbnailCanvas");
 
-	var queryString = {gameId:gid,mapName:mapName, mapData:mapData, mapPoint : mapPoint};
+	drawThumbnail(parseInt(getCookie("mid"))-1);
 
-	$.ajax({
-		url : "/custom/create/save.do",
-		type:"post",
-		data : queryString,
-		success:function(res){
-			if(res == "success"){
-				alert("맵이 성공적으로 제작되었습니다.");
+	var thumbnail = thumbnailCanvas.toDataURL("image/png");
+
+	clearCanvas();
+
+	$("#temp").css('background-image', 'url("'+thumbnail+'")');
+
+	$("#temp").toggleClass("d-none");
+	html2canvas(document.querySelector("#temp")).then(canvas => {
+	    thumbnail = canvas.toDataURL("image/png", 0.5);
+		var blobBin = atob(thumbnail.split(',')[1]);	// base64 데이터 디코딩
+	    var array = [];
+	    for (var i = 0; i < blobBin.length; i++) {
+	        array.push(blobBin.charCodeAt(i));
+	    }
+	    var file = new Blob([new Uint8Array(array)], {type: 'image/png'});
+		var formdata = new FormData();
+    	formdata.append("gameId", gid);
+		formdata.append("mapName", mapName);
+		formdata.append("mapData", mapData);
+		formdata.append("mapPoint", mapPoint);
+		formdata.append("thumbnailData", file);
+
+		$.ajax({
+			url : "/custom/create/save.do",
+			type:"post",
+			enctype: "multipart/form-data",
+			data : formdata,
+			processData : false,	// data 파라미터 강제 string 변환 방지
+    		contentType : false,
+			success:function(res){
+				if(res == "success"){
+					alert("맵이 성공적으로 제작되었습니다.");
+				}
 			}
-		}
+		});
+
+		$("#temp").toggleClass("d-none");
 	});
 }
 
@@ -342,6 +370,6 @@ $(document).ready(function() {
 		var idx = $(this).attr("id").substring(3);
 		changeMapElement(idx);
 		deleteCookie("mid");
-		setCookie("mid", idx, 1);
+		setCookie("mid", idx);
 	});
 });

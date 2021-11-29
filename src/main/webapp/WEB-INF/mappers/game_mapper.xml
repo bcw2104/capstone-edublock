@@ -63,8 +63,8 @@
 	</select>
 
 	<insert id="addGameContent" parameterType="gameInfoDTO">
-		INSERT INTO game_info_tbl(game_id,map_name,author_id,map_data,map_point,formal)
-			VALUES(#{gameId},#{mapName},#{authorId},#{mapData},#{mapPoint},#{formal})
+		INSERT INTO game_info_tbl(game_id,map_name,author_id,map_data,map_point,formal,thumbnail)
+			VALUES(#{gameId},#{mapName},#{authorId},#{mapData},#{mapPoint},#{formal},#{thumbnail})
 	</insert>
 
 	<insert id="addGameRecord" parameterType="gameRecordDTO">

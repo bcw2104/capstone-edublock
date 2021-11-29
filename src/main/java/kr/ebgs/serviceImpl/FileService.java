@@ -18,6 +18,10 @@ public class FileService {
 		return (extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png") || extension.equals("bmp") || extension.equals("svg"));
 	}
 
+	public String getThumbnailPath() {
+		return "/resources/images/game/thumbnail";
+	}
+
 	public String getCommonProfilePath() {
 		return "/resources/images/profile";
 	}
@@ -39,7 +43,7 @@ public class FileService {
 		return file.getName();
 	}
 
-	public void changeProfileImg(String path, MultipartFile mfile) throws Exception {
+	public void uploadFile(String path, MultipartFile mfile) throws Exception {
 		fileTool.createFile(path , mfile);
 	}
 
