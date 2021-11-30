@@ -44,11 +44,22 @@ Blockly.Blocks['start'] = {
    this.setHelpUrl("");
     }
   };
-
+  Blockly.Blocks['stay'] = {
+    init: function() {
+      this.appendDummyInput()
+          .appendField("대기 하기");
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(105);
+   this.setTooltip("");
+   this.setHelpUrl("");
+    }
+  };
+  
   Blockly.Blocks['repeat'] = {
     init: function() {
       this.appendDummyInput()
-          .appendField(new Blockly.FieldNumber(0, 1, 20), "for")
+          .appendField(new Blockly.FieldNumber(0, 1, 6), "for")
           .appendField(new Blockly.FieldLabelSerializable("번 반복하기"), "반복");
       this.appendStatementInput("nextblock")
           .setCheck(null)
@@ -62,7 +73,24 @@ Blockly.Blocks['start'] = {
     }
   };
 
-
+  Blockly.Blocks['if'] = {
+    init: function() {
+      this.appendDummyInput()
+          .setAlign(Blockly.ALIGN_RIGHT)
+          .appendField("만약 신호등이 ")
+          .appendField(new Blockly.FieldDropdown([["빨간색","red"], ["초록색","green"], ["",""]]), "flag")
+          .appendField("이라면");
+      this.appendStatementInput("nextblock")
+          .setCheck(null)
+          .appendField(new Blockly.FieldLabelSerializable(""), "next");
+      this.setInputsInline(true);
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(105);
+   this.setTooltip("");
+   this.setHelpUrl("");
+    }
+  }
   Blockly.Themes.jys = Blockly.Theme.defineTheme('jys', {
     'base': Blockly.Themes.Classic,
     'blockStyles': {

@@ -19,6 +19,8 @@
     <block type="left"></block>
     <block type="right"></block>
     <block type="repeat"></block>
+    <block type="if"></block>
+    <block type="stay"></block>
 </xml>
 
 
