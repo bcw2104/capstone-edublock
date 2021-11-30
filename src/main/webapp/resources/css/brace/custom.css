@@ -1,3 +1,8 @@
+.canvas {
+	max-width: 200px;
+    max-height: 200px;
+}
+
 .setting-title, .map-nav-title {
 	background-color: #7a87e5 !important;
 	border-radius: 15px 15px 0 0;
@@ -95,11 +100,13 @@
 	}
 }
 
+.ele-item,
 .map-ele-item {
 	list-style: none;
 	display: inline-block;
 }
 
+.ele-item > img,
 .map-ele-item>img {
 	width: 70px;
 	cursor: pointer;
@@ -107,6 +114,7 @@
 	margin: 5px;
 }
 
+ele-item>img:hover
 .map-ele-item>img:hover {
 	transform: translateY(-5px);
 }
@@ -129,4 +137,14 @@
 
 .map-thumbnail {
 	display: none;
+	width: 200px;
+    height: 200px;
+}
+
+#temp{
+	width: 200px;
+    height: 200px;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
 }

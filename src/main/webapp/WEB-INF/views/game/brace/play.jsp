@@ -36,7 +36,18 @@
 			<span class="font-15 text-secondary"><fmt:formatDate value="${requestScope.gameInfo.regDate}" pattern="yyyy-MM-dd"/></span>
 			</c:if>
 		</div>
-		<a href="/game/${requestScope.gameType.gameName}"><button class="btn btn-primary">목록으로</button></a>
+		<div class="header-options row m-0">
+			<div class="dropdown mr-1">
+				<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">맵 테마</button>
+				<div class="dropdown-menu map-option">
+					<img id="map1" class="map-option-item dropdown-item" src="/resources/images/brace/maps/map1/index13.png">
+					<img id="map2" class="map-option-item dropdown-item" src="/resources/images/brace/maps/map2/index13.png">
+					<img id="map3" class="map-option-item dropdown-item" src="/resources/images/brace/maps/map3/index13.png">
+					<img id="map4" class="map-option-item dropdown-item" src="/resources/images/brace/maps/map4/index13.png">
+				</div>
+			</div>
+			<a href="/game/${requestScope.gameType.gameName}"><button class="btn btn-primary">목록으로</button></a>
+		</div>
 	</div>
 	<div class="row m-0">
 		<div class="map-container mr-4">

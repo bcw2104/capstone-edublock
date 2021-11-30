@@ -1,7 +1,6 @@
 var wSize = 10;
 var hSize = 10;
 var canvasSize = 10;
-var cursor = null;
 var gid;
 var mapEleCnt = 23;
 var dragged;
@@ -23,10 +22,9 @@ function dragOver(ev) {
 	ev.preventDefault();
 
 	var target = $(ev.path[0]);
-	if (cursor != null && cursor != target.attr("id")) {
-		$("#" + cursor).removeClass("map-hover");
-	}
-
+	$(".map-hover").each(function(){
+		$(this).removeClass("map-hover");
+	})
 	target.addClass("map-hover");
 	cursor = target.attr("id");
 }
@@ -34,8 +32,9 @@ function dragOver(ev) {
 function drop(ev) {
 	ev.preventDefault();
 
-	$("#" + cursor).removeClass("map-hover");
-	cursor = null;
+	$(".map-hover").each(function(){
+		$(this).removeClass("map-hover");
+	})
 
 	var blockId = parseInt(ev.dataTransfer.getData("blockId").substring(4));
 	var source = ev.dataTransfer.getData("src");
@@ -47,7 +46,7 @@ function drop(ev) {
 		if (ev.target.id.indexOf('map') == 0) {
 			check = putBlock(index, blockId, wSize);
 			if (check == 1) {
-				$(ev.target).append('<img style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
+				$(ev.target).append('<img class="dragged-map" style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
 				if(blockId <=4){
 					$("#startEleBtn").attr("disabled", "disabled");
 					$("#start").removeClass("show");
@@ -64,7 +63,7 @@ function drop(ev) {
 		else if(ev.target.id.indexOf('ele') == 0){
 			if(addElement(index, blockId, 5,wSize)){
 				$("#"+parentId).empty();
-				$(ev.target).append('<img style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
+				$(ev.target).append('<img class="dragged-element" style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
 			}
 			else{
 				alert("놓을 수 없는 자리입니다.");
@@ -76,26 +75,28 @@ function drop(ev) {
 		var pIndex = parseInt(parentId.substring(3));
 
 		if(ev.target.id.indexOf('map') == 0){
+			deleteBlock(pIndex, wSize);
 			check = putBlock(index, blockId, wSize);
 			if (check == 1) {
 				$("#"+parentId).empty();
-				$(ev.target).append('<img style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
-				deleteBlock(pIndex, wSize);
+				$(ev.target).append('<img class="dragged-map" style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
 			}
 			else {
+				putBlock(pIndex, blockId, wSize);
 				alert("길이 연결되지 않습니다");
 			}
 		}
 		else if(ev.target.id.indexOf('ele') == 0){
 			if(addElement(index, blockId, 5,wSize)){
 				$("#"+parentId).empty();
-				$(ev.target).append('<img style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
+				deleteElement(pIndex, wSize);
+				$(ev.target).append('<img class="dragged-element" style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
 			}
 			else{
 				alert("놓을 수 없는 자리입니다.");
 			}
 		}
-		else{
+		else if(ev.target.id.indexOf('trash')== 0){
 			$("#"+parentId).empty();
 
 			if(parentId.indexOf('map') == 0 ){
@@ -135,25 +136,10 @@ function reset() {
 
 //저장 - 서버에 전송
 function save() {
-	/*
-	$(".map-board").find("div").each(function() {
-		$(this).removeClass("guide-line");
-	});
-
-	html2canvas(document.querySelector("div.map-board")).then(canvas => {
-		$(".map-thumbnail").append(canvas);
-	});
-
-	$(".map-board").find("div").each(function() {
-		$(this).addClass("guide-line");
-	});
-	*/
-
 	var limit = $("#limit").val();
 	var fuel = 20;
 	var mapPoint = $("#score").val();
 	var mapName;
-
 
 	if($("#mapName").val().length == 0){
 		alert("맵에 이름을 지어주세요.");
@@ -164,19 +150,49 @@ function save() {
 	fuel = isNaN(parseInt($("#fuel").val())) ? fuel : parseInt($("#fuel").val());
 
 	setLimitElement(limit,fuel);
+
 	var mapData = createMap();
+	var thumbnailCanvas = document.getElementById("thumbnailCanvas");
 
-	var queryString = {gameId:gid,mapName:mapName, mapData:mapData, mapPoint : mapPoint};
+	drawThumbnail(parseInt(getCookie("mid"))-1);
 
-	$.ajax({
-		url : "/custom/create/save.do",
-		type:"post",
-		data : queryString,
-		success:function(res){
-			if(res == "success"){
-				alert("맵이 성공적으로 제작되었습니다.");
+	var thumbnail = thumbnailCanvas.toDataURL("image/png");
+
+	clearCanvas();
+
+	$("#temp").css('background-image', 'url("'+thumbnail+'")');
+
+	$("#temp").toggleClass("d-none");
+	html2canvas(document.querySelector("#temp")).then(canvas => {
+	    thumbnail = canvas.toDataURL("image/png", 0.5);
+		var blobBin = atob(thumbnail.split(',')[1]);	// base64 데이터 디코딩
+	    var array = [];
+	    for (var i = 0; i < blobBin.length; i++) {
+	        array.push(blobBin.charCodeAt(i));
+	    }
+	    var file = new Blob([new Uint8Array(array)], {type: 'image/png'});
+		var formdata = new FormData();
+    	formdata.append("gameId", gid);
+		formdata.append("mapName", mapName);
+		formdata.append("mapData", mapData);
+		formdata.append("mapPoint", mapPoint);
+		formdata.append("thumbnailData", file);
+
+		$.ajax({
+			url : "/custom/create/save.do",
+			type:"post",
+			enctype: "multipart/form-data",
+			data : formdata,
+			processData : false,	// data 파라미터 강제 string 변환 방지
+    		contentType : false,
+			success:function(res){
+				if(res == "success"){
+					alert("맵이 성공적으로 제작되었습니다.");
+				}
 			}
-		}
+		});
+
+		$("#temp").toggleClass("d-none");
 	});
 }
 
@@ -196,7 +212,7 @@ function createElementBoard() {
 	$(".map-board").after('<div class="element-board"></div>');
 
 	for (var i = 1; i <= wSize * hSize; i++) {
-		$(".element-board").append("<div id='ele" + i + "' class='custom-item guide-line' ondrop='drop(event)' ondragover='dragOver(event)' style='width:" + canvasSize + "%;height:" + canvasSize + "%'></div>")
+		$(".element-board").append("<div id='ele" + i + "' class='custom-item' ondrop='drop(event)' ondragover='dragOver(event)' style='width:" + canvasSize + "%;height:" + canvasSize + "%'></div>")
 	}
 }
 
@@ -285,22 +301,53 @@ function next() {
 	}
 }
 
-function initMapElements() {
+function initElememt(){
+	for (i = 3; i <= 4; i++) {
+		$("#element").append('<li class = "ele-item"><img alt="drag' + i + '" src="/resources/images/brace/elements/element1/index' + i + '.png" ondragstart="drag(event)"></li>')
+	}
+}
+
+function initMapElements(idx) {
 	var i = 1;
 	for (; i <= 4; i++) {
-		$("#start").append('<li class = "map-ele-item"><img alt="drag' + i + '" src="/resources/images/brace/maps/map1/index' + i + '.png" ondragstart="drag(event)"></li>')
+		$("#start").append('<li class = "map-ele-item"><img alt="drag' + i + '" src="/resources/images/brace/maps/map'+idx+'/index' + i + '.png" ondragstart="drag(event)"></li>')
 	}
 	for (; i <= 8; i++) {
-		$("#dest").append('<li class = "map-ele-item"><img alt="drag' + i + '" src="/resources/images/brace/maps/map1/index' + i +   '.png" ondragstart="drag(event)"></li>')
+		$("#dest").append('<li class = "map-ele-item"><img alt="drag' + i + '" src="/resources/images/brace/maps/map'+idx+'/index' + i + '.png" ondragstart="drag(event)"></li>')
 	}
 	for (; i <= mapEleCnt; i++) {
-		$("#road").append('<li class = "map-ele-item"><img alt="drag' + i + '" src="/resources/images/brace/maps/map1/index' +  i + '.png" ondragstart="drag(event)"></li>')
-	}
-
-	for (i = 1; i <= 4; i++) {
-		$("#element").append('<li class = "map-ele-item"><img alt="drag' + i + '" src="/resources/images/brace/elements/element1/index' + i + '.png" ondragstart="drag(event)"></li>')
+		$("#road").append('<li class = "map-ele-item"><img alt="drag' + i + '" src="/resources/images/brace/maps/map'+idx+'/index' +  i + '.png" ondragstart="drag(event)"></li>')
 	}
 	disableStep2();
+}
+
+function changeMapElement(idx){
+	$(".map-ele-item").each(function(){
+		var blockId = parseInt($(this).find("img").attr("alt").substring(4));
+		$(this).find("img").attr("src","/resources/images/brace/maps/map"+idx+"/index"+ blockId + ".png");
+	});
+
+	$(".dragged-map").each(function(){
+		var blockId = parseInt($(this).attr("alt").substring(4));
+		$(this).attr("src","/resources/images/brace/maps/map"+idx+"/index"+ blockId + ".png");
+	});
+}
+
+function setCookie(name, value) {
+	var date = new Date();
+	date.setTime(date.getTime() + 24*60*60*1000);
+	document.cookie = name + '=' + value + ';expires=' + date.toUTCString() + ';path=/';
+};
+
+function getCookie(name) {
+	let matches = document.cookie.match(new RegExp(
+		"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+	));
+	return matches ? decodeURIComponent(matches[1]) : 1;
+}
+
+var deleteCookie = function(name) {
+	document.cookie = name + '=; expires=Thu, 01 Jan 1999 00:00:10 GMT;';
 }
 
 
@@ -316,12 +363,13 @@ $(document).ready(function() {
 	initNewMap();
 	initPoints();
 	initBoxes(wSize, hSize);
-	initMapElements();
+	initElememt();
+	initMapElements(parseInt(getCookie("mid")));
 
-	$("body").mousemove(function() {
-		if (cursor != null) {
-			$("#" + cursor).removeClass("map-hover");
-			cursor = null;
-		}
+	$(".map-option-item").click(function(){
+		var idx = $(this).attr("id").substring(3);
+		changeMapElement(idx);
+		deleteCookie("mid");
+		setCookie("mid", idx);
 	});
 });

@@ -27,10 +27,11 @@ const intersection = 4;
 // *** 요소의 종류
 const used = -1;
 const none = 0;
-const sPoint = 1;
-const gPoint = 2;
+const startingPoint = 1;
+const goalPoint = 2;
 const trafficLight = 3;
 const gasStation = 4;
+const someObject = 5; // *** 추가
 
 // 블록들의 클래스
 class Block {
@@ -133,18 +134,18 @@ class Block {
 }
 
 // 맵의 최대 사이즈
-const maxWidth = 20;
-const maxHeight = 20;
+let maxWidth = 20;
+let maxHeight = 20;
 // 시작점
-const startingPoint = { x: -1, y: -1 };
+let sPoint = { x: -1, y: -1 };
 // 도착점
-const goalPoint = { x: -1, y: -1 };
+let gPoint = { x: -1, y: -1 };
 // 시작 방향
 let startingd = -1;
 // 점들의 데이터
-const points = new Array(maxHeight + 1).fill(null).map(() => new Array(maxWidth + 1));
+let points = new Array(maxHeight + 1).fill(null).map(() => new Array(maxWidth + 1));
 // 이미지 번호를 담는 리스트
-const images = new Array(maxHeight).fill(null).map(() => new Array(maxWidth));
+let images = new Array(maxHeight).fill(null).map(() => new Array(maxWidth));
 //맵 이름, 맵 점수
 let newMapName = null;
 let newMapPoint = null;
@@ -156,7 +157,7 @@ let mapHeight = 0;
 // *** 좌상단 점
 let originPoint = { x: 0, y: 0 };
 
-const newMapData = {
+const mapObj = {
 	mw: null,
 	mh: null,
 	pl: null,
@@ -179,19 +180,19 @@ const newMapData = {
 }
 
 function initNewMap() {
-    newMapData.mw = null;
-    newMapData.mh = null;
-    newMapData.pl = null;
-    newMapData.mil = null;
-    newMapData.sp.x = null;
-    newMapData.sp.y = null;
-    newMapData.gp.x = null;
-    newMapData.gp.y = null;
-    newMapData.op.x = null;
-    newMapData.op.y = null;
-    newMapData.sf = null;
-    newMapData.sd = null;
-    newMapData.lb = null;
+    mapObj.mw = null;
+    mapObj.mh = null;
+    mapObj.pl = null;
+    mapObj.mil = null;
+    mapObj.sp.x = null;
+    mapObj.sp.y = null;
+    mapObj.gp.x = null;
+    mapObj.gp.y = null;
+    mapObj.op.x = null;
+    mapObj.op.y = null;
+    mapObj.sf = null;
+    mapObj.sd = null;
+    mapObj.lb = null;
 }
 
 // 점 데이터 초기화
@@ -305,12 +306,12 @@ function setBlock(pos, block) {
 			}
 			switch (points[pos.y - 1 + blockY][pos.x - 1 + blockX].et) {
 				case 1:
-					startingPoint.x = pos.x-originPoint.x - 1 + blockX;
-					startingPoint.y = pos.y-originPoint.y - 1 + blockY;
+					sPoint.x = pos.x-originPoint.x - 1 + blockX;
+					sPoint.y = pos.y-originPoint.y - 1 + blockY;
 					break;
 				case 2:
-					goalPoint.x = pos.x-originPoint.x - 1 + blockX;
-					goalPoint.y = pos.y-originPoint.y - 1 + blockY;
+					gPoint.x = pos.x-originPoint.x - 1 + blockX;
+					gPoint.y = pos.y-originPoint.y - 1 + blockY;
 					break;
 			}
 		}
@@ -322,65 +323,65 @@ function setBlock(pos, block) {
 	}
 }
 
-// points와 images로 newMapData 정보들을 저장.
+// points와 images로 mapObj 정보들을 저장.
 function setMapData() {
-	if (newMapData.mw == 0) {
+	if (mapObj.mw == 0) {
 		initNewMap();
 		throw "맵이 존재하지 않습니다."
 	}
-	newMapData.mw = mapWidth + 2;
-	newMapData.mh = mapHeight + 2;
-	newMapData.pl = new Array(newMapData.mh + 1).fill(null).map(() => new Array(newMapData.mw + 1));
-	for (let y = 0; y < newMapData.mh + 1; y++) {
-		for (let x = 0; x < newMapData.mw + 1; x++) {
-			if(newMapData.pl[y][x] == null || newMapData.pl[y][x].et == 0){
-				if (x == 0 || y == 0 || x == newMapData.mw || y == newMapData.mh) {
-					newMapData.pl[y][x] = new CustomPoint(false, 0);
+	mapObj.mw = mapWidth + 2;
+	mapObj.mh = mapHeight + 2;
+	mapObj.pl = new Array(mapObj.mh + 1).fill(null).map(() => new Array(mapObj.mw + 1));
+	for (let y = 0; y < mapObj.mh + 1; y++) {
+		for (let x = 0; x < mapObj.mw + 1; x++) {
+			if(mapObj.pl[y][x] == null || mapObj.pl[y][x].et == 0){
+				if (x == 0 || y == 0 || x == mapObj.mw || y == mapObj.mh) {
+					mapObj.pl[y][x] = new CustomPoint(false, 0);
 				}
 				else {
 					if (points[originPoint.y + y-1][originPoint.x + x -1] != null) {
-						newMapData.pl[y][x] = points[originPoint.y + y -1][originPoint.x + x -1];
+						mapObj.pl[y][x] = points[originPoint.y + y -1][originPoint.x + x -1];
 					}
 					else {
-						newMapData.pl[y][x] = new CustomPoint(false, 0);
+						mapObj.pl[y][x] = new CustomPoint(false, 0);
 					}
 				}
 			}
 		}
 	}
 
-	newMapData.mil = new Array(newMapData.mh).fill(null).map(() => Array(newMapData.mw));
-	for (let y = 0; y < newMapData.mh; y++) {
-		for (let x = 0; x < newMapData.mw; x++) {
-			if (x == 0 || y == 0 || x == newMapData.mw-1 || y == newMapData.mh-1) {
-				newMapData.mil[y][x] = new CustomMapImg(0, 0);
+	mapObj.mil = new Array(mapObj.mh).fill(null).map(() => Array(mapObj.mw));
+	for (let y = 0; y < mapObj.mh; y++) {
+		for (let x = 0; x < mapObj.mw; x++) {
+			if (x == 0 || y == 0 || x == mapObj.mw-1 || y == mapObj.mh-1) {
+				mapObj.mil[y][x] = new CustomMapImg(0, 0);
 			}
 			else {
 				if (images[originPoint.y + y-1][originPoint.x + x-1] != null) {
-					newMapData.mil[y][x] = images[originPoint.y + y-1][originPoint.x + x-1];
+					mapObj.mil[y][x] = images[originPoint.y + y-1][originPoint.x + x-1];
 				}
 				else {
-					newMapData.mil[y][x] = new CustomMapImg(0, 0);
+					mapObj.mil[y][x] = new CustomMapImg(0, 0);
 				}
 			}
 		}
 	}
 
-	if (startingPoint.x == -1) {
+	if (sPoint.x == -1) {
 		initNewMap();
 		throw "시작점이 정해지지 않았습니다."
 	}
-	newMapData.sp.x = startingPoint.x + 1 - originPoint.x;
-	newMapData.sp.y = startingPoint.y + 1 - originPoint.y;
-	if (goalPoint.x == -1) {
+	mapObj.sp.x = sPoint.x + 1 - originPoint.x;
+	mapObj.sp.y = sPoint.y + 1 - originPoint.y;
+	if (gPoint.x == -1) {
 		initNewMap();
 		throw "도착지가 정해지지 않았습니다."
 	}
-	newMapData.gp.x = goalPoint.x + 1 - originPoint.x;
-	newMapData.gp.y = goalPoint.y + 1 - originPoint.y;
-	newMapData.op.x = Math.floor((maxWidth - mapWidth) / 2) + 1;
-	newMapData.op.y = Math.floor((maxHeight - mapHeight) / 2) + 1;
-	newMapData.sd = startingDirection;
+	mapObj.gp.x = gPoint.x + 1 - originPoint.x;
+	mapObj.gp.y = gPoint.y + 1 - originPoint.y;
+	mapObj.op.x = Math.floor((maxWidth - mapWidth) / 2) + 1;
+	mapObj.op.y = Math.floor((maxHeight - mapHeight) / 2) + 1;
+	mapObj.sd = startingDirection;
 }
 
 //  boxes로 points, images 데이터 추가
@@ -551,7 +552,7 @@ function mapEncoding(wSize,hSize) {
 	setMapData();
 }
 
-//*** 요소 데이터 newMapData에 추가
+//*** 요소 데이터 mapObj에 추가
 function addElement(index, et, ist,wSize) {
 	var x = (index-1) % wSize + 1;
 	var y = parseInt((index-1) / wSize) + 1;
@@ -563,24 +564,24 @@ function addElement(index, et, ist,wSize) {
 	x = 2*x-originPoint.x;
 	y = 2*y - originPoint.y;
 
-	if(newMapData.pl[y][x].et != 0){
+	if(mapObj.pl[y][x].et != 0){
 		return 0;
 	}
 
 	switch (et) {
 		case trafficLight:
-			newMapData.pl[y][x].et = trafficLight;
-			newMapData.pl[y][x].ist = ist;
+			mapObj.pl[y][x].et = trafficLight;
+			mapObj.pl[y][x].ist = ist;
 			break;
 		case gasStation:
-			newMapData.pl[y][x].et = gasStation;
-			newMapData.pl[y][x].ist = ist;
+			mapObj.pl[y][x].et = gasStation;
+			mapObj.pl[y][x].ist = ist;
 			break;
 	}
 	return 1;
 }
 
-// *** 요소 데이터 newMapData에서 제거
+// *** 요소 데이터 mapObj에서 제거
 function deleteElement(index,wSize) {
 	var x = (index-1) % wSize + 1;
 	var y = parseInt((index-1) / wSize) + 1;
@@ -592,19 +593,19 @@ function deleteElement(index,wSize) {
 	x = 2*x - originPoint.x;
 	y = 2*y - originPoint.y;
 
-	newMapData.pl[y][x].et = 0;
-	newMapData.pl[y][x].ist = 0;
+	mapObj.pl[y][x].et = 0;
+	mapObj.pl[y][x].ist = 0;
 }
 
 // 만든 맵을 저장할 때 호출되는 함수
 
 function setLimitElement(limit,fuel){
-	newMapData.sf = fuel;
-	newMapData.lb = limit;
+	mapObj.sf = fuel;
+	mapObj.lb = limit;
 }
 
 function createMap() {
-	return JSON.stringify(newMapData);
+	return JSON.stringify(mapObj);
 }
 
 function saveData() {

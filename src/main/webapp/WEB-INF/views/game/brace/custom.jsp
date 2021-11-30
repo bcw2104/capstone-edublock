@@ -3,12 +3,25 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <link rel="stylesheet" type="text/css" href="/resources/css/brace/custom.css">
+<link rel="stylesheet" href="/resources/css/brace/canvas.css">
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script src="/resources/js/brace/custom_logic.js"></script>
+<script src="/resources/js/brace/draw.js"></script>
 <script src="/resources/js/brace/custom.js"></script>
 
 <div class="container board-wrap" >
-	<div class="mb-5 board-title font-32 font-weight-bold">만들기</div>
+	<div class="row m-0 justify-content-between">
+		<div class="mb-5 board-title font-32 font-weight-bold">만들기</div>
+		<div class="dropdown mr-1">
+			<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">맵 테마</button>
+			<div class="dropdown-menu map-option">
+				<img id="map1" class="map-option-item dropdown-item" src="/resources/images/brace/maps/map1/index13.png">
+				<img id="map2" class="map-option-item dropdown-item" src="/resources/images/brace/maps/map2/index13.png">
+				<img id="map3" class="map-option-item dropdown-item" src="/resources/images/brace/maps/map3/index13.png">
+				<img id="map4" class="map-option-item dropdown-item" src="/resources/images/brace/maps/map4/index13.png">
+			</div>
+		</div>
+	</div>
 	<div id="gId" class="d-none">${gameType.gameId}</div>
 	<div class="setting">
 		<div class="setting-title text-white p-2">맵 설정</div>
@@ -70,5 +83,8 @@
 			</div>
 		</div>
 	</div>
-	<div class="map-thumbnail"></div>
+	<div class="map-thumbnail">
+		<canvas id="thumbnailCanvas" class="canvas" width="1125" height="1125"></canvas>
+	</div>
+	<div id="temp" class="d-none"></div>
 </div>
