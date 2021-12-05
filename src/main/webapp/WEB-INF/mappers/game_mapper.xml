@@ -23,7 +23,7 @@
 			<where>
 				<if test="mapId != 0">map_id = #{mapId}</if>
 				<if test="gameId != 0">AND game_info_tbl.game_id = #{gameId}</if>
-				<if test="mapName != null">AND map_name = #{mapName}</if>
+				<if test="mapName != null">AND map_name LIKE '%${mapName}%'</if>
 				<if test="authorId != null ">AND game_info_tbl.author_id = #{authorId}</if>
 				<if test="formal != -1 ">AND formal = #{formal}</if>
 			</where>
