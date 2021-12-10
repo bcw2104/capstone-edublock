@@ -993,26 +993,29 @@ function readyBeforeMove(dir) {
         gameOverText = '갈 수 없는 곳입니다.';
     }
 	else{
-	    // 앞 요소에 걸리는지 판단
-	    const point = pointList[car.pos.y + compass[car.dir].y][car.pos.x + compass[car.dir].x];
-	    switch (point.elementType) {
-	        case trafficLight:
-	            if (point.element.getColor() == 2) {
-	                gameOver = true;
-	                gameOverText = '빨간불에는 건널 수 없습니다.'
-	            }
-	            break;
-	        case gasStation:
-	            if (point.element.gas > 0) {
-	                getGas = point.element.gas;
-	            }
-	            break;
-            case someObject: // *** 추가
-                if (point.element.something != 0) {
-                    gameOver = true;
-                    gameOverText = '무언가를 치었습니다.'
-                }
-	    }
+        if (dir != stay && dir != honk) { // *** 12/01 수정된 부분
+            // 앞 요소에 걸리는지 판단
+            const point = pointList[car.pos.y + compass[car.dir].y][car.pos.x + compass[car.dir].x];
+            switch (point.elementType) {
+                case trafficLight:
+                    if (point.element.getColor() == 2) {
+                        gameOver = true;
+                        gameOverText = '빨간불에는 건널 수 없습니다.'
+                    }
+                    break;
+                case gasStation:
+                    if (point.element.gas > 0) {
+                        getGas = point.element.gas;
+                    }
+                    break;
+                case someObject: // *** 추가
+                    if (point.element.something != 0) {
+                        gameOver = true;
+                        gameOverText = '무언가를 치었습니다.'
+                    }
+                    break;
+            }
+        }
 	}
 }
 // 블록의 끝에 필요한 함수
@@ -1023,7 +1026,6 @@ function setAfterMove() {
         gameOver = true;
         gameOverText = '연료가 바닥났습니다.';
     }
-    checkGameOver();
 
 	// 맵 요소 상태 변경
     for (let y = 0; y < mapHeight + 1; y++) {
@@ -1083,7 +1085,8 @@ async function block_stay() {
     await action(stay);
 }
 
-function block_frontOfCar(elementType) { // 인자에 해당하는 요소가 앞에 있다면 true 없다면 false
+async function block_frontOfCar(elementType) { // 인자에 해당하는 요소가 앞에 있다면 true 없다면 false
+	console.log(car.pos.x,car.pos.y)
     if (elementType == pointList[car.pos.y + compass[car.dir].y][car.pos.x + compass[car.dir].x].elementType) {
         return true;
     }
