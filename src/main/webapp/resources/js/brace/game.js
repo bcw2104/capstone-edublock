@@ -143,6 +143,9 @@ let gridOn = true;
 const runningSound = new Audio("/resources/sounds/brace/running.mp3");
 runningSound.loop = true;
 runningSound.volume = 1;
+const hornSound = new Audio("/resources/sounds/brace/horn.mp3");
+hornSound.loop = false;
+hornSound.volume = 1;
 
 let imgCar = new Image();
 imgCar.src = "/resources/images/brace/cars/car1.png";
@@ -256,7 +259,7 @@ function initPoint(){
 }
 
 function changeSpeed(m){
-	speed = speed * m;
+	speed = m;
 }
 
 function resizeCanvas(){
@@ -399,7 +402,7 @@ async function someObjectAnimation(pos, something) {
     const elementCanvas = document.getElementById("elementImgCanvas");
     const elementContext = elementCanvas.getContext("2d");
 
-    while (nowSize.x < 0) {
+    while (nowSize.x > 0) { // **** 수정
         elementContext.save();
         elementCanvas.translate(startPos.x, startPos.y);
         elementContext.clearMap(-nowSize.x/2, -nowSize.y/2, nowSize.x, nowSize.y);
@@ -810,7 +813,8 @@ async function stayAnimation(time = 0) {
 }
 
 async function honkAnimation(startPos, startDir) {
-    // *** 여기에 경적소리 추가해야 함.
+    hornSound.play();
+
     let time = 0;
     const objectPoint = pointList[startPos.x + compass[startDir].x][startPos.y + compass[startDir].y];
 
@@ -1083,6 +1087,10 @@ async function block_rightBackward() {
 
 async function block_stay() {
     await action(stay);
+}
+
+async function block_honk() {
+    await action(honk);
 }
 
 async function block_frontOfCar(elementType) { // 인자에 해당하는 요소가 앞에 있다면 true 없다면 false

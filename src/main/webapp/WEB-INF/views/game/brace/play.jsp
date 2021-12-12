@@ -58,7 +58,7 @@
 	        <div class="btn-container">
 				<div class="btn-group w-100">
 					<button class="btn btn-success" onclick="gridEvent()">격자무늬</button>
-					<button class="btn btn-success" onclick="resetGame()">초기화</button>
+					<button id="resetBtn" class="btn btn-success" onclick="resetGame()">초기화</button>
 					<select id="speed" class="form-control btn btn-success">
 						<option value="1">진행 속도</option>
 						<option value="0.5">x0.5</option>
@@ -134,6 +134,7 @@
 	}
 	const runWorkspace = async () => {
 		$("#startBtn").attr("disabled","disabled");
+		$("#resetBtn").attr("disabled","disabled");
 		runningSound.play();
 	    var code = generateCode();
 	    try {
@@ -144,7 +145,7 @@
 	    	runningSound.pause();
 	        checkGoal();
 	        $("#startBtn").removeAttr("disabled");
-
+	        $("#resetBtn").removeAttr("disabled");
 	    }
 	}
 </script>
