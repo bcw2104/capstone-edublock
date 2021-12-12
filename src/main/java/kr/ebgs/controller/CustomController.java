@@ -6,7 +6,6 @@ import java.util.UUID;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -94,7 +93,11 @@ public class CustomController {
 
 		gameInfo.setThumbnail(fileName);
 		gameInfo.setAuthorId(loginUser.getUserId());
-		gameInfo.setFormal(1);
+		if(loginUser.getUserType().equals(Auth.Type.ADMIN.name()))
+			gameInfo.setFormal(1);
+		else
+			gameInfo.setFormal(0);
+
 		gameService.addGameContent(gameInfo);
 
 		return "success";

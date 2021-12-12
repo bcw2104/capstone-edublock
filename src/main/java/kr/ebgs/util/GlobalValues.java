@@ -17,6 +17,8 @@ public class GlobalValues {
 	//custom
 	public final static String communityTitle = "커뮤니티";
 	public final static String communityPage = "/WEB-INF/views/community/home.jsp";
+	public final static String communityViewPage = "/WEB-INF/views/community/view.jsp";
+	public final static String communityWritePage = "/WEB-INF/views/community/write.jsp";
 
 	//game
 	public final static String rankTitle = "랭킹";

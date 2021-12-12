@@ -11,7 +11,7 @@ public interface CenterPostMapper {
 	public ArrayList<CenterPostDTO> select(int postId);
 	public ArrayList<CenterPostDTO> selectList(CenterPostDTO centerPostDTO);
 	public void modify(CenterPostDTO centerPostDTO);
-	public void increaseHits(int userId);
+	public void increaseHits(int postId);
 	public void insert(CenterPostDTO centerPostDTO);
 	public void delete(int userId);
 }

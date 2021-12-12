@@ -203,6 +203,7 @@ const pointList = new Array(mapHeight + 1).fill(null).map(() => new Array(mapWid
 window.onload = function() {
     resetCanvasOrigin();
     setCanvasOrigin();
+	getProfileImg($("#gameAuthor").text());
 
 	imgMap = imgMapList[parseInt(getCookie("mid"))-1];
 
@@ -226,6 +227,22 @@ window.onload = function() {
 
     drawElement(); // 요소 그리기
     gridEvent();
+}
+
+function getProfileImg(query){
+	$.ajax({
+		url: "/upload/profile",
+        type: "get",
+		data : {'query':query},
+        success : function(res){
+        	if(res == "fail"){
+				alert("프로필 이미지를 불러오는데 실패했습니다.");
+			}
+			else{
+        		$(".author-profile-img").attr("src",res);
+			}
+        }
+    });
 }
 
 function setCookie(name, value) {

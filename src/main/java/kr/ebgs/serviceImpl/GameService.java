@@ -20,6 +20,15 @@ public class GameService {
 	@Autowired
 	private GameMapper gameMapper;
 
+	public boolean isFirstVisit(ArrayList<Integer> visitList,int mapId) {
+		for(int visit : visitList) {
+			if(visit == mapId) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public ArrayList<RankDTO> getRankList(int type){
 		return rankMapper.selectAll(type);
 	}
@@ -97,5 +106,9 @@ public class GameService {
 		gameRecord.setUserId(userId);
 
 		gameMapper.addGameRecord(gameRecord);
+	}
+
+	public void increaseGameHits(int mapId) {
+		gameMapper.increaseHits(mapId);
 	}
 }

@@ -13,7 +13,7 @@
 	        <div class="search-form border-circle">
 	        	<div class="input-group">
 	        		<input type="text" id="searchInput" name="query" class="form-control border-0 border-circle">
-	        		<button type="submit" class="btn btn-white input-group-append border-circle">
+	        		<button type="button" id="searchBtn" class="btn btn-white input-group-append border-circle">
 	        			<img src="/resources/images/icon_search.svg" alt="search" />
 	        		</button>
 	        	</div>
@@ -25,33 +25,41 @@
 			<li class="nav-item"><a href="#pill1" id="maps" role="button" class="nav-link board-type active" data-toggle="pill">모든 작품</a></li>
 			<li class="nav-item"><a href="#pill2" id="coms" role="button" class="nav-link board-type" data-toggle="pill">커뮤니티</a></li>
 		</ul>
-		<a role="button" class="btn btn-primary" href="/custom/create">작품 만들기</a>
+		<a role="button" id="create" class="btn btn-primary" href="/custom/create">작품 만들기</a>
 	</div>
 	<hr class="my-3"/>
 	<!-- 본문 부분 -->
 	<div class="tab-content">
-		<div class="option-wrap row m-0 ">
-			<div class="form-group">
-				<select id="sort" class="form-control pointer">
-					<option value="new">최신순</option>
-					<option value="pop">인기순</option>
-					<option value="like">좋아요순</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<select id="gameType" class="form-control pointer">
-					<option value="0">전체</option>
-					<c:forEach items="${requestScope.gameType}" var="n">
-					<option value="${n.gameId}">${n.gameName}</option>
-					</c:forEach>
-				</select>
-			</div>
-		</div>
 		<div class="tab-pane container fade show active" id="pill1">
+			<div class="option-wrap row m-0 ">
+				<div class="form-group">
+					<select class="sort form-control pointer">
+						<option value="new">최신순</option>
+						<option value="pop">인기순</option>
+						<option value="like">좋아요순</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<select id="gameType" class="form-control pointer">
+						<option value="0">전체</option>
+						<c:forEach items="${requestScope.gameType}" var="n">
+						<option value="${n.gameId}">${n.gameName}</option>
+						</c:forEach>
+					</select>
+				</div>
+			</div>
 			<div class="row m-0 map-list">
 			</div>
 		</div>
 		<div class="tab-pane fade container" id="pill2">
+			<div class="option-wrap row m-0 ">
+				<div class="form-group">
+					<select class="sort form-control pointer">
+						<option value="new">최신순</option>
+						<option value="pop">인기순</option>
+					</select>
+				</div>
+			</div>
 			<table class="table post-list-table">
 				<thead>
 					<tr>

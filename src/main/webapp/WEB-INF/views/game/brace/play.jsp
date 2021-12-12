@@ -32,8 +32,16 @@
 				<img id="passMark" class="pass ${requestScope.clear ? '' : 'd-none'}" src="/resources/images/icon_pass.png" alt="pass"/>
 			</div>
 			<c:if test="${requestScope.gameInfo.formal == 0}">
-			<span class="font-15 text-secondary">${requestScope.gameInfo.authorId}</span>
-			<span class="font-15 text-secondary"><fmt:formatDate value="${requestScope.gameInfo.regDate}" pattern="yyyy-MM-dd"/></span>
+			<div class="row mx-0 mt-4 font-14">
+				<img class="author-profile-img" alt="profile">
+				<div class="author-info">
+					<div id="gameAuthor" class="d-none">${requestScope.gameInfo.authorId}</div>
+					<div class="ml-3">${requestScope.gameInfo.authorNickname}</div>
+					<div class="ml-3 text-secondary">
+						<fmt:formatDate value="${requestScope.gameInfo.regDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+					</div>
+				</div>
+			</div>
 			</c:if>
 		</div>
 		<div class="header-options row m-0">

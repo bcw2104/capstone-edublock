@@ -1,4 +1,4 @@
-function sort(arr,type){
+function sort1(arr,type){
 	if(type == 'pop'){
 		arr.sort(function(a, b) {
 			return b.hits - a.hits;
@@ -12,6 +12,21 @@ function sort(arr,type){
 	else{
 		arr.sort(function(a, b) {
 			return b.regDate - a.regDate;
+		});
+	}
+
+	return arr;
+}
+
+function sort2(arr,type){
+	if(type == 'pop'){
+		arr.sort(function(a, b) {
+			return b.hits - a.hits;
+		});
+	}
+	else{
+		arr.sort(function(a, b) {
+			return b.postDate - a.postDate;
 		});
 	}
 
@@ -67,19 +82,20 @@ function getMapList(params){
 		$("#searchInput").attr("value",decodeURIComponent(params["query"]));
 	}
 
+	$('#pagination').empty();
 	$('#pagination').pagination({
 		dataSource: function(done) {
 		    $.ajax({
 		        type: "get",
 		        url: "/community/maps"+paramsToQueryString(params),
 		        success: function(response) {
-					response = sort(response,params[sort]);
+					response = sort1(response,params["sort"]);
 		            done(response);
 		        }
 		    });
 		 },
 		pageNumber:(params["p"] == undefined ? 1 : params["p"]),
-		pageSize: 8,
+		pageSize: 20,
 	    callback: function(data, pagination) {
 			if (typeof (history.pushState) != undefined) {
 				params["p"]=pagination.pageNumber;
@@ -89,7 +105,7 @@ function getMapList(params){
 			var html;
 			for(var i in data){
 				html = '<div class="map-item mb-5">'
-						+'<div class="card" onclick="location.href=">'
+						+'<div class="card" onclick="location.href=\'/game/'+data[i].gameName+'/'+data[i].mapId+'\'">'
 							+'<img class="card-img-top" src="/resources/images/game/thumbnail/'+data[i].thumbnail+'" style="width:100%" />'
 							+'<div class="card-body">'
 								+'<div class="card-text font-weight-bold my-1">'+data[i].mapName+'</div>'
@@ -115,45 +131,39 @@ function getComList(params){
 	if(params["query"] != undefined){
 		$("#searchInput").attr("value",decodeURIComponent(params["query"]));
 	}
-
+	$('#pagination').empty();
 	$('#pagination').pagination({
 		dataSource: function(done) {
 		    $.ajax({
 		        type: "get",
 		        url: "/community/coms"+paramsToQueryString(params),
 		        success: function(response) {
+					response = sort2(response,params["sort"]);
 		            done(response);
 		        }
 		    });
 		 },
 		pageNumber:(params["p"] == undefined ? 1 : params["p"]),
-		pageSize: 8,
+		pageSize: 10,
 	    callback: function(data, pagination) {
 			if (typeof (history.pushState) != undefined) {
 				params["p"]=pagination.pageNumber;
 				changeURLParams(paramsToQueryString(params));
     		}
-			$(".map-list").empty();
+			$(".post-list").empty();
 			var html;
 			for(var i in data){
-				html = '<div class="map-item mb-5">'
-						+'<div class="card" onclick="location.href=">'
-							+'<img class="card-img-top" src="/resources/images/game/thumbnail/'+data[i].thumbnail+'" style="width:100%" />'
-							+'<div class="card-body">'
-								+'<div class="card-text font-weight-bold my-1">'+data[i].mapName+'</div>'
-								+'<div class="card-text">'+data[i].authorNickname+'</div>'
-								+'<div class="card-text">점수 : '+data[i].mapPoint+'</div>'
-								+'<div class="card-text pt-2 text-right">'
-									+'<img height="12px" src="/resources/images/icon_hits.png" alt="hits" />'
-									+'<span class="font-12 text-secondary ml-1">'+data[i].hits+'</span>'
-									+'<img class="ml-4" height="12px" src="/resources/images/icon_like.png" alt="like" />'
-									+'<span class="font-12 text-secondary ml-1">'+data[i].like+'</span>'
-								+'</div>'
-							+'</div>'
-						+'</div>'
-					+'</div>';
+				html = "<tr>"
+			            +"<td>"+(1+Number(i))+"</td>"
+			            +"<td>"
+			                +"<a href='/community/com/"+data[i].postId+"'>"+data[i].postTitle+"</a>"
+			            +"</td>"
+			            +"<td>"+data[i].postAuthorNickname+"</td>"
+			            +"<td>"+timestampToDate(data[i].postDate)+"</td>"
+			            +"<td>"+data[i].hits+"</td>"
+			        +"</tr>"
 
-				$(".map-list").append(html);
+				$(".post-list").append(html);
 			}
 	    }
 	});
@@ -162,15 +172,18 @@ function getComList(params){
 function getboardData(params){
 	if(params["type"] == undefined || params["type"] == "maps"){
 		getMapList(params);
+		$("#create").attr("href","/custom/create").text("작품 만들기");
 	}
 	else{
 		getComList(params);
+		$("#create").attr("href","/community/com/write").text("글쓰기");
 	}
 }
 
 $(document).ready(function() {
 	var params = getParams();
 	getboardData(params);
+	$("#"+params["type"]).click();
 
 	$(".board-type").on("click",function(){
 		params = [];
@@ -179,10 +192,10 @@ $(document).ready(function() {
 		getboardData(params);
 	});
 
-	$("#sort").on("change",function(){
+	$(".sort").on("change",function(){
 		params["sort"] = $(this).val();
 		changeURLParams(paramsToQueryString(params));
-		getMapList(params);
+		getboardData(params);
 	});
 
 	$("#gameType").on("change",function(){
@@ -191,5 +204,9 @@ $(document).ready(function() {
 		getMapList(params);
 	});
 
-
+	$("#searchBtn").on("click",function(){
+		params["query"] = $("#searchInput").val();
+		changeURLParams(paramsToQueryString(params));
+		getboardData(params);
+	});
 });

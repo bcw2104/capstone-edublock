@@ -139,6 +139,16 @@ public class GameController {
 				clear = true;
 			}
 		}
+
+		if(session.getAttribute("gameVisit") == null) {
+			session.setAttribute("gameVisit", new ArrayList<Integer>());
+		}
+		ArrayList<Integer> visitList = (ArrayList<Integer>) session.getAttribute("gameVisit");
+		if(gameService.isFirstVisit(visitList,mapId)) {
+			gameService.increaseGameHits(mapId);
+			visitList.add(mapId);
+		}
+
 		session.setAttribute("recent", mapId);
 
 		model.addAttribute("page", "/WEB-INF/views/game/"+gameType.getGameName()+"/play.jsp");

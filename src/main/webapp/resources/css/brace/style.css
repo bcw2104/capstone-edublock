@@ -122,4 +122,14 @@
 	font-size:18px;
 }
 
+.author-profile-img{
+	width: 45px;
+	height: 45px;
+    border-radius: 22.5px;
+}
+
+.author-info{
+	align-self: end;
+}
+
 
