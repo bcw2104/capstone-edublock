@@ -203,7 +203,6 @@ const pointList = new Array(mapHeight + 1).fill(null).map(() => new Array(mapWid
 window.onload = function() {
     resetCanvasOrigin();
     setCanvasOrigin();
-	getProfileImg($("#gameAuthor").text());
 
 	imgMap = imgMapList[parseInt(getCookie("mid"))-1];
 
@@ -227,22 +226,6 @@ window.onload = function() {
 
     drawElement(); // 요소 그리기
     gridEvent();
-}
-
-function getProfileImg(query){
-	$.ajax({
-		url: "/upload/profile",
-        type: "get",
-		data : {'query':query},
-        success : function(res){
-        	if(res == "fail"){
-				alert("프로필 이미지를 불러오는데 실패했습니다.");
-			}
-			else{
-        		$(".author-profile-img").attr("src",res);
-			}
-        }
-    });
 }
 
 function setCookie(name, value) {
@@ -986,7 +969,7 @@ async function checkGoal() { // 코드가 실행된 뒤 마지막에 결과를 �
 			type:"post",
 			success:function(res){
 				if(res == "success"){
-					alert("도착했습니다.");
+					$("#successModal").modal("show");
 					$("#passMark").removeClass("d-none");
 					resetGame();
 				}
@@ -1000,7 +983,7 @@ async function checkGoal() { // 코드가 실행된 뒤 마지막에 결과를 �
 		if(gameOverText == null){
 			gameOverText = "도착하지 못했습니다.";
 		}
-		alert(gameOverText);
+		$("#failModal").modal("show");
 		resetGame();
     }
 }

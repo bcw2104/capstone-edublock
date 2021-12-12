@@ -23,6 +23,39 @@
     <block type="stay"></block>
 </xml>
 
+<div class="modal fade" id="successModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">성공!</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body">
+				<div class="mb-4">자동차가 무사히 목적지에 도착했습니다!</div>
+				<div class="text-right">
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="failModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">실패!</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body">
+				<div class="mb-4">아쉽네요! 다시 도전해보세요!</div>
+				<div class="text-right">
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
 <div class="game-container">
 	<div class="game-header row m-0 justify-content-between">
@@ -42,6 +75,24 @@
 					</div>
 				</div>
 			</div>
+			<script type="text/javascript">
+			$(document).ready(function() {
+				var query = $("#gameAuthor").text();
+				$.ajax({
+					url: "/upload/profile",
+			        type: "get",
+					data : {'query':query},
+			        success : function(res){
+			        	if(res == "fail"){
+							alert("프로필 이미지를 불러오는데 실패했습니다.");
+						}
+						else{
+			        		$(".author-profile-img").attr("src",res);
+						}
+			        }
+			    });
+			})
+			</script>
 			</c:if>
 		</div>
 		<div class="header-options row m-0">

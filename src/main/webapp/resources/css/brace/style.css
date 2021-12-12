@@ -132,4 +132,7 @@
 	align-self: end;
 }
 
+.modal .close{
+	padding: 20px 0px;
+}
 
