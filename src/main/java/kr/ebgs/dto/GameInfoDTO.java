@@ -15,6 +15,7 @@ public class GameInfoDTO {
     private int formal;
     private int hits;
     private int like;
+    private String thumbnail;
 
 	public GameInfoDTO() {
 		this.mapId = 0;
@@ -29,6 +30,7 @@ public class GameInfoDTO {
 		this.formal = -1;
 		this.hits = 0;
 		this.like = 0;
+		this.thumbnail = null;
 	}
 
 	public int getMapId() {
@@ -125,5 +127,13 @@ public class GameInfoDTO {
 
 	public void setLike(int like) {
 		this.like = like;
+	}
+
+	public String getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
 	}
 }

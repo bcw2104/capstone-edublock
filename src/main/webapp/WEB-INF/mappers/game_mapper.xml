@@ -11,7 +11,7 @@
 			</where>
 	</select>
 
-	<select id="selectGameInfo" resultType="GameInfoDTO" parameterType="GameInfoDTO">
+	<select id="selectGameInfo" resultType="gameInfoDTO" parameterType="gameInfoDTO">
 		SELECT game_info_tbl.*,game_tbl.game_name,user_tbl.user_nickname as author_nickname FROM
 			game_info_tbl
 				INNER JOIN
@@ -23,14 +23,14 @@
 			<where>
 				<if test="mapId != 0">map_id = #{mapId}</if>
 				<if test="gameId != 0">AND game_info_tbl.game_id = #{gameId}</if>
-				<if test="mapName != null">AND map_name = #{mapName}</if>
+				<if test="mapName != null">AND map_name LIKE '%${mapName}%'</if>
 				<if test="authorId != null ">AND game_info_tbl.author_id = #{authorId}</if>
 				<if test="formal != -1 ">AND formal = #{formal}</if>
 			</where>
 			ORDER BY map_point ASC;
 	</select>
 
-	<select id="selectHotGameInfo" resultType="GameInfoDTO">
+	<select id="selectHotGameInfo" resultType="gameInfoDTO">
 		SELECT game_info_tbl.*,game_tbl.game_name,user_tbl.user_nickname as author_nickname FROM
 			game_info_tbl
 				INNER JOIN
@@ -39,10 +39,11 @@
 				INNER JOIN
 			user_tbl
 				ON game_info_tbl.author_id = user_tbl.user_id
+			WHERE  formal = 0
 			ORDER BY reg_date DESC limit 4;
 	</select>
 
-	<select id="selectNewGameInfo" resultType="GameInfoDTO">
+	<select id="selectNewGameInfo" resultType="gameInfoDTO">
 		SELECT game_info_tbl.*,game_tbl.game_name,user_tbl.user_nickname as author_nickname FROM
 			game_info_tbl
 				INNER JOIN
@@ -51,6 +52,7 @@
 				INNER JOIN
 			user_tbl
 				ON game_info_tbl.author_id = user_tbl.user_id
+			WHERE  formal = 0
 			ORDER BY reg_date DESC limit 4;
 	</select>
 
@@ -62,7 +64,23 @@
 			</where>
 	</select>
 
+	<insert id="addGameContent" parameterType="gameInfoDTO">
+		INSERT INTO game_info_tbl(game_id,map_name,author_id,map_data,map_point,formal,thumbnail)
+			VALUES(#{gameId},#{mapName},#{authorId},#{mapData},#{mapPoint},#{formal},#{thumbnail})
+	</insert>
+
 	<insert id="addGameRecord" parameterType="gameRecordDTO">
 		INSERT INTO game_record_tbl(user_id,map_id) VALUES(#{userId},#{mapId})
 	</insert>
+
+	<update id="increaseHits" parameterType="int">
+		UPDATE game_info_tbl
+			<set>
+				hits = hits+1
+			</set>
+			<where>
+				map_id = #{mapId}
+			</where>
+	</update>
+
 </mapper>

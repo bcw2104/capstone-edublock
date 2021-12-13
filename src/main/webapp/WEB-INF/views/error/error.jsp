@@ -23,22 +23,32 @@
     <jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
     <div class="container" style="height:450px">
     	<div class="my-5 py-5 text-center">
-    		<div class="font-weight-bold text-primary"style="font-size: 100px">${requestScope['javax.servlet.error.status_code']}</div>
-    		<div class="mr-2 my-4 font-18">
-			<c:if test="${requestScope['javax.servlet.error.status_code'] == 401}">
-				접근 권한이 없는 페이지입니다.
-			</c:if>
-			<c:if test="${requestScope['javax.servlet.error.status_code'] == 404}">
-				만료되었거나 존재하지 않는 페이지입니다.
-			</c:if>
-			<c:if test="${requestScope['javax.servlet.error.status_code'] == 405}">
-				허용되지 않는 페이지입니다.
-			</c:if>
-			<c:if test="${requestScope['javax.servlet.error.status_code'] == 500}">
-				서버에 오류가 발생했습니다.
-			</c:if>
+    	<c:choose>
+    		<c:when test="${requestScope['javax.servlet.error.status_code'] == 401}">
+				<script type="text/javascript">
+					alert("로그인이 필요한 서비스입니다.");
+					location.href = "/";
+				</script>
+			</c:when>
+			<c:otherwise>
+	    	<div class="font-weight-bold text-primary"style="font-size: 100px">${requestScope['javax.servlet.error.status_code']}</div>
+	    		<div class="mr-2 my-4 font-18">
+				<c:if test="${requestScope['javax.servlet.error.status_code'] == 403}">
+					접근 권한이 없는 페이지입니다.
+				</c:if>
+				<c:if test="${requestScope['javax.servlet.error.status_code'] == 404}">
+					만료되었거나 존재하지 않는 페이지입니다.
+				</c:if>
+				<c:if test="${requestScope['javax.servlet.error.status_code'] == 405}">
+					허용되지 않는 페이지입니다.
+				</c:if>
+				<c:if test="${requestScope['javax.servlet.error.status_code'] == 500}">
+					서버에 오류가 발생했습니다.
+				</c:if>
 			</div>
 			<a href="/"><button type="button" class="btn btn-primary" style="width:80px">홈으로</button></a>
+			</c:otherwise>
+		</c:choose>
 		</div>
     </div>
     <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

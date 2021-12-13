@@ -1,0 +1,150 @@
+.canvas {
+	max-width: 200px;
+    max-height: 200px;
+}
+
+.setting-title, .map-nav-title {
+	background-color: #7a87e5 !important;
+	border-radius: 15px 15px 0 0;
+}
+
+.setting-form {
+	padding: 10px;
+	background-color: #e0eaff;
+	border-radius: 0 0 15px 15px;
+}
+
+.map-nav {
+	margin-right: 20px;
+}
+
+.map-ele-list {
+	width: 270px;
+	min-height: 700px;
+	padding: 10px;
+	background-color: #e0eaff;
+	border-radius: 0 0 15px 15px;
+}
+
+.map-ele-list * {
+	background-color: #e0eaff;
+}
+
+.map-ele-list .btn {
+	font-weight: bold;
+}
+
+.map-ele-list .btn:hover {
+	background-color: #bed2ff;
+}
+
+.map-ele-list .btn:focus {
+	box-shadow: none !important;
+}
+
+.tool-wrap{
+	text-align: right;
+}
+.tool-wrap .trash{
+	width: 50px;
+}
+
+.custom-board{
+	position: relative;
+}
+.custom-item{
+	position: relative;
+}
+
+.custom-item > img{
+	position: absolute;
+	width: 100%;
+}
+
+.map-board,
+.element-board {
+	font-size: 0px;
+	width: 850px;
+	height: 850px;
+}
+
+.element-board{
+	position: absolute;
+	top: 0px;
+}
+
+@media screen and (max-width:1200px) {
+	.map-board,
+	.element-board  {
+		width: 740px;
+		height: 740px;
+	}
+	.map-ele-list {
+		width: 200px;
+	}
+}
+
+@media screen and (max-width:1000px) {
+	.map-board,
+	.element-board {
+		width: 768px;
+		height: 768px;
+	}
+	.map-ele-list {
+		width: 100%;
+		min-height: 70px !important;
+	}
+	.map-nav {
+		width: 100%;
+		margin-right: 0px;
+	}
+}
+
+.ele-item,
+.map-ele-item {
+	list-style: none;
+	display: inline-block;
+}
+
+.ele-item > img,
+.map-ele-item>img {
+	width: 70px;
+	cursor: pointer;
+	transition: transform 0.1s ease-out 0s;
+	margin: 5px;
+}
+
+ele-item>img:hover
+.map-ele-item>img:hover {
+	transform: translateY(-5px);
+}
+
+.map-hover {
+	border: 2px solid #c9c9c9 !important;
+}
+
+.guide-line {
+	border: 1.5px dashed #e1e1e1;
+}
+
+.element-board>div,
+.map-board>div {
+	display: inline-block;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-size: contain;
+}
+
+.map-thumbnail {
+	display: none;
+	width: 200px;
+    height: 200px;
+}
+
+#temp{
+	width: 200px;
+    height: 200px;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}

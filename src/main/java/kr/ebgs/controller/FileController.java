@@ -86,7 +86,7 @@ public class FileController {
 			String path = realPath+File.separator+fileName;
 
 			fileService.removePath(realPath);
-			fileService.changeProfileImg(path,mfile);
+			fileService.uploadFile(path,mfile);
 
 			return "success";
 		}

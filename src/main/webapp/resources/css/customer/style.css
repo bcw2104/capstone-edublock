@@ -1,4 +1,4 @@
-/* board 페이지 */
+/* board */
 
 .search-form-wrap{
 	position: absolute;
@@ -20,9 +20,11 @@
 	margin-top: 50px;
 }
 
-.nav-pills >.nav-item:hover,
-.nav-pills >.nav-item > .active{
+.nav-pills .nav-link:hover,
+.nav-pills .nav-link.active{
 	font-weight: bold;
+	color:#ffffff;
+	background-color: #7a87e5 !important;
 }
 
 .post-list-table th,
@@ -44,7 +46,7 @@
 	display: block;
 }
 
-/* view 페이지 */
+/* view */
 .post-view .author-profile-img,
 .comment-view .comment-profile-img{
 	width: 45px;

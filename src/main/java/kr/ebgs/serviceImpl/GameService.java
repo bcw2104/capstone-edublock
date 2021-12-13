@@ -20,6 +20,15 @@ public class GameService {
 	@Autowired
 	private GameMapper gameMapper;
 
+	public boolean isFirstVisit(ArrayList<Integer> visitList,int mapId) {
+		for(int visit : visitList) {
+			if(visit == mapId) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public ArrayList<RankDTO> getRankList(int type){
 		return rankMapper.selectAll(type);
 	}
@@ -87,11 +96,19 @@ public class GameService {
 		return gameMapper.selectGameRecord(gameRecord);
 	}
 
+	public void addGameContent(GameInfoDTO gameInfo){
+		gameMapper.addGameContent(gameInfo);
+	}
+
 	public void addGameClearRecord(String userId,int mapId){
 		GameRecordDTO gameRecord = new GameRecordDTO();
 		gameRecord.setMapId(mapId);
 		gameRecord.setUserId(userId);
 
 		gameMapper.addGameRecord(gameRecord);
+	}
+
+	public void increaseGameHits(int mapId) {
+		gameMapper.increaseHits(mapId);
 	}
 }
