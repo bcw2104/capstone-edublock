@@ -29,6 +29,12 @@ Blockly.JavaScript['stay'] = function(block) {
 	return code;
 };
 
+
+Blockly.JavaScript['honk'] = function(block) {
+	var code = 'await block_honk()\n';
+	return code;
+};
+
 Blockly.JavaScript['repeat'] = function(block) {
 	var number_for = block.getFieldValue('for');
 	var statements_nextblock = Blockly.JavaScript.statementToCode(block, 'nextblock');
@@ -40,17 +46,28 @@ Blockly.JavaScript['repeat'] = function(block) {
 	return code;
 };
 
-Blockly.JavaScript['if'] = function(block) {
+Blockly.JavaScript['if'] = function(block) { // **** 수정
 	var dropdown_flag = block.getFieldValue('flag');
 	var statements_nextblock = Blockly.JavaScript.statementToCode(block, 'nextblock');
 	var code = '\n';
+
+	if (dropdown_flag == 'red') {
+		code += 'if(block_frontOfCar(trafficLight) && block_isRedLight()) {\n';
+		code += statements_nextblock;
+		code += '}';
+	}
+	else if (dropdown_flag == 'green') {
+		code += 'if(block_frontOfCar(trafficLight) && !block_isRedLight()) {\n';
+		code += statements_nextblock;
+		code += '}';
+	}
 	code += 'await block_frontOfCar(3)\n';
 	if(dropdown_flag == 'green' && !statements_nextblock.includes("stay")){
 		code += 'await block_isRedLight(2)\n';
 		code += statements_nextblock;
 	}
 	else if(dropdown_flag == 'green' && statements_nextblock.includes("stay")){
-		
+
 	}
 	else{
 		code += statements_nextblock;

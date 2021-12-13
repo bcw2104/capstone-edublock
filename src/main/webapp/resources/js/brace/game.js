@@ -1093,14 +1093,13 @@ async function block_honk() {
     await action(honk);
 }
 
-async function block_frontOfCar(elementType) { // 인자에 해당하는 요소가 앞에 있다면 true 없다면 false
+function block_frontOfCar(elementType) { // 인자에 해당하는 요소가 앞에 있다면 true 없다면 false
 	console.log(car.pos.x,car.pos.y)
     if (elementType == pointList[car.pos.y + compass[car.dir].y][car.pos.x + compass[car.dir].x].elementType) {
         return true;
     }
     return false;
 }
-
 
 function block_isRedLight() {
     const point = pointList[car.pos.y + compass[car.dir].y][car.pos.x + compass[car.dir].x];

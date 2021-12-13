@@ -21,6 +21,7 @@
     <block type="repeat"></block>
     <block type="if"></block>
     <block type="stay"></block>
+    <block type="honk"></block>
 </xml>
 
 <div class="modal fade" id="successModal">
