@@ -49,6 +49,7 @@
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
 			</div>
 			<div class="modal-body">
+				<div id="gameOverMsg" class="mb-4"></div>
 				<div class="mb-4">아쉽네요! 다시 도전해보세요!</div>
 				<div class="text-right">
 					<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

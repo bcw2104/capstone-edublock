@@ -61,7 +61,38 @@ function drop(ev) {
 			}
 		}
 		else if(ev.target.id.indexOf('ele') == 0){
-			if(addElement(index, blockId, 5,wSize)){
+			var param=0;
+			if(blockId < 5){
+				param = 5;
+				if(blockId == 3){
+					param = 1;
+				}
+				else if(blockId == 4){
+					param = 3;
+				}
+				else if(blockId == 5){
+					param = 5;
+				}
+				blockId = 3;
+			}
+			else if(blockId == 6){
+				param = 5;
+				blockId = 4;
+			}
+			else if(blockId <= 9){
+				if(blockId == 7){
+					param = 0;
+				}
+				else if(blockId == 8){
+					param = 1;
+				}
+				else if(blockId == 9){
+					param = 2;
+				}
+				blockId = 5;
+			}
+
+			if(addElement(index, blockId, param,wSize)){
 				$("#"+parentId).empty();
 				$(ev.target).append('<img class="dragged-element" style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
 			}
@@ -87,7 +118,37 @@ function drop(ev) {
 			}
 		}
 		else if(ev.target.id.indexOf('ele') == 0){
-			if(addElement(index, blockId, 5,wSize)){
+			var param=0;
+			if(blockId < 5){
+				param = 5;
+				if(blockId == 3){
+					param = 1;
+				}
+				else if(blockId == 4){
+					param = 3;
+				}
+				else if(blockId == 5){
+					param = 5;
+				}
+				blockId = 3;
+			}
+			else if(blockId == 6){
+				param = 5;
+				blockId = 4;
+			}
+			else if(blockId <= 9){
+				if(blockId == 7){
+					param = 0;
+				}
+				else if(blockId == 8){
+					param = 1;
+				}
+				else if(blockId == 9){
+					param = 2;
+				}
+				blockId = 5;
+			}
+			if(addElement(index, blockId, param,wSize)){
 				$("#"+parentId).empty();
 				deleteElement(pIndex, wSize);
 				$(ev.target).append('<img class="dragged-element" style="width:100%" alt="drag' + blockId + '" src="' + source + '" ondragstart="move(event)">');
@@ -302,7 +363,7 @@ function next() {
 }
 
 function initElememt(){
-	for (i = 3; i <= 4; i++) {
+	for (i = 3; i <= 9; i++) {
 		$("#element").append('<li class = "ele-item"><img alt="drag' + i + '" src="/resources/images/brace/elements/element1/index' + i + '.png" ondragstart="drag(event)"></li>')
 	}
 }

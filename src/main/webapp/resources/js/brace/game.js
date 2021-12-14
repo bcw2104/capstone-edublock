@@ -4,7 +4,7 @@ const startingPoint = 1;
 const goalPoint = 2;
 const trafficLight = 3;
 const gasStation = 4;
-const someObject = 5; // *** 추가
+const someObject = 5;
 
 class Point {
     constructor(isLocatable, x, y ,elementType, initState = 0) { // type이 0이면 아무것도 없는 것
@@ -118,11 +118,10 @@ class GasStation {
     }
 }
 
-// 장애물 객체. 장애물 종류에 따라 something이 바뀌고 something에 따라 그림이 바뀜.
 class SomeObject {
     constructor(initState) {
-        this.something = initState; // 0이면 없음, 1이상이면 어떤 장애물
-        this.exist = 1;
+        this.something = initState; // 0, 1, 2 장애물
+        this.exist = 1; // 경적으로 없애면 0이 됨.
     }
 
     init(initState) {
@@ -175,7 +174,7 @@ const backward = 4;
 const leftBackward = 5;
 const rightBackward = 6 ;
 const stay = 7;
-const honk = 8; // *** 추가
+const honk = 8;
 
 const compass = [{x: 0, y: -1}, {x: 1, y: 0}, {x: 0, y: 1}, {x: -1, y: 0}]
 const up = 0;
@@ -384,7 +383,8 @@ function drawElement() {
                         elementContext.translate((tileLength + lineWidth) * x + lineWidth, (tileLength + lineWidth) * y + lineWidth);
                         elementContext.drawImage(imgEle, (tileLength + lineWidth) * gasStation, (tileLength + lineWidth) * remainGas, tileLength, tileLength, -elementSize/2, -elementSize/2, elementSize, elementSize);
                         break;
-                    case someObject: // *** 추가
+                    case someObject:
+                        if (pointList[y][x].element.exist == 1)
                         elementContext.translate((tileLength + lineWidth) * x + lineWidth, (tileLength + lineWidth) * y + lineWidth);
                         elementContext.drawImage(imgEle, (tileLength + lineWidth) * someObject, (tileLength + lineWidth) * pointList[y][x].element.something, tileLength, tileLength, -elementSize/2, -elementSize/2, elementSize, elementSize);
                         break;
@@ -402,7 +402,7 @@ async function someObjectAnimation(pos, something) {
     const elementCanvas = document.getElementById("elementImgCanvas");
     const elementContext = elementCanvas.getContext("2d");
 
-    while (nowSize.x > 0) { // **** 수정
+    while (nowSize.x > 0) {
         elementContext.save();
         elementCanvas.translate(startPos.x, startPos.y);
         elementContext.clearMap(-nowSize.x/2, -nowSize.y/2, nowSize.x, nowSize.y);
@@ -546,8 +546,7 @@ function calPos(dir) {
             break;
         case stay: // 대기
             break;
-            // *** 추가
-        case hunk: // 경적
+        case honk: // 경적
             break;
     }
 }
@@ -816,12 +815,12 @@ async function honkAnimation(startPos, startDir) {
     hornSound.play();
 
     let time = 0;
-    const objectPoint = pointList[startPos.x + compass[startDir].x][startPos.y + compass[startDir].y];
+    const objectPoint = pointList[startPos.y + compass[startDir].y][startPos.x + compass[startDir].x];
 
     while (time < 100) {
-        if (time > 50 && objectPoint.elementType == someObject && objectPoint.element.something != 0) {
+        if (time > 50 && objectPoint.elementType == someObject && objectPoint.element.exist != 0) { // **** 수정
             someObjectAnimation(objectPoint.pos, objectPoint.element.something);
-            objectPoint.element.something = 0;
+            objectPoint.element.exist = 0;
         }
         await delay(5);
         time += speed;
@@ -876,7 +875,7 @@ async function carAnimation(dir, startPos, startDir) {
         case stay:
             await stayAnimation();
             break;
-        case honk: // *** 추가.
+        case honk:
             await honkAnimation(startPos, startDir);
             break;
     }
@@ -983,6 +982,7 @@ async function checkGoal() { // 코드가 실행된 뒤 마지막에 결과를 �
 		if(gameOverText == null){
 			gameOverText = "도착하지 못했습니다.";
 		}
+		$("#gameOverMsg").text(gameOverText);
 		$("#failModal").modal("show");
 		resetGame();
     }
@@ -997,7 +997,7 @@ function readyBeforeMove(dir) {
         gameOverText = '갈 수 없는 곳입니다.';
     }
 	else{
-        if (dir != stay && dir != honk) { // *** 12/01 수정된 부분
+        if (dir != stay && dir != honk) {
             // 앞 요소에 걸리는지 판단
             const point = pointList[car.pos.y + compass[car.dir].y][car.pos.x + compass[car.dir].x];
             switch (point.elementType) {
@@ -1012,8 +1012,8 @@ function readyBeforeMove(dir) {
                         getGas = point.element.gas;
                     }
                     break;
-                case someObject: // *** 추가
-                    if (point.element.something != 0) {
+                case someObject:
+                    if (point.element.exist != 0) {
                         gameOver = true;
                         gameOverText = '무언가를 치었습니다.'
                     }
