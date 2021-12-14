@@ -577,6 +577,10 @@ function addElement(index, et, ist,wSize) {
 			mapObj.pl[y][x].et = gasStation;
 			mapObj.pl[y][x].ist = ist;
 			break;
+		case someObject:
+			mapObj.pl[y][x].et = someObject;
+			mapObj.pl[y][x].ist = ist;
+			break;
 	}
 	return 1;
 }
